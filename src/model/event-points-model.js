@@ -1,15 +1,26 @@
-export default class EventPointsModel {
-  #eventPoints = [];
+import {getRandomEventPointsMock} from '../mock/event-points.js';
 
-  constructor() {
-    this.#eventPoints = [];
-  }
+
+const POINT_COUNT = 3;
+
+export default class EventPointsModel {
+  // #eventPoints = [];
+
+  // constructor() {
+  //   this.#eventPoints = [];
+  // }
+
+  // get() {
+  //   return this.#eventPoints;
+  // }
+
+  // getById(id) {
+  //   return this.#eventPoints.find((eventPoints) => eventPoints.id === id) || null;
+  // }
+
+  tasks = Array.from({length: POINT_COUNT}, getRandomEventPointsMock);
 
   get() {
-    return this.#eventPoints;
-  }
-
-  getById(id) {
-    return this.#eventPoints.find((eventPoints) => eventPoints.id === id) || null;
+    return this.tasks;
   }
 }

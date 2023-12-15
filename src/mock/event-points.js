@@ -4,7 +4,7 @@ import { POINT_TYPE } from '../const.js';
 const eventPointsMock = [
   {
     id: '1',
-    basePrice: 1100,
+    basePrice: 100,
     dateFrom: '2019-07-10T22:55:56.845Z',
     dateTo: '2019-07-11T11:22:13.375Z',
     destination: '4',
@@ -14,7 +14,7 @@ const eventPointsMock = [
   },
   {
     id: '2',
-    basePrice: 1100,
+    basePrice: 200,
     dateFrom: '2019-07-10T22:55:56.845Z',
     dateTo: '2019-07-11T11:22:13.375Z',
     destination: '5',
@@ -24,7 +24,7 @@ const eventPointsMock = [
   },
   {
     id: '3',
-    basePrice: 1100,
+    basePrice: 300,
     dateFrom: '2019-07-10T22:55:56.845Z',
     dateTo: '2019-07-11T11:22:13.375Z',
     destination: '6',
@@ -34,8 +34,8 @@ const eventPointsMock = [
   },
 ];
 
-// function getRandomEventPointsMock() {
-//   return getRandomArrayElement(eventPointsMock);
-// }
+function getRandomEventPointsMock() {
+  return getRandomArrayElement(eventPointsMock);
+}
 
-export { eventPointsMock };
+export { getRandomEventPointsMock };

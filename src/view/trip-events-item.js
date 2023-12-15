@@ -1,24 +1,33 @@
 import {createElement} from '../render.js';
+import {humanizeTaskDueDate, dateDif} from '../utils.js';
+import {DATE_FORMAT_DAY_MONTH, DATE_FORMAT_YEAR_DAY_MONTH, DATE_FORMAT_HOURS_MINUTE} from '../const.js';
 
-function createTripEventsItemTemplate() {
+function createTripEventsItemTemplate(points) {
+  const { basePrice, dateFrom, dateTo} = points;
+
+  const dateStartDayMonth = humanizeTaskDueDate(dateFrom, DATE_FORMAT_DAY_MONTH);
+  const dateStartDatetime = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH);
+  const dateStartHoursMinute = humanizeTaskDueDate(dateFrom, DATE_FORMAT_HOURS_MINUTE);
+  const dateEndHoursMinute = humanizeTaskDueDate(dateTo, DATE_FORMAT_HOURS_MINUTE);
+
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">MAR 18</time>
+        <time class="event__date" datetime="${dateStartDatetime}">${dateStartDayMonth}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
         </div>
         <h3 class="event__title">Taxi Amsterdam</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${dateStartHoursMinute}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${dateEndHoursMinute}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${dateDif(dateTo, dateFrom, 'minute')}M</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
@@ -44,8 +53,12 @@ function createTripEventsItemTemplate() {
 
 
 export default class TripEventsItemView {
+  constructor({points}) {
+    this.points = points;
+  }
+
   getTemplate() {
-    return createTripEventsItemTemplate();
+    return createTripEventsItemTemplate(this.points);
   }
 
   getElement() {
