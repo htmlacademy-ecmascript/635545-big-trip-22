@@ -19,7 +19,7 @@ const eventPointsMock = [
     dateTo: '2019-07-11T12:22:13.375Z',
     destination: '5',
     isFavorite: false,
-    offers: [],
+    offers: ['11', '12'],
     type: `${getRandomArrayElement(POINT_TYPE)}`,
   },
   {

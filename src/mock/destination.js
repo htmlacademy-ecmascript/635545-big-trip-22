@@ -79,4 +79,4 @@ function getRandomDestinationMock() {
   return getRandomArrayElement(destinationMock);
 }
 
-export { getRandomDestinationMock };
+export { destinationMock };

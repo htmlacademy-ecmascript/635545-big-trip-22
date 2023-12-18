@@ -1,8 +1,12 @@
+import {destinationMock} from '../mock/destination.js';
+
+// const POINT_COUNT = 1;
+
 export default class DestinationModel {
   #destinations = [];
 
   constructor() {
-    this.#destinations = [];
+    this.#destinations = destinationMock;
   }
 
   get() {

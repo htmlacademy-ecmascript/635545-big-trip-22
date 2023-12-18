@@ -8,21 +8,32 @@ import EditPointView from '../view/edit-point.js';
 export default class EventsPresenter {
   sortComponent = new SortView();
   tripEventsListComponent = new TripEventsListView();
-  // editPointComponent = new EditPointView();
   newPointComponent = new NewPointView();
 
-  constructor({container, eventPointsModel, editPointModel}) {
+  constructor({container, eventPointsModel, editPointModel, destinationModel}) {
     this.container = container;
     this.eventPointsModel = eventPointsModel;
     this.editPointModel = editPointModel;
+    this.destinationModel = destinationModel;
   }
 
   init() {
     this.eventPoints = [...this.eventPointsModel.get()];
-    this.editPoint = this.editPointModel.get();
+    this.editPoint = this.editPointModel.get()[0];
+    this.destination = this.destinationModel.getById(this.editPoint.destination);
     render(this.sortComponent, this.container);
     render(this.tripEventsListComponent, this.container);
-    render(new EditPointView({editPoint: this.editPoint[0]}), this.tripEventsListComponent.getElement());
+
+    this.editPoint.description = this.destination.description;
+    this.editPoint.name = this.destination.name;
+    this.editPoint.pictures = this.destination.pictures;
+
+    render(
+      new EditPointView({
+        editPoint: this.editPoint,
+      }),
+      this.tripEventsListComponent.getElement()
+    );
 
     render(this.newPointComponent, this.tripEventsListComponent.getElement());
 

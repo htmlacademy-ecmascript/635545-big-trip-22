@@ -1,12 +1,23 @@
-import {getRandomDestinationMock} from '../mock/destination.js';
+import {getRandomEventPointsMock} from '../mock/event-points.js';
 
 const POINT_COUNT = 1;
 
 export default class EditPointModel {
+  #editPoint = [];
 
-  editPoint = Array.from({length: POINT_COUNT}, getRandomDestinationMock);
+  constructor() {
+    this.#editPoint = Array.from({length: POINT_COUNT}, getRandomEventPointsMock);
+  }
 
   get() {
-    return this.editPoint;
+    return this.#editPoint;
   }
+
+  getById(id) {
+    return this.#editPoint.find((editPoint) => editPoint.id === id) || null;
+  }
+
+  // get() {
+  //   return this.editPoint;
+  // }
 }
