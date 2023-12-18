@@ -1,6 +1,5 @@
 import {getRandomEventPointsMock} from '../mock/event-points.js';
 
-
 const POINT_COUNT = 3;
 
 export default class EventPointsModel {
@@ -18,9 +17,9 @@ export default class EventPointsModel {
   //   return this.#eventPoints.find((eventPoints) => eventPoints.id === id) || null;
   // }
 
-  tasks = Array.from({length: POINT_COUNT}, getRandomEventPointsMock);
+  eventPoints = Array.from({length: POINT_COUNT}, getRandomEventPointsMock);
 
   get() {
-    return this.tasks;
+    return this.eventPoints;
   }
 }

@@ -2,61 +2,81 @@ import { getRandomArrayElement } from '../utils.js';
 import { NATURAL_NUMBERS } from '../const.js';
 
 const destinationMock = [
-  // {
-  //   pointType: `${getRandomArrayElement(POINT_TYPE)}`,
-  //   cityType: `${getRandomArrayElement(CITY)}`,
-  //   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.',
-  // src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
-  //   offers: [
-  //     'Add luggage',
-  //     'Switch to comfort class',
-  //     'Add meal',
-  //     'Choose seats',
-  //     'Travel by train'
-  //   ],
-  //   startTime: '19/03/19 00:00',
-  //   endTime: '19/03/19 00:00',
-  //   value: '12',
-  // },
   {
     id: '4',
     description:
-      'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
-    name: 'Chamonix',
+      'Minsk, is a beautiful city',
+    name: 'Minsk',
     pictures: [
       {
         src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
-        description: 'Chamonix parliament building',
+        description: 'random-img',
       },
       {
         src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
-        description: 'Chamonix parliament building',
+        description: 'random-img',
       },
     ],
   },
   {
     id: '5',
     description:
-      'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
-    name: 'Chamonix',
+      'Volzhskiy, is a beautiful city.',
+    name: 'Volzhskiy',
     pictures: [
       {
         src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
-        description: 'Chamonix parliament building',
+        description: 'random-img',
       },
     ],
   },
   {
     id: '6',
     description:
-      'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
-    name: 'Chamonix',
+      'Moscow, is a beautiful city.',
+    name: 'Moscow',
     pictures: [],
+  },
+  {
+    id: '7',
+    description:
+      'St. Petersburg, is a beautiful city.',
+    name: 'St. Petersburg',
+    pictures: [
+      {
+        src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
+        description: 'random-img',
+      },
+    ],
+  },
+  {
+    id: '8',
+    description:
+      'Biysk, is a beautiful city.',
+    name: 'Biysk',
+    pictures: [
+      {
+        src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
+        description: 'random-img',
+      },
+    ],
+  },
+  {
+    id: '9',
+    description:
+      'Grodno, is a beautiful city.',
+    name: 'Grodno',
+    pictures: [
+      {
+        src: `https://loremflickr.com/248/152?random=${getRandomArrayElement(NATURAL_NUMBERS)}`,
+        description: 'random-img',
+      },
+    ],
   },
 ];
 
-// function getRandomDestinationMock() {
-//   return getRandomArrayElement(destinationMock);
-// }
+function getRandomDestinationMock() {
+  return getRandomArrayElement(destinationMock);
+}
 
-export { destinationMock };
+export { getRandomDestinationMock };

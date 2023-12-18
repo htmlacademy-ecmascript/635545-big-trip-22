@@ -3,19 +3,19 @@ const offersMock = [
     type: 'taxi',
     offers: [
       {
-        id: '1',
+        id: '10',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 123,
       },
       {
-        id: '2',
+        id: '11',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 234,
       },
       {
-        id: '3',
+        id: '12',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 34546,
       },
     ],
   },
@@ -23,9 +23,9 @@ const offersMock = [
     type: 'bus',
     offers: [
       {
-        id: '2',
+        id: '10',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 5675,
       },
     ],
   },
@@ -33,9 +33,9 @@ const offersMock = [
     type: 'train',
     offers: [
       {
-        id: '3',
+        id: '10',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 246,
       },
     ],
   },
@@ -43,9 +43,9 @@ const offersMock = [
     type: 'ship',
     offers: [
       {
-        id: '3',
+        id: '10',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 354,
       },
     ],
   },
@@ -53,9 +53,9 @@ const offersMock = [
     type: 'drive',
     offers: [
       {
-        id: '3',
+        id: '11',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 4574,
       },
     ],
   },
@@ -63,9 +63,9 @@ const offersMock = [
     type: 'flight',
     offers: [
       {
-        id: '3',
+        id: '12',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 3434,
       },
     ],
   },
@@ -73,9 +73,9 @@ const offersMock = [
     type: 'check-in',
     offers: [
       {
-        id: '3',
+        id: '10',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 345,
       },
     ],
   },
@@ -87,9 +87,9 @@ const offersMock = [
     type: 'restaurant',
     offers: [
       {
-        id: '3',
+        id: '12',
         title: 'Upgrade to a business class',
-        price: 120,
+        price: 34534,
       },
     ],
   },
