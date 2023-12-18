@@ -57,6 +57,11 @@ const offersMock = [
         title: 'Upgrade to a business class',
         price: 4574,
       },
+      {
+        id: '12',
+        title: 'Upgrade to a business class',
+        price: 353,
+      },
     ],
   },
   {
@@ -77,11 +82,22 @@ const offersMock = [
         title: 'Upgrade to a business class',
         price: 345,
       },
+      {
+        id: '12',
+        title: 'Upgrade to a business class',
+        price: 6546,
+      },
     ],
   },
   {
     type: 'sightseeing',
-    offers: [],
+    offers: [
+      {
+        id: '12',
+        title: 'Upgrade to a business class',
+        price: 34534,
+      },
+    ],
   },
   {
     type: 'restaurant',

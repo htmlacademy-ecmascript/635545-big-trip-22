@@ -10,23 +10,27 @@ export default class EventsPresenter {
   tripEventsListComponent = new TripEventsListView();
   newPointComponent = new NewPointView();
 
-  constructor({container, eventPointsModel, editPointModel, destinationModel}) {
+  constructor({container, eventPointsModel, editPointModel, destinationModel, offersModel}) {
     this.container = container;
     this.eventPointsModel = eventPointsModel;
     this.editPointModel = editPointModel;
     this.destinationModel = destinationModel;
+    this.offersModel = offersModel;
   }
 
   init() {
     this.eventPoints = [...this.eventPointsModel.get()];
     this.editPoint = this.editPointModel.get()[0];
     this.destination = this.destinationModel.getById(this.editPoint.destination);
+    this.offer = this.offersModel.getByType(this.editPoint.type);
+    this.offers = this.offer.offers;
     render(this.sortComponent, this.container);
     render(this.tripEventsListComponent, this.container);
 
     this.editPoint.description = this.destination.description;
     this.editPoint.name = this.destination.name;
     this.editPoint.pictures = this.destination.pictures;
+    this.editPoint.offers = this.offers;
 
     render(
       new EditPointView({

@@ -1,15 +1,17 @@
+import {offersMock} from '../mock/offers.js';
+
 export default class OffersModel {
   #offers = [];
 
   constructor() {
-    this.#offers = [];
+    this.#offers = offersMock;
   }
 
   get() {
     return this.#offers;
   }
 
-  getById(id) {
-    return this.#offers.find((offers) => offers.id === id) || null;
+  getByType(type) {
+    return this.#offers.find((offers) => offers.type === type) || null;
   }
 }

@@ -4,9 +4,22 @@ import {DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
 
 function createEditPointTemplate(editPoint) {
   // console.log({destination});
-  const { basePrice, dateFrom, dateTo, name, description, type } = editPoint;
+  const { basePrice, dateFrom, dateTo, name, description, type, offers } = editPoint;
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
+
+  console.log(offers);
+
+  const eventOfferSelectorList = `
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
+      <label class="event__offer-label" for="event-offer-luggage-1">
+        <span class="event__offer-title">Add luggage</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">50</span>
+      </label>
+    </div>
+  `;
 
   return (
     `<li class="trip-events__item">
