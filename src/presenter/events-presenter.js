@@ -8,7 +8,6 @@ import EditPointView from '../view/edit-point.js';
 export default class EventsPresenter {
   sortComponent = new SortView();
   tripEventsListComponent = new TripEventsListView();
-  newPointComponent = new NewPointView();
 
   constructor({container, eventPointsModel, editPointModel, destinationModel, offersModel}) {
     this.container = container;
@@ -24,13 +23,13 @@ export default class EventsPresenter {
     this.destination = this.destinationModel.getById(this.editPoint.destination);
     this.offer = this.offersModel.getByType(this.editPoint.type);
     this.offers = this.offer.offers;
-    render(this.sortComponent, this.container);
-    render(this.tripEventsListComponent, this.container);
-
     this.editPoint.description = this.destination.description;
     this.editPoint.name = this.destination.name;
     this.editPoint.pictures = this.destination.pictures;
     this.editPoint.offers = this.offers;
+
+    render(this.sortComponent, this.container);
+    render(this.tripEventsListComponent, this.container);
 
     render(
       new EditPointView({
@@ -39,7 +38,12 @@ export default class EventsPresenter {
       this.tripEventsListComponent.getElement()
     );
 
-    render(this.newPointComponent, this.tripEventsListComponent.getElement());
+    render(
+      new NewPointView({
+        editPoint: this.editPoint,
+      }),
+      this.tripEventsListComponent.getElement()
+    );
 
     for (let i = 0; i < this.eventPoints.length; i++) {
       render(new TripEventsItemView({points: this.eventPoints[i]}), this.tripEventsListComponent.getElement());

@@ -16,8 +16,4 @@ export default class EditPointModel {
   getById(id) {
     return this.#editPoint.find((editPoint) => editPoint.id === id) || null;
   }
-
-  // get() {
-  //   return this.editPoint;
-  // }
 }
