@@ -75,8 +75,4 @@ const destinationMock = [
   },
 ];
 
-function getRandomDestinationMock() {
-  return getRandomArrayElement(destinationMock);
-}
-
 export { destinationMock };
