@@ -9,7 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     clean: true,
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   plugins: [
     new HtmlPlugin({
       template: 'public/index.html',
