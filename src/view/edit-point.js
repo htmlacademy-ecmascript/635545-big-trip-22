@@ -2,8 +2,9 @@ import {createElement} from '../render.js';
 import {humanizeTaskDueDate} from '../utils.js';
 import {DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
 
-function createEditPointTemplate(editPoint) {
-  const { basePrice, dateFrom, dateTo, name, description, type, offers } = editPoint;
+function createEditPointTemplate(editPoint, offers, destination) {
+  const { basePrice, dateFrom, dateTo, type } = editPoint;
+  const { name, description } = destination;
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
 
@@ -142,12 +143,14 @@ function createEditPointTemplate(editPoint) {
 
 
 export default class EditPointView {
-  constructor({editPoint}) {
+  constructor(editPoint, offers, destination) {
     this.editPoint = editPoint;
+    this.offers = offers;
+    this.destination = destination;
   }
 
   getTemplate() {
-    return createEditPointTemplate(this.editPoint);
+    return createEditPointTemplate(this.editPoint, this.offers, this.destination);
   }
 
   getElement() {

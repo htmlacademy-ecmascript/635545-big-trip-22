@@ -23,25 +23,29 @@ export default class EventsPresenter {
     this.destination = this.destinationModel.getById(this.editPoint.destination);
     this.offer = this.offersModel.getByType(this.editPoint.type);
     this.offers = this.offer.offers;
-    this.editPoint.description = this.destination.description;
-    this.editPoint.name = this.destination.name;
-    this.editPoint.pictures = this.destination.pictures;
-    this.editPoint.offers = this.offers;
+    // this.editPoint.description = this.destination.description;
+    // this.editPoint.name = this.destination.name;
+    // this.editPoint.pictures = this.destination.pictures;
+    // this.editPoint.offers = this.offers;
 
     render(this.sortComponent, this.container);
     render(this.tripEventsListComponent, this.container);
 
     render(
-      new EditPointView({
-        editPoint: this.editPoint,
-      }),
+      new EditPointView(
+        this.editPoint,
+        this.offers,
+        this.destination
+      ),
       this.tripEventsListComponent.getElement()
     );
 
     render(
-      new NewPointView({
-        editPoint: this.editPoint,
-      }),
+      new NewPointView(
+        this.editPoint,
+        this.offers,
+        this.destination
+      ),
       this.tripEventsListComponent.getElement()
     );
 
