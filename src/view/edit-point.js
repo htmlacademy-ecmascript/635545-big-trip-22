@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate} from '../utils.js';
 import {DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
 
@@ -142,26 +142,19 @@ function createEditPointTemplate(editPoint, offers, destination) {
 }
 
 
-export default class EditPointView {
+export default class EditPointView extends AbstractView {
+  #editPoint = null;
+  #offers = null;
+  #destination = null;
+
   constructor(editPoint, offers, destination) {
-    this.editPoint = editPoint;
-    this.offers = offers;
-    this.destination = destination;
+    super();
+    this.#editPoint = editPoint;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
-  getTemplate() {
-    return createEditPointTemplate(this.editPoint, this.offers, this.destination);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEditPointTemplate(this.#editPoint, this.#offers, this.#destination);
   }
 }

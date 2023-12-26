@@ -1,4 +1,4 @@
-import {RenderPosition} from './render.js';
+import {RenderPosition} from './framework/render.js';
 import EventsPresenter from './presenter/events-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import HeaderInfoPresenter from './presenter/header-info-presenter.js';
