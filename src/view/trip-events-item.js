@@ -53,13 +53,21 @@ function createTripEventsItemTemplate(points) {
 
 export default class TripEventsItemView extends AbstractView {
   #points = null;
+  #rollupBtnClick = null;
 
-  constructor({points}) {
+  constructor({points, onClick}) {
     super();
     this.#points = points;
+    this.#rollupBtnClick = onClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickRollupBtn);
   }
 
   get template() {
     return createTripEventsItemTemplate(this.#points);
   }
+
+  #clickRollupBtn = (evt) => {
+    evt.preventDefault();
+    this.#rollupBtnClick();
+  };
 }

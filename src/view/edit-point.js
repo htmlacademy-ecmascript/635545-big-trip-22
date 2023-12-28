@@ -146,15 +146,23 @@ export default class EditPointView extends AbstractView {
   #editPoint = null;
   #offers = null;
   #destination = null;
+  #saveBtnSubmit = null;
 
-  constructor(editPoint, offers, destination) {
+  constructor({editPoint, offers, destination, onSubmit}) {
     super();
     this.#editPoint = editPoint;
     this.#offers = offers;
     this.#destination = destination;
+    this.#saveBtnSubmit = onSubmit;
+    this.element.addEventListener('submit', this.#submitSaveBtn);
   }
 
   get template() {
     return createEditPointTemplate(this.#editPoint, this.#offers, this.#destination);
   }
+
+  #submitSaveBtn = (evt) => {
+    evt.preventDefault();
+    this.#saveBtnSubmit();
+  };
 }
