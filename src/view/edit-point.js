@@ -155,6 +155,7 @@ export default class EditPointView extends AbstractView {
     this.#destination = destination;
     this.#saveBtnSubmit = onSubmit;
     this.element.addEventListener('submit', this.#submitSaveBtn);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#submitSaveBtn);
   }
 
   get template() {

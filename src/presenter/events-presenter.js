@@ -2,7 +2,6 @@ import {render, replace} from '../framework/render.js';
 import SortView from '../view/sort.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import TripEventsItemView from '../view/trip-events-item.js';
-import NewPointView from '../view/new-point.js';
 import EditPointView from '../view/edit-point.js';
 
 export default class EventsPresenter {
@@ -37,24 +36,6 @@ export default class EventsPresenter {
     render(this.#sortComponent, this.#container);
     render(this.#tripEventsListComponent, this.#container);
 
-    // render(
-    //   new EditPointView(
-    //     this.#editPoint,
-    //     this.#offers,
-    //     this.#destination
-    //   ),
-    //   this.#tripEventsListComponent.element
-    // );
-
-    // render(
-    //   new NewPointView(
-    //     this.#editPoint,
-    //     this.#offers,
-    //     this.#destination
-    //   ),
-    //   this.#tripEventsListComponent.element
-    // );
-
     for (let i = 0; i < this.#eventPoints.length; i++) {
       this.#renderPoints(
         this.#eventPoints[i],
@@ -63,13 +44,6 @@ export default class EventsPresenter {
         this.#destination
       );
     }
-
-    // this.#renderPoints(
-    //   this.#eventPoints[0],
-    //   this.#editPoint,
-    //   this.#offers,
-    //   this.#destination
-    // );
   }
 
   #renderPoints(points, editPoint, offers, destination) {
@@ -82,14 +56,23 @@ export default class EventsPresenter {
       editPoint,
       offers,
       destination,
-      onSubmit: saveBtnSubmit
+      onSubmit: closeEditOpenPoint
     });
+
+    const escKeyEventEdit = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        closeEditOpenPoint();
+        document.removeEventListener('keydown', escKeyEventEdit);
+      }
+    };
 
     function rollupBtnClick() {
       replace(editComponent, pointComponent);
+      document.addEventListener('keydown', escKeyEventEdit);
     }
 
-    function saveBtnSubmit() {
+    function closeEditOpenPoint() {
       replace(pointComponent, editComponent);
     }
 
