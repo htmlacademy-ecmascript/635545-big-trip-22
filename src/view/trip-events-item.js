@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate, dateDif} from '../utils.js';
 import {DATE_FORMAT_DAY_MONTH, DATE_FORMAT_YEAR_DAY_MONTH, DATE_FORMAT_HOURS_MINUTE} from '../const.js';
 
@@ -51,25 +51,23 @@ function createTripEventsItemTemplate(points) {
   );
 }
 
+export default class TripEventsItemView extends AbstractView {
+  #points = null;
+  #rollupBtnClick = null;
 
-export default class TripEventsItemView {
-  constructor({points}) {
-    this.points = points;
+  constructor({points, onClick}) {
+    super();
+    this.#points = points;
+    this.#rollupBtnClick = onClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickRollupBtn);
   }
 
-  getTemplate() {
-    return createTripEventsItemTemplate(this.points);
+  get template() {
+    return createTripEventsItemTemplate(this.#points);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #clickRollupBtn = (evt) => {
+    evt.preventDefault();
+    this.#rollupBtnClick();
+  };
 }
