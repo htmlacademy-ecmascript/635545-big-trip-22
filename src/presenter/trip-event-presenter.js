@@ -1,8 +1,8 @@
-import {render, replace} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
 
-export default class tripEventPresenter {
+export default class TripEventPresenter {
   #container = null;
   #editPointModel = null;
   #destinationModel = null;
@@ -11,51 +11,93 @@ export default class tripEventPresenter {
   #destination = null;
   #offer = null;
   #offers = null;
-  #eventPoint = null;
+  #point = null;
+  #pointComponent = null;
+  #editComponent = null;
+  #handleDataChange = null;
+  // #escKeyEventEdit = null;
+  // #rollupBtnClick = null;
+  // #favoriteBtnClick = null;
+  // #closeEditOpenPoint = null;
 
-  constructor({container, editPointModel, destinationModel, offersModel, eventPoint}) {
+  constructor({container, editPointModel, destinationModel, offersModel, onPointChange}) {
     this.#container = container;
     this.#editPointModel = editPointModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
-    this.#eventPoint = eventPoint;
+    this.#handleDataChange = onPointChange;
   }
 
-  init() {
+  init(point) {
+    this.#point = point;
     this.#editPoint = this.#editPointModel.get()[0];
     this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
     this.#offers = this.#offer.offers;
 
-    const pointComponent = new TripEventsItemView({
-      points: this.#eventPoint,
-      onClick: rollupBtnClick
+    const preventPointComponent = this.#pointComponent;
+    const preventEditComponent = this.#editComponent;
+
+    this.#pointComponent = new TripEventsItemView({
+      point: this.#point,
+      onClickRollupBtn: this.#rollupBtnClick,
+      onClickFavoriteBtn: this.#favoriteBtnClick,
     });
 
-    const editComponent = new EditPointView({
+    this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       offers: this.#offers,
       destination: this.#destination,
-      onSubmit: closeEditOpenPoint
+      onSubmit: this.#closeEditOpenPoint
     });
 
-    const escKeyEventEdit = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        closeEditOpenPoint();
-        document.removeEventListener('keydown', escKeyEventEdit);
-      }
-    };
-
-    function rollupBtnClick() {
-      replace(editComponent, pointComponent);
-      document.addEventListener('keydown', escKeyEventEdit);
+    // if (this.#container.contains(preventPointComponent)) {
+    if (preventPointComponent === null || preventEditComponent === null) {
+      render(this.#pointComponent, this.#container);
+      return;
     }
 
-    function closeEditOpenPoint() {
-      replace(pointComponent, editComponent);
+    if (this.#container.contains(preventPointComponent.element)) {
+      replace(this.#pointComponent, preventPointComponent);
     }
 
-    render(pointComponent, this.#container);
+    if (this.#container.contains(preventEditComponent.element)) {
+      replace(this.#editComponent, preventEditComponent);
+    }
   }
+
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#editComponent);
+  }
+
+  get(point) {
+    return this.init(point);
+  }
+
+  #escKeyEventEdit = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#closeEditOpenPoint();
+      document.removeEventListener('keydown', this.#escKeyEventEdit);
+    }
+  };
+
+  #rollupBtnClick = () => {
+    replace(this.#editComponent, this.#pointComponent);
+    document.addEventListener('keydown', this.#escKeyEventEdit);
+  };
+
+  // Submit
+
+  #closeEditOpenPoint = (point) => {
+    replace(this.#pointComponent, this.#editComponent);
+    // this.#handleDataChange(point);
+    document.removeEventListener('keydown', this.#escKeyEventEdit);
+  };
+
+  #favoriteBtnClick = () => {
+    console.log('оппа');
+    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+  };
 }

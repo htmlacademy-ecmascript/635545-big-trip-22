@@ -12,4 +12,6 @@ function dateDif(date1 , date2, format) {
   return dayjs(date1).diff(dayjs(date2), format);
 }
 
-export {getRandomArrayElement , humanizeTaskDueDate, dateDif};
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
+export {getRandomArrayElement , humanizeTaskDueDate, dateDif, updateItem};
