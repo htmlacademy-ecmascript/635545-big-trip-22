@@ -74,7 +74,8 @@ export default class TripEventsItemView extends AbstractView {
     this.#rollupBtnClick();
   };
 
-  #clickFavoriteBtn = () => {
+  #clickFavoriteBtn = (evt) => {
+    evt.preventDefault();
     this.#favoriteBtnClick();
   };
 }

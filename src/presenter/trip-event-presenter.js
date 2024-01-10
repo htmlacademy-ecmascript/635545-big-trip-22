@@ -71,9 +71,9 @@ export default class TripEventPresenter {
     remove(this.#editComponent);
   }
 
-  get(point) {
-    return this.init(point);
-  }
+  // get(point) {
+  //   return this.init(point);
+  // }
 
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
