@@ -15,10 +15,6 @@ export default class TripEventPresenter {
   #pointComponent = null;
   #editComponent = null;
   #handleDataChange = null;
-  // #escKeyEventEdit = null;
-  // #rollupBtnClick = null;
-  // #favoriteBtnClick = null;
-  // #closeEditOpenPoint = null;
 
   constructor({container, editPointModel, destinationModel, offersModel, onPointChange}) {
     this.#container = container;
@@ -51,7 +47,6 @@ export default class TripEventPresenter {
       onSubmit: this.#closeEditOpenPoint
     });
 
-    // if (this.#container.contains(preventPointComponent)) {
     if (preventPointComponent === null || preventEditComponent === null) {
       render(this.#pointComponent, this.#container);
       return;
@@ -71,10 +66,6 @@ export default class TripEventPresenter {
     remove(this.#editComponent);
   }
 
-  // get(point) {
-  //   return this.init(point);
-  // }
-
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
@@ -90,14 +81,12 @@ export default class TripEventPresenter {
 
   // Submit
 
-  #closeEditOpenPoint = (point) => {
+  #closeEditOpenPoint = () => {
     replace(this.#pointComponent, this.#editComponent);
-    // this.#handleDataChange(point);
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
 
   #favoriteBtnClick = () => {
-    console.log('оппа');
     this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 }

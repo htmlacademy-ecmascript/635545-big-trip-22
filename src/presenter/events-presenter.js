@@ -49,6 +49,10 @@ export default class EventsPresenter {
     });
   }
 
+  #resetPoint = () => {
+    console.log('надо сбрасывать');
+  };
+
   #renderPoint = (point) => {
     const tripEventPresenter = new TripEventPresenter({
       container: this.#tripEventsListComponent.element,
@@ -56,7 +60,6 @@ export default class EventsPresenter {
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
       onPointChange: this.#handleDataChange,
-      // eventPoint: this.#eventPoints[i],
     });
 
     tripEventPresenter.init(point);
