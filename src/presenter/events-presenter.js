@@ -1,11 +1,13 @@
 import {render} from '../framework/render.js';
 import SortView from '../view/sort.js';
 import TripEventsListView from '../view/trip-events-list.js';
+import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from '../presenter/trip-event-presenter.js';
 import {updateItem} from '../utils.js';
 
 export default class EventsPresenter {
   #sortComponent = new SortView();
+  #emptyListComponent = new EmptyListView();
   #tripEventsListComponent = new TripEventsListView();
   #container = null;
   #eventPointsModel = null;
@@ -22,9 +24,15 @@ export default class EventsPresenter {
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#eventPoints = [...this.#eventPointsModel.get()];
+    // this.#eventPoints = [];
   }
 
   init() {
+    if(!this.#eventPoints.length) {
+      this.#renderEmptyList();
+      return;
+    }
+
     this.#renderSort();
     this.#renderList();
   }
@@ -33,6 +41,10 @@ export default class EventsPresenter {
     this.#eventPoints = updateItem(this.#eventPoints, updatePoint);
     this.#pointsPresenter.get(updatePoint.id).init(updatePoint);
   };
+
+  #renderEmptyList() {
+    render(this.#emptyListComponent, this.#container);
+  }
 
   #renderSort() {
     render(this.#sortComponent, this.#container);
@@ -43,7 +55,7 @@ export default class EventsPresenter {
     this.#renderPoints();
   }
 
-  handleModeChange = () => {
+  #handleModeChange = () => {
     this.#pointsPresenter.forEach((presenter) => {
       presenter.resetView();
     });
@@ -62,7 +74,7 @@ export default class EventsPresenter {
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
       onPointChange: this.#handleDataChange,
-      onModeChange: this.handleModeChange
+      onModeChange: this.#handleModeChange
     });
 
     tripEventPresenter.init(point);
