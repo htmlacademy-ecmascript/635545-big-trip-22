@@ -25,10 +25,11 @@ export default class EventsPresenter {
     this.#offersModel = offersModel;
     this.#eventPoints = [...this.#eventPointsModel.get()];
     // this.#eventPoints = [];
+    this.eventPointsLength = this.#eventPoints.length;
   }
 
   init() {
-    if(!this.#eventPoints.length) {
+    if(!this.eventPointsLength) {
       this.#renderEmptyList();
       return;
     }
