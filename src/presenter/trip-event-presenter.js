@@ -1,6 +1,7 @@
-import {render, replace, remove} from '../framework/render.js';
+import {render, replace} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
+import {Mode} from '../const.js';
 
 export default class TripEventPresenter {
   #container = null;
@@ -15,13 +16,25 @@ export default class TripEventPresenter {
   #pointComponent = null;
   #editComponent = null;
   #handleDataChange = null;
+  #mode = Mode.DEFAULT;
+  #handleModeChange = null;
+  // #resetPoint = null;
 
-  constructor({container, editPointModel, destinationModel, offersModel, onPointChange}) {
+  constructor({
+    container,
+    editPointModel,
+    destinationModel,
+    offersModel,
+    onPointChange,
+    onModeChange
+  }) {
     this.#container = container;
     this.#editPointModel = editPointModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
+    this.#handleModeChange = onModeChange;
+    // this.#resetPoint = resetPoint;
   }
 
   init(point) {
@@ -52,19 +65,19 @@ export default class TripEventPresenter {
       return;
     }
 
-    if (this.#container.contains(preventPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, preventPointComponent);
     }
 
-    if (this.#container.contains(preventEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#editComponent, preventEditComponent);
     }
   }
 
-  destroy() {
-    remove(this.#pointComponent);
-    remove(this.#editComponent);
-  }
+  // destroy() {
+  //   remove(this.#pointComponent);
+  //   remove(this.#editComponent);
+  // }
 
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
@@ -75,14 +88,31 @@ export default class TripEventPresenter {
   };
 
   #rollupBtnClick = () => {
-    replace(this.#editComponent, this.#pointComponent);
+    this.#replacePointToEditor();
     document.addEventListener('keydown', this.#escKeyEventEdit);
+  };
+
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceEditorToPoint();
+    }
+  };
+
+  #replaceEditorToPoint = () => {
+    replace(this.#pointComponent, this.#editComponent);
+    this.#mode = Mode.DEFAULT;
+  };
+
+  #replacePointToEditor = () => {
+    replace(this.#editComponent, this.#pointComponent);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   };
 
   // Submit
 
   #closeEditOpenPoint = () => {
-    replace(this.#pointComponent, this.#editComponent);
+    this.#replaceEditorToPoint();
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
 

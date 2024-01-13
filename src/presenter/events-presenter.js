@@ -43,15 +43,17 @@ export default class EventsPresenter {
     this.#renderPoints();
   }
 
+  handleModeChange = () => {
+    this.#pointsPresenter.forEach((presenter) => {
+      presenter.resetView();
+    });
+  };
+
   #renderPoints() {
     this.#eventPoints.forEach((point) => {
       this.#renderPoint(point);
     });
   }
-
-  #resetPoint = () => {
-    console.log('надо сбрасывать');
-  };
 
   #renderPoint = (point) => {
     const tripEventPresenter = new TripEventPresenter({
@@ -60,6 +62,7 @@ export default class EventsPresenter {
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
       onPointChange: this.#handleDataChange,
+      onModeChange: this.handleModeChange
     });
 
     tripEventPresenter.init(point);
