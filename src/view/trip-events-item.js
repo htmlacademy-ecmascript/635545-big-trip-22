@@ -2,8 +2,8 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate, dateDif} from '../utils.js';
 import {DATE_FORMAT_DAY_MONTH, DATE_FORMAT_YEAR_DAY_MONTH, DATE_FORMAT_HOURS_MINUTE} from '../const.js';
 
-function createTripEventsItemTemplate(points) {
-  const { basePrice, dateFrom, dateTo} = points;
+function createTripEventsItemTemplate(point) {
+  const { basePrice, dateFrom, dateTo, isFavorite} = point;
 
   const dateStartDayMonth = humanizeTaskDueDate(dateFrom, DATE_FORMAT_DAY_MONTH);
   const dateStartDatetime = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH);
@@ -37,7 +37,7 @@ function createTripEventsItemTemplate(points) {
             <span class="event__offer-price">20</span>
           </li>
         </ul>
-        <button class="event__favorite-btn event__favorite-btn--active" type="button">
+        <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
             <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -52,22 +52,30 @@ function createTripEventsItemTemplate(points) {
 }
 
 export default class TripEventsItemView extends AbstractView {
-  #points = null;
+  #point = null;
   #rollupBtnClick = null;
+  #favoriteBtnClick = null;
 
-  constructor({points, onClick}) {
+  constructor({point, onClickRollupBtn, onClickFavoriteBtn}) {
     super();
-    this.#points = points;
-    this.#rollupBtnClick = onClick;
+    this.#point = point;
+    this.#rollupBtnClick = onClickRollupBtn;
+    this.#favoriteBtnClick = onClickFavoriteBtn;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickRollupBtn);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#clickFavoriteBtn);
   }
 
   get template() {
-    return createTripEventsItemTemplate(this.#points);
+    return createTripEventsItemTemplate(this.#point);
   }
 
   #clickRollupBtn = (evt) => {
     evt.preventDefault();
     this.#rollupBtnClick();
+  };
+
+  #clickFavoriteBtn = (evt) => {
+    evt.preventDefault();
+    this.#favoriteBtnClick();
   };
 }

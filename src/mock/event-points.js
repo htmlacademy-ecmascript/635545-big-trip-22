@@ -38,4 +38,4 @@ function getRandomEventPointsMock() {
   return getRandomArrayElement(eventPointsMock);
 }
 
-export { getRandomEventPointsMock };
+export { getRandomEventPointsMock, eventPointsMock };
