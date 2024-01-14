@@ -46,6 +46,29 @@ const SortTypes = [
   },
 ];
 
+const FilterTypes = [
+  {
+    type: 'everything',
+    isDisabled: false,
+    isChecked: true,
+  },
+  {
+    type: 'future',
+    isDisabled: false,
+    isChecked: false,
+  },
+  {
+    type: 'present',
+    isDisabled: false,
+    isChecked: false,
+  },
+  {
+    type: 'past',
+    isDisabled: false,
+    isChecked: false,
+  },
+];
+
 export {
   POINT_TYPE,
   CITY,
@@ -57,4 +80,5 @@ export {
   Mode,
   EmptyListText,
   SortTypes,
+  FilterTypes,
 };
