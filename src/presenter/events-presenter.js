@@ -6,7 +6,6 @@ import TripEventPresenter from '../presenter/trip-event-presenter.js';
 import {updateItem} from '../utils.js';
 
 export default class EventsPresenter {
-  #sortComponent = new SortView();
   #emptyListComponent = new EmptyListView();
   #tripEventsListComponent = new TripEventsListView();
   #container = null;
@@ -14,6 +13,8 @@ export default class EventsPresenter {
   #editPointModel = null;
   #destinationModel = null;
   #offersModel = null;
+  // #clickSort = null;
+  #sortComponent = null;
   #eventPoints = [];
   #pointsPresenter = new Map();
 
@@ -34,9 +35,17 @@ export default class EventsPresenter {
       return;
     }
 
+    this.#sortComponent = new SortView({
+      onSort: this.#clickSort,
+    });
+
     this.#renderSort();
     this.#renderList();
   }
+
+  #clickSort = () => {
+    console.log('оппа');
+  };
 
   #handleDataChange = (updatePoint) => {
     this.#eventPoints = updateItem(this.#eventPoints, updatePoint);
