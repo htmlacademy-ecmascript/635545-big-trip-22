@@ -31,7 +31,7 @@ export default class MainPresenter {
   init() {
     eventsPresenter.init();
     filtersPresenter.init();
-    if(eventsPresenter.eventPointsLength) {
+    if(eventPointsModel.get().length) {
       headerInfoPresenter.init();
     }
   }

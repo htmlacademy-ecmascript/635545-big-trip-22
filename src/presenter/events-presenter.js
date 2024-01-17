@@ -26,11 +26,10 @@ export default class EventsPresenter {
     this.#offersModel = offersModel;
     this.#eventPoints = [...this.#eventPointsModel.get()];
     // this.#eventPoints = [];
-    this.eventPointsLength = this.#eventPoints.length;
   }
 
   init() {
-    if(!this.eventPointsLength) {
+    if(!this.#eventPoints.length) {
       this.#renderEmptyList();
       return;
     }
@@ -44,7 +43,7 @@ export default class EventsPresenter {
   }
 
   #clickSort = () => {
-    console.log('оппа');
+    // console.log('оппа');
   };
 
   #handleDataChange = (updatePoint) => {
