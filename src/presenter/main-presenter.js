@@ -21,7 +21,10 @@ const eventsPresenter = new EventsPresenter({
   destinationModel,
   offersModel
 });
-const filtersPresenter = new FiltersPresenter({container: tripControlsFilters});
+const filtersPresenter = new FiltersPresenter({
+  container: tripControlsFilters,
+  pointsModel: eventPointsModel,
+});
 const headerInfoPresenter = new HeaderInfoPresenter({container: tripMainElement, place: RenderPosition.AFTERBEGIN});
 
 export default class MainPresenter {

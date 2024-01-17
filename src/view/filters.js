@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {FilterTypes} from '../const.js';
 
 function createFiltersRowTemplate(types) {
   return types.reduce(
@@ -13,7 +12,7 @@ function createFiltersRowTemplate(types) {
   );
 }
 
-function createFiltersTemplate() {
+function createFiltersTemplate(FilterTypes) {
   return (
     `<form class="trip-filters" action="#" method="get">
       ${createFiltersRowTemplate(FilterTypes)}
@@ -23,7 +22,14 @@ function createFiltersTemplate() {
 }
 
 export default class FiltersView extends AbstractView {
+  #items = [];
+
+  constructor({items}) {
+    super();
+    this.#items = items;
+  }
+
   get template() {
-    return createFiltersTemplate();
+    return createFiltersTemplate(this.#items);
   }
 }

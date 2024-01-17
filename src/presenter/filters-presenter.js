@@ -1,15 +1,25 @@
 import {render} from '../framework/render.js';
 import FiltersView from '../view/filters.js';
+import {filter} from '../utils.js';
 
 export default class FiltersPresenter {
-  #filterComponent = new FiltersView();
   #container = null;
+  #pointsModel = [];
+  #filters = [];
 
-  constructor({container}) {
+  constructor({container, pointsModel}) {
     this.#container = container;
+    this.#pointsModel = pointsModel;
+    this.#filters = Object.entries(filter).map(
+      ([filterType, filterPoints], index) => ({
+        type: filterType,
+        isChecked: index === 0,
+        isDisabled: !filterPoints(this.#pointsModel.get()).length,
+      })
+    );
   }
 
   init() {
-    render(this.#filterComponent, this.#container);
+    render(new FiltersView({items: this.#filters}), this.#container);
   }
 }

@@ -46,28 +46,12 @@ const SortTypes = [
   },
 ];
 
-const FilterTypes = [
-  {
-    type: 'everything',
-    isDisabled: false,
-    isChecked: true,
-  },
-  {
-    type: 'future',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'present',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'past',
-    isDisabled: false,
-    isChecked: false,
-  },
-];
+const FilterTypes = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
 
 export {
   POINT_TYPE,
