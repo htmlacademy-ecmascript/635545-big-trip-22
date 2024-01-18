@@ -2,7 +2,7 @@ import {render} from '../framework/render.js';
 import SortView from '../view/sort.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
-import TripEventPresenter from '../presenter/trip-event-presenter.js';
+import TripEventPresenter from './event-presenter.js';
 import {updateItem} from '../utils.js';
 
 export default class EventsPresenter {

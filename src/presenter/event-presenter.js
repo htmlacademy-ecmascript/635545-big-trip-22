@@ -60,7 +60,7 @@ export default class TripEventPresenter {
       onSubmit: this.#closeEditOpenPoint
     });
 
-    if (preventPointComponent === null || preventEditComponent === null) {
+    if (!preventPointComponent || !preventEditComponent) {
       render(this.#pointComponent, this.#container);
       return;
     }
