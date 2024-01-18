@@ -43,6 +43,7 @@ export default class EventsPresenter {
     const sortPresenter = new SortPresenter({
       container: this.#container,
       sortTypeHandler: this.#sortTypesChangeHandler,
+      defaultSortType: this.#defaultSortType,
     });
     sortPresenter.init();
   }

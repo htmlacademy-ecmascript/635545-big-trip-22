@@ -5,14 +5,15 @@ import {SortTypes, enabledSortTypes} from '../const.js';
 export default class SortPresenter {
   #container = null;
   #sortTypes = [];
-  #currentSortType = SortTypes.DAY;
+  #defaultSortType = null;
   #sortTypeChangeHandler = null;
 
-  constructor({container, sortTypeHandler}) {
+  constructor({container, sortTypeHandler, defaultSortType}) {
     this.#container = container;
+    this.#defaultSortType = defaultSortType;
     this.#sortTypes = Object.values(SortTypes).map((type) => ({
       type,
-      isChecked: type === this.#currentSortType,
+      isChecked: type === this.#defaultSortType,
       isDisabled: !enabledSortTypes[type],
     }));
     this.#sortTypeChangeHandler = sortTypeHandler;
