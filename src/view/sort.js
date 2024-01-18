@@ -10,7 +10,7 @@ function createSortRowTemplate(types) {
           type="radio"
           name="trip-sort"
           value="sort-${type}"
-          data-sort="${type}"
+          data-item="${type}"
           ${isDisabled ? 'disabled' : ''}
           ${isChecked ? 'checked' : ''}
         >
@@ -30,24 +30,22 @@ function createSortTemplate(types) {
 }
 
 export default class SortView extends AbstractView {
-  // #clickSortBtn = null;
   #sortTypes = [];
+  #handleItemChange = null;
 
-  constructor({item}) {
+  constructor({item, onItemChange}) {
     super();
     this.#sortTypes = item;
-    // this.#clickSortBtn = onSort;
-    // this.element.querySelectorAll('.trip-sort__item').forEach((item) => {
-    //   item.addEventListener('click', this.#clickSort);
-    // });
+    this.#handleItemChange = onItemChange;
+    this.element.addEventListener('change' , this.#itemChangeHandler);
   }
+
+  #itemChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleItemChange?.(evt.target.dataset.item);
+  };
 
   get template() {
     return createSortTemplate(this.#sortTypes);
   }
-
-  // #clickSort = () => {
-  //   console.log(this);
-  //   this.#clickSortBtn();
-  // };
 }

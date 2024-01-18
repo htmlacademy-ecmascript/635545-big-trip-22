@@ -3,7 +3,8 @@ import TripEventsListView from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import {updateItem} from '../utils.js';
+import {sorting, updateItem} from '../utils.js';
+import { SortTypes } from '../const.js';
 
 export default class EventsPresenter {
   #emptyListComponent = new EmptyListView();
@@ -15,6 +16,8 @@ export default class EventsPresenter {
   #offersModel = null;
   #eventPoints = [];
   #pointsPresenter = new Map();
+  #currentSortType = null;
+  #defaultSortType = SortTypes.DAY;
 
   constructor({container, eventPointsModel, editPointModel, destinationModel, offersModel}) {
     this.#container = container;
@@ -32,14 +35,27 @@ export default class EventsPresenter {
       return;
     }
 
-    new SortPresenter(
-      {
-        container: this.#container,
-      }
-    ).init();
-
+    this.#renderSort();
     this.#renderList();
   }
+
+  #renderSort() {
+    const sortPresenter = new SortPresenter({
+      container: this.#container,
+      sortTypeHandler: this.#sortTypesChangeHandler,
+    });
+    sortPresenter.init();
+  }
+
+  #sortPoints = (sortType) => {
+    this.#currentSortType = sortType;
+    this.#eventPoints = sorting[this.#currentSortType](this.#eventPoints);
+  };
+
+  #clearPoints = () => {
+    this.#pointsPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenter.clear();
+  };
 
   #handleDataChange = (updatePoint) => {
     this.#eventPoints = updateItem(this.#eventPoints, updatePoint);
@@ -52,8 +68,14 @@ export default class EventsPresenter {
 
   #renderList() {
     render(this.#tripEventsListComponent, this.#container);
-    this.#renderPoints();
+    this.#sortTypesChangeHandler(this.#defaultSortType);
   }
+
+  #sortTypesChangeHandler = (sortType) => {
+    this.#sortPoints(sortType);
+    this.#clearPoints();
+    this.#renderPoints();
+  };
 
   #handleModeChange = () => {
     this.#pointsPresenter.forEach((presenter) => {
