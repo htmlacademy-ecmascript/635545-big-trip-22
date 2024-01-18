@@ -18,7 +18,7 @@ const EmptyListText = {
   Future: 'There are no future events now',
 };
 
-const SortTypes = [
+const SortTypes2 = [
   {
     type: 'day',
     isDisabled: false,
@@ -46,6 +46,22 @@ const SortTypes = [
   },
 ];
 
+const SortTypes = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer',
+};
+
+const enabledSortTypes = {
+  [SortTypes.DAY]: true,
+  [SortTypes.EVENT]: false,
+  [SortTypes.TIME]: true,
+  [SortTypes.PRICE]: true,
+  [SortTypes.OFFER]: false,
+};
+
 const FilterTypes = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -64,5 +80,7 @@ export {
   Mode,
   EmptyListText,
   SortTypes,
+  SortTypes2,
   FilterTypes,
+  enabledSortTypes,
 };

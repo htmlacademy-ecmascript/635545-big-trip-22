@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {SortTypes} from '../const.js';
+import {SortTypes2} from '../const.js';
 
 function createSortRowTemplate(types) {
   return types.reduce(
@@ -25,7 +25,7 @@ function createSortRowTemplate(types) {
 function createSortTemplate() {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${createSortRowTemplate(SortTypes)}
+      ${createSortRowTemplate(SortTypes2)}
     </form>`
   );
 }

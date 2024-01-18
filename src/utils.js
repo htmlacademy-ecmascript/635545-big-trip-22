@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import {FilterTypes} from './const.js';
+import {SortTypes} from './const.js';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -26,4 +27,30 @@ const filter = {
   [FilterTypes.PAST]: (points) => points.filter(isPointPast),
 };
 
-export {getRandomArrayElement , humanizeTaskDueDate, dateDif, updateItem, filter};
+const getPointsByDate = (pointA, pointB) =>
+  dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
+const getPointsByTime = (pointA, pointB) =>
+  dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom)) - dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+const getPointsByPrice = (pointA, pointB) =>
+  pointB.basePrice - pointA.basePrice;
+
+const sorting = {
+  [SortTypes.DAY]: (points) => [...points].sort(getPointsByDate),
+  [SortTypes.EVENT]: () => {
+    throw new Error(`Sort by ${SortTypes.EVENT} is disabled`);
+  },
+  [SortTypes.TIME]: (points) => [...points].sort(getPointsByTime),
+  [SortTypes.PRICE]: (points) => [...points].sort(getPointsByPrice),
+  [SortTypes.OFFER]: () => {
+    throw new Error(`Sort by ${SortTypes.OFFER} is disabled`);
+  }
+};
+
+export {
+  getRandomArrayElement,
+  humanizeTaskDueDate,
+  dateDif,
+  updateItem,
+  filter,
+  sorting,
+};
