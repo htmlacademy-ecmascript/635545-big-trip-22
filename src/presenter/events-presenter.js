@@ -1,8 +1,8 @@
 import {render} from '../framework/render.js';
-import SortView from '../view/sort.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
+import SortPresenter from './sort-presenter.js';
 import {updateItem} from '../utils.js';
 
 export default class EventsPresenter {
@@ -13,8 +13,6 @@ export default class EventsPresenter {
   #editPointModel = null;
   #destinationModel = null;
   #offersModel = null;
-  // #clickSort = null;
-  #sortComponent = null;
   #eventPoints = [];
   #pointsPresenter = new Map();
 
@@ -34,17 +32,14 @@ export default class EventsPresenter {
       return;
     }
 
-    this.#sortComponent = new SortView({
-      onSort: this.#clickSort,
-    });
+    new SortPresenter(
+      {
+        container: this.#container,
+      }
+    ).init();
 
-    this.#renderSort();
     this.#renderList();
   }
-
-  #clickSort = () => {
-    // console.log('оппа');
-  };
 
   #handleDataChange = (updatePoint) => {
     this.#eventPoints = updateItem(this.#eventPoints, updatePoint);
@@ -53,10 +48,6 @@ export default class EventsPresenter {
 
   #renderEmptyList() {
     render(this.#emptyListComponent, this.#container);
-  }
-
-  #renderSort() {
-    render(this.#sortComponent, this.#container);
   }
 
   #renderList() {

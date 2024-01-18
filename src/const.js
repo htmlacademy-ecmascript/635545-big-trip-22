@@ -79,8 +79,8 @@ export {
   DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE,
   Mode,
   EmptyListText,
+  FilterTypes,
   SortTypes,
   SortTypes2,
-  FilterTypes,
   enabledSortTypes,
 };

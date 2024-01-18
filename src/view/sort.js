@@ -31,22 +31,22 @@ function createSortTemplate() {
 }
 
 export default class SortView extends AbstractView {
-  #clickSortBtn = null;
+  // #clickSortBtn = null;
 
-  constructor({onSort}) {
+  constructor() {
     super();
-    this.#clickSortBtn = onSort;
-    this.element.querySelectorAll('.trip-sort__item').forEach((item) => {
-      item.addEventListener('click', this.#clickSort);
-    });
+    // this.#clickSortBtn = onSort;
+    // this.element.querySelectorAll('.trip-sort__item').forEach((item) => {
+    //   item.addEventListener('click', this.#clickSort);
+    // });
   }
 
   get template() {
     return createSortTemplate();
   }
 
-  #clickSort = () => {
-    console.log(this);
-    this.#clickSortBtn();
-  };
+  // #clickSort = () => {
+  //   console.log(this);
+  //   this.#clickSortBtn();
+  // };
 }
