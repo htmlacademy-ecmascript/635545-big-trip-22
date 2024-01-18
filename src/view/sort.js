@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {SortTypes2} from '../const.js';
 
 function createSortRowTemplate(types) {
   return types.reduce(
@@ -22,19 +21,21 @@ function createSortRowTemplate(types) {
   );
 }
 
-function createSortTemplate() {
+function createSortTemplate(types) {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${createSortRowTemplate(SortTypes2)}
+      ${createSortRowTemplate(types)}
     </form>`
   );
 }
 
 export default class SortView extends AbstractView {
   // #clickSortBtn = null;
+  #sortTypes = [];
 
-  constructor() {
+  constructor({item}) {
     super();
+    this.#sortTypes = item;
     // this.#clickSortBtn = onSort;
     // this.element.querySelectorAll('.trip-sort__item').forEach((item) => {
     //   item.addEventListener('click', this.#clickSort);
@@ -42,7 +43,7 @@ export default class SortView extends AbstractView {
   }
 
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#sortTypes);
   }
 
   // #clickSort = () => {

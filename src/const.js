@@ -18,34 +18,6 @@ const EmptyListText = {
   Future: 'There are no future events now',
 };
 
-const SortTypes2 = [
-  {
-    type: 'day',
-    isDisabled: false,
-    isChecked: true,
-  },
-  {
-    type: 'event',
-    isDisabled: true,
-    isChecked: false,
-  },
-  {
-    type: 'time',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'price',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'offer',
-    isDisabled: true,
-    isChecked: false,
-  },
-];
-
 const SortTypes = {
   DAY: 'day',
   EVENT: 'event',
@@ -81,6 +53,5 @@ export {
   EmptyListText,
   FilterTypes,
   SortTypes,
-  SortTypes2,
   enabledSortTypes,
 };
