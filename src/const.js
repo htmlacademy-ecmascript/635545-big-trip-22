@@ -18,56 +18,28 @@ const EmptyListText = {
   Future: 'There are no future events now',
 };
 
-const SortTypes = [
-  {
-    type: 'day',
-    isDisabled: false,
-    isChecked: true,
-  },
-  {
-    type: 'event',
-    isDisabled: true,
-    isChecked: false,
-  },
-  {
-    type: 'time',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'price',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'offer',
-    isDisabled: true,
-    isChecked: false,
-  },
-];
+const SortTypes = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer',
+};
 
-const FilterTypes = [
-  {
-    type: 'everything',
-    isDisabled: false,
-    isChecked: true,
-  },
-  {
-    type: 'future',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'present',
-    isDisabled: false,
-    isChecked: false,
-  },
-  {
-    type: 'past',
-    isDisabled: false,
-    isChecked: false,
-  },
-];
+const enabledSortTypes = {
+  [SortTypes.DAY]: true,
+  [SortTypes.EVENT]: false,
+  [SortTypes.TIME]: true,
+  [SortTypes.PRICE]: true,
+  [SortTypes.OFFER]: false,
+};
+
+const FilterTypes = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
 
 export {
   POINT_TYPE,
@@ -79,6 +51,7 @@ export {
   DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE,
   Mode,
   EmptyListText,
-  SortTypes,
   FilterTypes,
+  SortTypes,
+  enabledSortTypes,
 };
