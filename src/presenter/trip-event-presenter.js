@@ -82,6 +82,7 @@ export default class TripEventPresenter {
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editComponent.reset(this.#editPoint);
       this.#closeEditOpenPoint();
       document.removeEventListener('keydown', this.#escKeyEventEdit);
     }
@@ -112,6 +113,7 @@ export default class TripEventPresenter {
   // Submit
 
   #closeEditOpenPoint = () => {
+    this.#editComponent.reset(this.#editPoint);
     this.#replaceEditorToPoint();
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };

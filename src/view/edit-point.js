@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate} from '../utils.js';
 import {DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
 
@@ -8,11 +8,11 @@ function createEditPointTemplate(editPoint, offers, destination) {
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
 
-  function selectorItemTemplate (title, price) {
+  function selectorItemTemplate (id, title, price) {
     return `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-        <label class="event__offer-label" for="event-offer-luggage-1">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" checked>
+        <label class="event__offer-label" for="event-offer-luggage-${id}" data-offer-id="${id}">
           <span class="event__offer-title">${title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${price}</span>
@@ -22,7 +22,7 @@ function createEditPointTemplate(editPoint, offers, destination) {
   }
 
   function selectorListTemplate () {
-    return offers.reduce((sum, current) => sum + selectorItemTemplate(current.title, current.price), '');
+    return offers.reduce((sum, current) => sum + selectorItemTemplate(current.id, current.title, current.price), '');
   }
 
   return (
@@ -141,8 +141,7 @@ function createEditPointTemplate(editPoint, offers, destination) {
   );
 }
 
-
-export default class EditPointView extends AbstractView {
+export default class EditPointView extends AbstractStatefulView {
   #editPoint = null;
   #offers = null;
   #destination = null;
@@ -154,16 +153,52 @@ export default class EditPointView extends AbstractView {
     this.#offers = offers;
     this.#destination = destination;
     this.#saveBtnSubmit = onSubmit;
-    this.element.addEventListener('submit', this.#submitSaveBtn);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#submitSaveBtn);
+    console.log(offers);
+    this._setState(EditPointView.pasrsePointToState({editPoint: editPoint}));
+    this._restoreHandlers();
   }
 
   get template() {
     return createEditPointTemplate(this.#editPoint, this.#offers, this.#destination);
   }
 
+  reset = (editPoint) => this.updateElement({editPoint});
+
   #submitSaveBtn = (evt) => {
     evt.preventDefault();
     this.#saveBtnSubmit();
+  };
+
+  static pasrsePointToState = ({editPoint}) => ({editPoint});
+
+  _restoreHandlers = () => {
+    this.element.addEventListener('submit', this.#submitSaveBtn);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#submitSaveBtn);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+  };
+
+  // #formSubmitHandler = (evt) => {
+  // }
+
+  #typeChangeHandler = (evt) => {
+    this.updateElement({editPoint: {...this._state.editPoint, type: evt.target.value, offers: []}});
+  };
+
+  #destinationHandler = (evt) => {
+    const selected = this.#destination.find((pointDestination) => pointDestination.name === evt.target.value);
+    const selectedId = (selected) ? selected.id : null;
+    this.updateElement({editPoint: {...this._state.editPoint, destination: selectedId}});
+  };
+
+  #offerChangeHandler = () => {
+    const checkedBoxes = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    this._setState({editPoint: {...this._state.editPoint, offers: checkedBoxes.map((item) => item.datset.offerId)}});
+  };
+
+  #priceChangeHandler = (evt) => {
+    this._setState({editPoint: {...this._state.editPoint, basePoint: evt.target.valueAsNumber}});
   };
 }
