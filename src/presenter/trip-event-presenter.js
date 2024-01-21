@@ -53,8 +53,6 @@ export default class TripEventPresenter {
       onClickRollupBtn: this.#rollupBtnClick,
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
-    console.log(this.#point);
-    console.log(this.#editPoint);
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       offers: this.#offers,
@@ -84,7 +82,7 @@ export default class TripEventPresenter {
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      // this.#editComponent.reset(this.#editPoint);
+      this.#editComponent.reset(this.#editPoint);
       this.#closeEditOpenPoint();
       document.removeEventListener('keydown', this.#escKeyEventEdit);
     }
@@ -115,7 +113,8 @@ export default class TripEventPresenter {
   // Submit
 
   #closeEditOpenPoint = () => {
-    // this.#editComponent.reset(this.#editPoint);
+    // console.log(this.#editPoint);
+    this.#editComponent.reset(this.#editPoint);
     this.#replaceEditorToPoint();
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };

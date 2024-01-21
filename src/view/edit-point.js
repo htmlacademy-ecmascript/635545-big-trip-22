@@ -153,7 +153,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destination = destination;
     this.#saveBtnSubmit = onSubmit;
-    // this._setState(EditPointView.pasrsePointToState({editPoint: editPoint}));
+    this._setState(EditPointView.pasrsePointToState({editPoint: editPoint}));
     this._restoreHandlers();
   }
 
@@ -161,7 +161,7 @@ export default class EditPointView extends AbstractStatefulView {
     return createEditPointTemplate(this.#editPoint, this.#offers, this.#destination);
   }
 
-  // reset = (editPoint) => this.updateElement({editPoint});
+  reset = (editPoint) => this.updateElement({editPoint});
 
   #submitSaveBtn = (evt) => {
     evt.preventDefault();
@@ -183,31 +183,30 @@ export default class EditPointView extends AbstractStatefulView {
   // }
 
   #typeChangeHandler = (evt) => {
-    // this.updateElement({
-    //   editPoint: {
-    //     ...this._state.editPoint,
-    //     type: evt.target.value,
-    //     offers: []
-    //   }
-    // });
+    this.updateElement({
+      editPoint: {
+        ...this._state.editPoint,
+        type: evt.target.value,
+        offers: []
+      }
+    });
   };
 
   #destinationHandler = (evt) => {
-    // const selected = this.#destination.find((pointDestination) => pointDestination.name === evt.target.value);
-    // const selectedId = (selected) ? selected.id : null;
-    // this.updateElement({editPoint: {...this._state.editPoint, destination: selectedId}});
+    const selected = this.#destination.find((pointDestination) => pointDestination.name === evt.target.value);
+    const selectedId = (selected) ? selected.id : null;
+    this.updateElement({editPoint: {...this._state.editPoint, destination: selectedId}});
   };
 
   #offerChangeHandler = () => {
-    // const checkedBoxes = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-    // this._setState({editPoint: {...this._state.editPoint, offers: checkedBoxes.map((item) => item.dataset.offerId)}});
+    const checkedBoxes = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    this._setState({editPoint: {...this._state.editPoint, offers: checkedBoxes.map((item) => item.dataset.offerId)}});
   };
 
   #priceChangeHandler = (evt) => {
-    // console.log(evt.target.value);
-    // this._setState({
-    //   editPoint: {...this._state.editPoint, basePrice: evt.target.value}
-    // });
-    // console.log(this._state);
+    this._setState({
+    // this.updateElement({
+      editPoint: {...this._state.editPoint, basePrice: evt.target.value}
+    });
   };
 }
