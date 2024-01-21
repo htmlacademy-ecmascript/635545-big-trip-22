@@ -39,20 +39,22 @@ export default class TripEventPresenter {
 
   init(point) {
     this.#point = point;
-    this.#editPoint = this.#editPointModel.get()[0];
+    // this.#editPoint = this.#editPointModel.get()[0];
+    this.#editPoint = this.#point;
     this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
     this.#offers = this.#offer.offers;
 
     const preventPointComponent = this.#pointComponent;
     const preventEditComponent = this.#editComponent;
-
     this.#pointComponent = new TripEventsItemView({
       point: this.#point,
+      destination: this.#destination,
       onClickRollupBtn: this.#rollupBtnClick,
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
-
+    console.log(this.#point);
+    console.log(this.#editPoint);
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       offers: this.#offers,
@@ -82,7 +84,7 @@ export default class TripEventPresenter {
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#editComponent.reset(this.#editPoint);
+      // this.#editComponent.reset(this.#editPoint);
       this.#closeEditOpenPoint();
       document.removeEventListener('keydown', this.#escKeyEventEdit);
     }
@@ -113,7 +115,7 @@ export default class TripEventPresenter {
   // Submit
 
   #closeEditOpenPoint = () => {
-    this.#editComponent.reset(this.#editPoint);
+    // this.#editComponent.reset(this.#editPoint);
     this.#replaceEditorToPoint();
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };

@@ -32,7 +32,7 @@ function createEditPointTemplate(editPoint, offers, destination) {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -113,7 +113,7 @@ function createEditPointTemplate(editPoint, offers, destination) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -153,8 +153,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destination = destination;
     this.#saveBtnSubmit = onSubmit;
-    console.log(offers);
-    this._setState(EditPointView.pasrsePointToState({editPoint: editPoint}));
+    // this._setState(EditPointView.pasrsePointToState({editPoint: editPoint}));
     this._restoreHandlers();
   }
 
@@ -162,7 +161,7 @@ export default class EditPointView extends AbstractStatefulView {
     return createEditPointTemplate(this.#editPoint, this.#offers, this.#destination);
   }
 
-  reset = (editPoint) => this.updateElement({editPoint});
+  // reset = (editPoint) => this.updateElement({editPoint});
 
   #submitSaveBtn = (evt) => {
     evt.preventDefault();
@@ -184,21 +183,31 @@ export default class EditPointView extends AbstractStatefulView {
   // }
 
   #typeChangeHandler = (evt) => {
-    this.updateElement({editPoint: {...this._state.editPoint, type: evt.target.value, offers: []}});
+    // this.updateElement({
+    //   editPoint: {
+    //     ...this._state.editPoint,
+    //     type: evt.target.value,
+    //     offers: []
+    //   }
+    // });
   };
 
   #destinationHandler = (evt) => {
-    const selected = this.#destination.find((pointDestination) => pointDestination.name === evt.target.value);
-    const selectedId = (selected) ? selected.id : null;
-    this.updateElement({editPoint: {...this._state.editPoint, destination: selectedId}});
+    // const selected = this.#destination.find((pointDestination) => pointDestination.name === evt.target.value);
+    // const selectedId = (selected) ? selected.id : null;
+    // this.updateElement({editPoint: {...this._state.editPoint, destination: selectedId}});
   };
 
   #offerChangeHandler = () => {
-    const checkedBoxes = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-    this._setState({editPoint: {...this._state.editPoint, offers: checkedBoxes.map((item) => item.datset.offerId)}});
+    // const checkedBoxes = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    // this._setState({editPoint: {...this._state.editPoint, offers: checkedBoxes.map((item) => item.dataset.offerId)}});
   };
 
   #priceChangeHandler = (evt) => {
-    this._setState({editPoint: {...this._state.editPoint, basePoint: evt.target.valueAsNumber}});
+    // console.log(evt.target.value);
+    // this._setState({
+    //   editPoint: {...this._state.editPoint, basePrice: evt.target.value}
+    // });
+    // console.log(this._state);
   };
 }
