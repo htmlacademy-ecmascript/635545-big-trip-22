@@ -56,7 +56,9 @@ export default class TripEventPresenter {
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       offers: this.#offers,
+      currentOffers: this.#offersModel.getByType(point.type),
       destination: this.#destination,
+      currentDestination: this.#destinationModel.getById(point.destination),
       onSubmit: this.#closeEditOpenPoint
     });
 
