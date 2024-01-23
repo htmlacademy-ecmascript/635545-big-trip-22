@@ -18,7 +18,6 @@ export default class TripEventPresenter {
   #handleDataChange = null;
   #mode = Mode.DEFAULT;
   #handleModeChange = null;
-  // #resetPoint = null;
 
   constructor({
     container,
@@ -34,12 +33,12 @@ export default class TripEventPresenter {
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
     this.#handleModeChange = onModeChange;
-    // this.#resetPoint = resetPoint;
   }
 
   init(point) {
     this.#point = point;
-    this.#editPoint = this.#editPointModel.get()[0];
+    // this.#editPoint = this.#editPointModel.get()[0];
+    this.#editPoint = this.#point;
     this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
     this.#offers = this.#offer.offers;
@@ -49,15 +48,18 @@ export default class TripEventPresenter {
 
     this.#pointComponent = new TripEventsItemView({
       point: this.#point,
+      destination: this.#destination,
+      arrOffers: this.#offersModel.get(),
       onClickRollupBtn: this.#rollupBtnClick,
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
 
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
-      offers: this.#offers,
-      destination: this.#destination,
-      onSubmit: this.#closeEditOpenPoint
+      arrDestinations: this.#destinationModel.get(),
+      arrOffers: this.#offersModel.get(),
+      onSubmit: this.#closeAndSaveEditOpenPoint,
+      onClose: this.#closeEditOpenPoint
     });
 
     if (!preventPointComponent || !preventEditComponent) {
@@ -82,6 +84,7 @@ export default class TripEventPresenter {
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      // this.#editComponent.reset(this.#editPoint);
       this.#closeEditOpenPoint();
       document.removeEventListener('keydown', this.#escKeyEventEdit);
     }
@@ -109,10 +112,19 @@ export default class TripEventPresenter {
     this.#mode = Mode.EDITING;
   };
 
-  // Submit
+  // Close
 
   #closeEditOpenPoint = () => {
+    // this.#editComponent.reset(this.#editPoint);
     this.#replaceEditorToPoint();
+    document.removeEventListener('keydown', this.#escKeyEventEdit);
+  };
+
+  // Submit
+
+  #closeAndSaveEditOpenPoint = (point) => {
+    this.#replaceEditorToPoint();
+    this.#handleDataChange(point);
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
 
