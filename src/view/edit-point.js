@@ -145,7 +145,7 @@ export default class EditPointView extends AbstractStatefulView {
   #arrOffers = [];
   #onSubmit = null;
 
-  constructor({editPoint, offers, arrDestinations, arrOffers, onSubmit}) {
+  constructor({editPoint, arrDestinations, arrOffers, onSubmit}) {
     super();
     // this.#editPoint = editPoint;
     this.#arrDestinations = arrDestinations;
