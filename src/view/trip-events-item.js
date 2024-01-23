@@ -2,14 +2,30 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate, dateDif} from '../utils.js';
 import {DATE_FORMAT_DAY_MONTH, DATE_FORMAT_YEAR_DAY_MONTH, DATE_FORMAT_HOURS_MINUTE} from '../const.js';
 
-function createTripEventsItemTemplate(point, destination) {
+function createTripEventsItemTemplate(point, destination, arrOffers) {
   const { basePrice, dateFrom, dateTo, isFavorite, type} = point;
-  const { name } = destination;
+  const { name } = destination ?? '';
 
   const dateStartDayMonth = humanizeTaskDueDate(dateFrom, DATE_FORMAT_DAY_MONTH);
   const dateStartDatetime = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH);
   const dateStartHoursMinute = humanizeTaskDueDate(dateFrom, DATE_FORMAT_HOURS_MINUTE);
   const dateEndHoursMinute = humanizeTaskDueDate(dateTo, DATE_FORMAT_HOURS_MINUTE);
+
+  const currentPointOffers = arrOffers.find((item) => item.type === type).offers;
+
+  function offersListTemplate () {
+    return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.id, current.title, current.price), '');
+  }
+
+  function offerItemTemplate (title, price) {
+    return `
+      <li class="event__offer">
+        <span class="event__offer-title">${title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+      </li>
+    `;
+  }
 
   return (
     `<li class="trip-events__item">
@@ -32,11 +48,7 @@ function createTripEventsItemTemplate(point, destination) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">20</span>
-          </li>
+          ${offersListTemplate()}
         </ul>
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
@@ -55,13 +67,15 @@ function createTripEventsItemTemplate(point, destination) {
 export default class TripEventsItemView extends AbstractView {
   #point = null;
   #destination = null;
+  #arrOffers = [];
   #rollupBtnClick = null;
   #favoriteBtnClick = null;
 
-  constructor({point, destination, onClickRollupBtn, onClickFavoriteBtn}) {
+  constructor({point, destination, arrOffers, onClickRollupBtn, onClickFavoriteBtn}) {
     super();
     this.#point = point;
     this.#destination = destination;
+    this.#arrOffers = arrOffers;
     this.#rollupBtnClick = onClickRollupBtn;
     this.#favoriteBtnClick = onClickFavoriteBtn;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickRollupBtn);
@@ -69,7 +83,11 @@ export default class TripEventsItemView extends AbstractView {
   }
 
   get template() {
-    return createTripEventsItemTemplate(this.#point, this.#destination);
+    return createTripEventsItemTemplate(
+      this.#point,
+      this.#destination,
+      this.#arrOffers
+    );
   }
 
   #clickRollupBtn = (evt) => {

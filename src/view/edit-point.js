@@ -12,7 +12,6 @@ function createEditPointTemplate(
   const selectedDestination = arrDestinations.find(
     ({id}) => id === state.destination
   );
-
   const currentPointOffers = arrOffers.find((item) => item.type === type).offers;
 
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
@@ -28,7 +27,7 @@ function createEditPointTemplate(
     return '';
   };
 
-  function selectorItemTemplate (id, title, price) {
+  function offerItemTemplate (id, title, price) {
     return `
       <div class="event__offer-selector">
         <input class="event__offer-checkbox visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage"
@@ -43,8 +42,8 @@ function createEditPointTemplate(
     `;
   }
 
-  function selectorListTemplate () {
-    return currentPointOffers.reduce((sum, current) => sum + selectorItemTemplate(current.id, current.title, current.price), '');
+  function offersListTemplate () {
+    return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.id, current.title, current.price), '');
   }
 
   function cityTemplate () {
@@ -130,7 +129,7 @@ function createEditPointTemplate(
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-              ${selectorListTemplate()}
+              ${offersListTemplate()}
             </div>
           </section>
           ${createDestinationTemplate()}
@@ -171,7 +170,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   #submitSaveBtn = (evt) => {
     evt.preventDefault();
-    this.#onSubmit();
+    this.#onSubmit(EditPointView.parseStateToPoint(this._state));
   };
 
   removeElement = () => {
@@ -224,5 +223,5 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   static pasrsePointToState = (editPoint) => (editPoint);
-  static parseStateToPoint = (state) => state.editPoint;
+  static parseStateToPoint = (state) => state;
 }
