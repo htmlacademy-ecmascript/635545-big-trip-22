@@ -56,9 +56,10 @@ export default class TripEventPresenter {
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       offers: this.#offers,
-      currentOffers: this.#offersModel.getByType(point.type),
-      destination: this.#destination,
-      currentDestination: this.#destinationModel.getById(point.destination),
+      // currentOffers: this.#offersModel.getByType(point.type),
+      arrDestinations: this.#destinationModel.get(),
+      arrOffers: this.#offersModel.get(),
+      // currentDestination: this.#destinationModel.getById(point.destination),
       onSubmit: this.#closeEditOpenPoint
     });
 
@@ -115,8 +116,7 @@ export default class TripEventPresenter {
   // Submit
 
   #closeEditOpenPoint = () => {
-    // console.log(this.#editPoint);
-    this.#editComponent.reset(this.#editPoint);
+    // this.#editComponent.reset(this.#editPoint);
     this.#replaceEditorToPoint();
     document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
