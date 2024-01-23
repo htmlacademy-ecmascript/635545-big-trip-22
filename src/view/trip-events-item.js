@@ -41,7 +41,7 @@ function createTripEventsItemTemplate(point, destination, arrOffers) {
             &mdash;
             <time class="event__end-time" datetime="2019-03-18T11:00">${dateEndHoursMinute}</time>
           </p>
-          <p class="event__duration">${dateDif(dateTo, dateFrom, 'minute')}M</p>
+          <p class="event__duration">${dateDif(dateTo, dateFrom, 'minute')}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

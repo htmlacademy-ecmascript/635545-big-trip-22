@@ -11,7 +11,11 @@ function humanizeTaskDueDate(dueDate, dateFormat) {
 }
 
 function dateDif(date1 , date2, format) {
-  return dayjs(date1).diff(dayjs(date2), format);
+  const result = dayjs(date1).diff(dayjs(date2), format);
+  if (result > 60) {
+    return `${Math.trunc(result / 60)}H ${result % 60}M`;
+  }
+  return `${result}M`;
 }
 
 function ucFirst(str) {
