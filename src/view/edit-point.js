@@ -11,7 +11,6 @@ function createEditPointTemplate(
   const selectedDestination = arrDestinations.find(
     ({id}) => id === state.destination
   );
-  console.log(selectedDestination.pictures.length);
 
   const currentPointOffers = arrOffers.find((item) => item.type === type).offers;
 
@@ -166,13 +165,15 @@ export default class EditPointView extends AbstractStatefulView {
   #arrDestinations = [];
   #arrOffers = [];
   #onSubmit = null;
+  #onClose = null;
 
-  constructor({editPoint, arrDestinations, arrOffers, onSubmit}) {
+  constructor({editPoint, arrDestinations, arrOffers, onSubmit, onClose}) {
     super();
     // this.#editPoint = editPoint;
     this.#arrDestinations = arrDestinations;
     this.#arrOffers = arrOffers;
     this.#onSubmit = onSubmit;
+    this.#onClose = onClose;
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
   }
@@ -198,7 +199,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#submitSaveBtn);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#submitSaveBtn);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);

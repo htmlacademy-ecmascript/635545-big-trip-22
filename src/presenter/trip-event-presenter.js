@@ -45,6 +45,7 @@ export default class TripEventPresenter {
 
     const preventPointComponent = this.#pointComponent;
     const preventEditComponent = this.#editComponent;
+
     this.#pointComponent = new TripEventsItemView({
       point: this.#point,
       destination: this.#destination,
@@ -52,11 +53,13 @@ export default class TripEventPresenter {
       onClickRollupBtn: this.#rollupBtnClick,
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
+
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       arrDestinations: this.#destinationModel.get(),
       arrOffers: this.#offersModel.get(),
-      onSubmit: this.#closeEditOpenPoint
+      onSubmit: this.#closeAndSaveEditOpenPoint,
+      onClose: this.#closeEditOpenPoint
     });
 
     if (preventPointComponent === null || preventEditComponent === null) {
@@ -109,10 +112,17 @@ export default class TripEventPresenter {
     this.#mode = Mode.EDITING;
   };
 
+  // Close
+
+  #closeEditOpenPoint = () => {
+    // this.#editComponent.reset(this.#editPoint);
+    this.#replaceEditorToPoint();
+    document.removeEventListener('keydown', this.#escKeyEventEdit);
+  };
+
   // Submit
 
-  #closeEditOpenPoint = (point) => {
-    // this.#editComponent.reset(this.#editPoint);
+  #closeAndSaveEditOpenPoint = (point) => {
     this.#replaceEditorToPoint();
     this.#handleDataChange(point);
     document.removeEventListener('keydown', this.#escKeyEventEdit);
