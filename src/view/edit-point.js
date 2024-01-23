@@ -1,3 +1,6 @@
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
 import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
@@ -166,6 +169,8 @@ export default class EditPointView extends AbstractStatefulView {
   #arrOffers = [];
   #onSubmit = null;
   #onClose = null;
+  #datePickerFrom = null;
+  #datePickerTo = null;
 
   constructor({editPoint, arrDestinations, arrOffers, onSubmit, onClose}) {
     super();
@@ -204,6 +209,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.#setDatepickers();
   };
 
   // #formSubmitHandler = (evt) => {
@@ -240,6 +246,53 @@ export default class EditPointView extends AbstractStatefulView {
       ...this._state,
       basePrice: evt.target.value
     });
+  };
+
+  #setDatepickers = () => {
+    const startDateNode = this.element.querySelector('.event__input--time[name="event-start-time"]');
+    const endDateNode = this.element.querySelector('.event__input--time[name="event-end-time"]');
+
+    const flatpickerConfig = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      locale: {
+        firstDayOfWeek: 1,
+      },
+      'time_24hr': true,
+    };
+
+    this.#datePickerFrom = flatpickr(startDateNode, {
+      ...flatpickerConfig,
+      defaultDate: this._state.dateFrom,
+      onClose: this.#closeStartDateHandler,
+      maxDate: this._state.dateTo,
+    });
+
+    this.#datePickerTo = flatpickr(endDateNode, {
+      ...flatpickerConfig,
+      defaultDate: this._state.dateTo,
+      onClose: this.#closeEndDateHandler,
+      minDate: this._state.dateFrom,
+    });
+
+  };
+
+  #closeStartDateHandler = ([selectedDate]) => {
+    this._setState({
+      ...this._state,
+      dateFrom: selectedDate
+    });
+
+    this.#datePickerTo.set('minDate'. selectedDate);
+  };
+
+  #closeEndDateHandler = ([selectedDate]) => {
+    this._setState({
+      ...this._state,
+      dateTo: selectedDate
+    });
+
+    this.#datePickerFrom.set('maxDate'. selectedDate);
   };
 
   static pasrsePointToState = (editPoint) => (editPoint);
