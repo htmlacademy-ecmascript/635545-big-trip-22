@@ -11,23 +11,45 @@ function createEditPointTemplate(
   const selectedDestination = arrDestinations.find(
     ({id}) => id === state.destination
   );
+  console.log(selectedDestination.pictures.length);
+
   const currentPointOffers = arrOffers.find((item) => item.type === type).offers;
 
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
+
   const createDestinationTemplate = () => {
     if (selectedDestination) {
-      return (`<section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
-      </section>`);
+      const photoListTemplate = () => {
+        if (selectedDestination.pictures.length) {
+          const photoItemTemplate = (src, title) => `<img class="event__photo" src="${src}" alt="${title}">`;
+
+          return (`
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${selectedDestination.pictures.reduce((sum, current) => sum + photoItemTemplate(current.src, current.description), '')}
+              </div>
+            </div>
+          `);
+        } else {
+          return '';
+        }
+      };
+
+      return (
+        `
+          <section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+            <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
+          </section>
+          ${photoListTemplate()}
+        `
+      );
     }
     return '';
   };
 
   function offerItemTemplate (id, title, price) {
-    console.log(state.offers);
-
     return `
       <div class="event__offer-selector">
         <input class="event__offer-checkbox visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage"

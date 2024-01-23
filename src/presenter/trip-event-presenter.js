@@ -18,7 +18,6 @@ export default class TripEventPresenter {
   #handleDataChange = null;
   #mode = Mode.DEFAULT;
   #handleModeChange = null;
-  // #resetPoint = null;
 
   constructor({
     container,
@@ -34,7 +33,6 @@ export default class TripEventPresenter {
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
     this.#handleModeChange = onModeChange;
-    // this.#resetPoint = resetPoint;
   }
 
   init(point) {
