@@ -56,11 +56,8 @@ export default class TripEventPresenter {
     });
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
-      offers: this.#offers,
-      // currentOffers: this.#offersModel.getByType(point.type),
       arrDestinations: this.#destinationModel.get(),
       arrOffers: this.#offersModel.get(),
-      // currentDestination: this.#destinationModel.getById(point.destination),
       onSubmit: this.#closeEditOpenPoint
     });
 

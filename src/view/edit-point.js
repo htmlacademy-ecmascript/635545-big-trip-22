@@ -4,7 +4,6 @@ import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../cons
 
 function createEditPointTemplate(
   state,
-  offers,
   arrDestinations,
   arrOffers
 ) {
@@ -16,7 +15,6 @@ function createEditPointTemplate(
 
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
-
   const createDestinationTemplate = () => {
     if (selectedDestination) {
       return (`<section class="event__section  event__section--destination">
@@ -28,11 +26,13 @@ function createEditPointTemplate(
   };
 
   function offerItemTemplate (id, title, price) {
+    console.log(state.offers);
+
     return `
       <div class="event__offer-selector">
         <input class="event__offer-checkbox visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage"
         data-id="${id}"
-        ${offers.find((item) => item === id) ? 'checked' : ''}>
+        ${state.offers.find((item) => item === id) ? 'checked' : ''}>
         <label class="event__offer-label" for="event-offer-luggage-${id}">
           <span class="event__offer-title">${title}</span>
           &plus;&euro;&nbsp;
@@ -141,7 +141,6 @@ function createEditPointTemplate(
 
 export default class EditPointView extends AbstractStatefulView {
   // #editPoint = null;
-  #offers = [];
   #arrDestinations = [];
   #arrOffers = [];
   #onSubmit = null;
@@ -151,7 +150,6 @@ export default class EditPointView extends AbstractStatefulView {
     // this.#editPoint = editPoint;
     this.#arrDestinations = arrDestinations;
     this.#arrOffers = arrOffers;
-    this.#offers = offers;
     this.#onSubmit = onSubmit;
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
@@ -160,7 +158,6 @@ export default class EditPointView extends AbstractStatefulView {
   get template() {
     return createEditPointTemplate(
       this._state,
-      this.#offers,
       this.#arrDestinations,
       this.#arrOffers,
     );
