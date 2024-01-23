@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
 import {Mode} from '../const.js';
@@ -62,7 +62,7 @@ export default class TripEventPresenter {
       onClose: this.#closeEditOpenPoint
     });
 
-    if (preventPointComponent === null || preventEditComponent === null) {
+    if (!preventPointComponent || !preventEditComponent) {
       render(this.#pointComponent, this.#container);
       return;
     }
@@ -76,10 +76,10 @@ export default class TripEventPresenter {
     }
   }
 
-  // destroy() {
-  //   remove(this.#pointComponent);
-  //   remove(this.#editComponent);
-  // }
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#editComponent);
+  }
 
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
