@@ -11,7 +11,6 @@ export default class EventsPresenter {
   #tripEventsListComponent = new TripEventsListView();
   #container = null;
   #eventPointsModel = null;
-  #editPointModel = null;
   #destinationModel = null;
   #offersModel = null;
   #eventPoints = [];
@@ -19,10 +18,9 @@ export default class EventsPresenter {
   #currentSortType = null;
   #defaultSortType = SortTypes.DAY;
 
-  constructor({container, eventPointsModel, editPointModel, destinationModel, offersModel}) {
+  constructor({container, eventPointsModel, destinationModel, offersModel}) {
     this.#container = container;
     this.#eventPointsModel = eventPointsModel;
-    this.#editPointModel = editPointModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#eventPoints = [...this.#eventPointsModel.get()];
@@ -93,7 +91,6 @@ export default class EventsPresenter {
   #renderPoint = (point) => {
     const tripEventPresenter = new TripEventPresenter({
       container: this.#tripEventsListComponent.element,
-      editPointModel: this.#editPointModel,
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
       onPointChange: this.#handleDataChange,

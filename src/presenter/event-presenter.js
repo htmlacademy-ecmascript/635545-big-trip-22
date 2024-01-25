@@ -5,7 +5,6 @@ import {Mode} from '../const.js';
 
 export default class TripEventPresenter {
   #container = null;
-  #editPointModel = null;
   #destinationModel = null;
   #offersModel = null;
   #editPoint = null;
@@ -21,14 +20,12 @@ export default class TripEventPresenter {
 
   constructor({
     container,
-    editPointModel,
     destinationModel,
     offersModel,
     onPointChange,
     onModeChange
   }) {
     this.#container = container;
-    this.#editPointModel = editPointModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
@@ -37,7 +34,6 @@ export default class TripEventPresenter {
 
   init(point) {
     this.#point = point;
-    // this.#editPoint = this.#editPointModel.get()[0];
     this.#editPoint = this.#point;
     this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
