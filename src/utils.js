@@ -10,12 +10,18 @@ function humanizeTaskDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
 
-function dateDif(date1 , date2, format) {
-  const result = dayjs(date1).diff(dayjs(date2), format);
-  if (result > 60) {
-    return `${Math.trunc(result / 60)}H ${result % 60}M`;
+function getTwoString(str) {
+  return (`${str}`.length < 2) ? `0${str}` : `${str}`;
+}
+
+function dateDif(date1 , date2) {
+  const result = dayjs(date1).diff(dayjs(date2), 'minute');
+  if (Math.trunc(result / 60) >= 24) {
+    return `${getTwoString(Math.trunc(result / (24 * 60)))}D ${getTwoString(result % 24 % 60)}H ${getTwoString(result % 60)}M`;
+  } else if (result >= 60) {
+    return `${getTwoString(Math.trunc(result / 60))}H ${getTwoString(result % 60)}M`;
   }
-  return `${result}M`;
+  return `${getTwoString(result)}M`;
 }
 
 function ucFirst(str) {
