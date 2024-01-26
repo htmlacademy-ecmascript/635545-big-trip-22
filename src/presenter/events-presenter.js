@@ -4,27 +4,31 @@ import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import {sorting, updateItem} from '../utils.js';
-import { SortTypes } from '../const.js';
+import { SortTypes, UpdateType } from '../const.js';
 
 export default class EventsPresenter {
   #emptyListComponent = new EmptyListView();
   #tripEventsListComponent = new TripEventsListView();
   #container = null;
   #eventPointsModel = null;
+  #filterModel = null;
   #destinationModel = null;
   #offersModel = null;
   #eventPoints = [];
   #pointsPresenter = new Map();
-  #currentSortType = null;
-  #defaultSortType = SortTypes.DAY;
+  #currentSortType = SortTypes.DAY;
+  #sortPresenter = null;
 
-  constructor({container, eventPointsModel, destinationModel, offersModel}) {
+  constructor({container, eventPointsModel, destinationModel, offersModel, filterModel}) {
     this.#container = container;
     this.#eventPointsModel = eventPointsModel;
+    this.#filterModel = filterModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#eventPoints = [...this.#eventPointsModel.get()];
-    // this.#eventPoints = [];
+    // Для пустого листа this.#eventPoints = [];
+    this.#eventPointsModel.addObserver(this.#modelEventHandler);
+    this.#filterModel.addObserver(this.#modelEventHandler);
   }
 
   init() {
@@ -37,11 +41,26 @@ export default class EventsPresenter {
     this.#renderList();
   }
 
+  #modelEventHandler = (updateType, data) => {
+    if(updateType === UpdateType.PATCH) {
+      this.#pointsPresenter.get(data.id).init(data);
+    }
+    if(updateType === UpdateType.MINOR) {
+      // очистить список
+      // отредндерить заново
+    }
+    if(updateType === UpdateType.MAJOR) {
+      // сброс сортировки
+      // очистить список
+      // отредндерить заново
+    }
+  };
+
   #renderSort() {
     const sortPresenter = new SortPresenter({
       container: this.#container,
       sortTypeHandler: this.#sortTypesChangeHandler,
-      defaultSortType: this.#defaultSortType,
+      defaultSortType: this.#currentSortType,
     });
     sortPresenter.init();
   }
@@ -67,11 +86,12 @@ export default class EventsPresenter {
 
   #renderList() {
     render(this.#tripEventsListComponent, this.#container);
-    this.#sortTypesChangeHandler(this.#defaultSortType);
+    this.#sortTypesChangeHandler(this.#currentSortType);
   }
 
   #sortTypesChangeHandler = (sortType) => {
-    this.#sortPoints(sortType);
+    // this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearPoints();
     this.#renderPoints();
   };
