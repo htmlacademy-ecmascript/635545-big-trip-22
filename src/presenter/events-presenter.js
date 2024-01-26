@@ -3,7 +3,7 @@ import TripEventsListView from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import {sorting, updateItem} from '../utils.js';
+import {filter, sorting, updateItem} from '../utils.js';
 import { SortTypes, UpdateType } from '../const.js';
 
 export default class EventsPresenter {
@@ -31,8 +31,18 @@ export default class EventsPresenter {
     this.#filterModel.addObserver(this.#modelEventHandler);
   }
 
+  get eventPoints() {
+    const filterType = this.#filterModel.get();
+    const filteredPoints = filter[filterType](this.#eventPointsModel.get());
+    return sorting[this.#currentSortType](filteredPoints);
+  }
+
   init() {
-    if(!this.#eventPoints.length) {
+    this.#renderBoard();
+  }
+
+  #renderBoard() {
+    if(!this.eventPoints.length) {
       this.#renderEmptyList();
       return;
     }
