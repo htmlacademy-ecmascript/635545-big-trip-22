@@ -34,11 +34,11 @@ export default class FiltersView extends AbstractView {
   #items = [];
   #handleItemChange = null;
 
-  constructor({items, onItemChange}) {
+  constructor({items, onItemChange = () => {}}) {
     super();
     this.#items = items;
     this.#handleItemChange = onItemChange;
-    this.element.addEventListener('change', this.#handleItemChange);
+    this.element.addEventListener('change', this.#itemChangeHamdler);
   }
 
   #itemChangeHamdler = (evt) => {
