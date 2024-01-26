@@ -73,5 +73,6 @@ export {
   updateItem,
   filter,
   sorting,
-  ucFirst
+  ucFirst,
+  isMinorChange
 };
