@@ -2,6 +2,7 @@ import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
 import {Mode, UpdateType, UserAction} from '../const.js';
+import { isMinorChange } from '../utils.js';
 
 export default class TripEventPresenter {
   #container = null;
@@ -124,12 +125,21 @@ export default class TripEventPresenter {
   // Submit
 
   #closeAndSaveEditOpenPoint = (point) => {
+    const currentTypeChange = isMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
+    this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point);
     this.#replaceEditorToPoint();
-    this.#handleDataChange(point);
-    document.removeEventListener('keydown', this.#escKeyEventEdit);
+    // возможно следует поменять местами...
+    // document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
 
   #favoriteBtnClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {
+        ...this.#point,
+        isFavorite: !this.#point.isFavorite
+      }
+    );
   };
 }
