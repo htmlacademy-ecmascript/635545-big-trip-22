@@ -5,8 +5,8 @@ const eventPointsMock = [
   {
     id: '1',
     basePrice: 100,
-    dateFrom: '2019-07-10T22:33:56.845Z',
-    dateTo: '2019-07-11T07:22:13.375Z',
+    dateFrom: '2025-07-10T22:33:56.845Z',
+    dateTo: '2025-07-11T07:22:13.375Z',
     destination: '4',
     isFavorite: false,
     offers: ['10', '11', '12'],
@@ -15,8 +15,8 @@ const eventPointsMock = [
   {
     id: '2',
     basePrice: 200,
-    dateFrom: '2019-07-10T11:55:56.845Z',
-    dateTo: '2019-07-11T12:22:13.375Z',
+    dateFrom: '2024-01-25T11:55:56.845Z',
+    dateTo: '2024-01-30T12:22:13.375Z',
     destination: '5',
     isFavorite: false,
     offers: ['11', '12'],
