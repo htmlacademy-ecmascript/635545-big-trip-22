@@ -3,14 +3,17 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
-import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
+import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
   arrDestinations,
-  arrOffers
+  arrOffers,
+  editorMode
 ) {
   const { basePrice, dateFrom, dateTo, type } = state;
+  const isCreating = editorMode === EditType.CREATING;
+
   const selectedDestination = arrDestinations.find(
     ({id}) => id === state.destination
   );
@@ -91,6 +94,12 @@ function createEditPointTemplate(
     );
   }
 
+  const rollupTemplate = () => `
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
+  `;
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -128,10 +137,14 @@ function createEditPointTemplate(
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateStart}">
+            <input class="event__input  event__input--time"
+            id="event-start-time-1" type="text" name="event-start-time"
+            value="${isCreating ? '' : dateStart}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateEnd}">
+            <input class="event__input  event__input--time"
+            id="event-end-time-1" type="text" name="event-end-time"
+            value="${isCreating ? '' : dateEnd}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -143,10 +156,10 @@ function createEditPointTemplate(
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
+          <button class="event__reset-btn" type="reset">
+          ${isCreating ? 'Cancel' : 'Delete'}
           </button>
+          ${isCreating ? '' : rollupTemplate()}
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -172,8 +185,17 @@ export default class EditPointView extends AbstractStatefulView {
   #onDelete = null;
   #datePickerFrom = null;
   #datePickerTo = null;
+  #editorMode = null;
 
-  constructor({editPoint, arrDestinations, arrOffers, onSubmit, onClose, onDelete}) {
+  constructor({
+    editPoint,
+    arrDestinations,
+    arrOffers,
+    onSubmit,
+    onClose,
+    onDelete,
+    editorMode = EditType.EDITING,
+  }) {
     super();
     // this.#editPoint = editPoint;
     this.#arrDestinations = arrDestinations;
@@ -181,6 +203,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#onSubmit = onSubmit;
     this.#onClose = onClose;
     this.#onDelete = onDelete;
+    this.#editorMode = editorMode;
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
   }
@@ -190,6 +213,7 @@ export default class EditPointView extends AbstractStatefulView {
       this._state,
       this.#arrDestinations,
       this.#arrOffers,
+      this.#editorMode
     );
   }
 
@@ -206,12 +230,15 @@ export default class EditPointView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#submitSaveBtn);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
+    if (this.#editorMode === EditType.EDITING) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
+      // Удаляем только при режиме редактирования!
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+    }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.#setDatepickers();
   };
 

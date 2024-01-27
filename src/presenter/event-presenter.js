@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
-import {Mode, UpdateType, UserAction} from '../const.js';
+import {EditType, Mode, UpdateType, UserAction} from '../const.js';
 import { isMinorChange } from '../utils.js';
 
 export default class TripEventPresenter {
@@ -58,6 +58,8 @@ export default class TripEventPresenter {
       onSubmit: this.#closeAndSaveEditOpenPoint,
       onClose: this.#closeEditOpenPoint,
       onDelete: this.#deleteClickHandler,
+      // здесь тестим режим новой точки
+      editorMode: EditType.EDITING,
     });
 
     if (!preventPointComponent || !preventEditComponent) {

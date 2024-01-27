@@ -11,6 +11,11 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
+const EditType = {
+  CREATING: 'CREATING',
+  EDITING: 'EDITING',
+};
+
 const EmptyListText = {
   EVERYTHING: 'Click New Event to create your first point',
   PAST: 'There are no past events now',
@@ -68,4 +73,5 @@ export {
   enabledSortTypes,
   UserAction,
   UpdateType,
+  EditType,
 };
