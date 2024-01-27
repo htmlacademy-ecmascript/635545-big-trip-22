@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
-import {Mode} from '../const.js';
+import {Mode, UpdateType, UserAction} from '../const.js';
 
 export default class TripEventPresenter {
   #container = null;
@@ -55,7 +55,8 @@ export default class TripEventPresenter {
       arrDestinations: this.#destinationModel.get(),
       arrOffers: this.#offersModel.get(),
       onSubmit: this.#closeAndSaveEditOpenPoint,
-      onClose: this.#closeEditOpenPoint
+      onClose: this.#closeEditOpenPoint,
+      onDelete: this.#deleteClickHandler,
     });
 
     if (!preventPointComponent || !preventEditComponent) {
@@ -76,6 +77,10 @@ export default class TripEventPresenter {
     remove(this.#pointComponent);
     remove(this.#editComponent);
   }
+
+  #deleteClickHandler = (point) => {
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
+  };
 
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
