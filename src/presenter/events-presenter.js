@@ -50,7 +50,8 @@ export default class EventsPresenter {
 
     this.#renderSort();
     this.#renderList();
-    // this.#renderPoints(); сломалась редактирование
+    // this.#renderPoints();
+    // сломалась редактирование
   }
 
   #clearBoard = ({resetSortType = false} = {}) => {
