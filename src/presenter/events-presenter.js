@@ -3,6 +3,7 @@ import TripEventsListView from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
 import {filter, sorting, updateItem} from '../utils.js';
 import { SortTypes, UpdateType, UserAction } from '../const.js';
 
@@ -19,13 +20,31 @@ export default class EventsPresenter {
   #pointsPresenter = new Map();
   #currentSortType = SortTypes.DAY;
   #sortPresenter = null;
+  #newPointPresenter = null;
+  #newButtonPresenter = null;
+  #isCreating = false;
 
-  constructor({container, eventPointsModel, destinationModel, offersModel, filtersModel}) {
+  constructor({
+    container,
+    eventPointsModel,
+    destinationModel,
+    offersModel,
+    filtersModel,
+    newButtonPresenter
+  }) {
     this.#container = container;
     this.#eventPointsModel = eventPointsModel;
     this.#filtersModel = filtersModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
+    this.#newPointPresenter = new NewPointPresenter({
+      container: this.#container,
+      destinationModel: this.#destinationModel,
+      offersModel: this.#offersModel,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#addPointDestroyHandler,
+    });
+    this.#newButtonPresenter = newButtonPresenter;
     // this.#eventPoints = [...this.#eventPointsModel.get()];
     // Для пустого листа this.#eventPoints = [];
     this.#eventPointsModel.addObserver(this.#modelEventHandler);
@@ -41,6 +60,21 @@ export default class EventsPresenter {
   init() {
     this.#renderBoard();
   }
+
+  addPointButtonClickHandler = () => {
+    this.#isCreating = true;
+    this.#newButtonPresenter.disabledButton();
+    this.#newPointPresenter.init();
+  };
+
+  #addPointDestroyHandler = ({isCanceled}) => {
+    this.#isCreating = false;
+    this.#newButtonPresenter.enableButton();
+    if(!this.#pointsPresenter.length && isCanceled) {
+      this.#clearBoard();
+      this.#renderBoard();
+    }
+  };
 
   #renderBoard() {
     if(!this.eventPoints.length) {

@@ -3,6 +3,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
+import {POINT_EMPTY} from '../const.js';
 import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
@@ -59,7 +60,7 @@ function createEditPointTemplate(
       <div class="event__offer-selector">
         <input class="event__offer-checkbox visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage"
         data-id="${id}"
-        ${state.offers.find((item) => item === id) ? 'checked' : ''}>
+        ${state.offers?.find((item) => item === id) ? 'checked' : ''}>
         <label class="event__offer-label" for="event-offer-luggage-${id}">
           <span class="event__offer-title">${title}</span>
           &plus;&euro;&nbsp;
@@ -188,7 +189,7 @@ export default class EditPointView extends AbstractStatefulView {
   #editorMode = null;
 
   constructor({
-    editPoint,
+    editPoint = POINT_EMPTY,
     arrDestinations,
     arrOffers,
     onSubmit,
@@ -234,6 +235,9 @@ export default class EditPointView extends AbstractStatefulView {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
       // Удаляем только при режиме редактирования!
       this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+    }
+    if (this.#editorMode === EditType.CREATING) {
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onClose);
     }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);

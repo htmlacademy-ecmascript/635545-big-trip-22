@@ -23,6 +23,18 @@ const EmptyListText = {
   FUTURE: 'There are no future events now',
 };
 
+const POINT_EMPTY = {
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  arrDestinations: [],
+  arrOffers: [],
+  isFavorite: false,
+  offers: [],
+  type: 'taxi',
+};
+
 const SortTypes = {
   DAY: 'day',
   EVENT: 'event',
@@ -74,4 +86,5 @@ export {
   UserAction,
   UpdateType,
   EditType,
+  POINT_EMPTY,
 };
