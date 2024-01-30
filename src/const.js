@@ -73,6 +73,19 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
+const SourceUrl = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations',
+};
+
 export {
   POINT_TYPE,
   CITY,
@@ -90,4 +103,6 @@ export {
   UpdateType,
   EditType,
   POINT_EMPTY,
+  Method,
+  SourceUrl,
 };
