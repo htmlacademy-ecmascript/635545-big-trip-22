@@ -1,8 +1,8 @@
-import {render} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 import HeaderInfoView from '../view/header-info.js';
 
 export default class HeaderInfoPresenter {
-  #headerInfoComponent = new HeaderInfoView();
+  #headerInfoComponent = null;
   #container = null;
   #place = null;
 
@@ -12,6 +12,14 @@ export default class HeaderInfoPresenter {
   }
 
   init() {
-    render(this.#headerInfoComponent, this.#container, this.#place);
+    const prevHeaderInfoComponent = this.#headerInfoComponent;
+    this.#headerInfoComponent = new HeaderInfoView();
+    if(!prevHeaderInfoComponent) {
+      render(this.#headerInfoComponent, this.#container, this.#place);
+      return;
+    }
+    replace(this.#headerInfoComponent, prevHeaderInfoComponent);
+    remove(prevHeaderInfoComponent);
+    render(this.#headerInfoComponent, this.#container);
   }
 }
