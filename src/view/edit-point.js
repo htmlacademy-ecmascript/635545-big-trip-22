@@ -3,14 +3,18 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
-import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE} from '../const.js';
+import {POINT_EMPTY} from '../const.js';
+import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
   arrDestinations,
-  arrOffers
+  arrOffers,
+  editorMode
 ) {
   const { basePrice, dateFrom, dateTo, type } = state;
+  const isCreating = editorMode === EditType.CREATING;
+
   const selectedDestination = arrDestinations.find(
     ({id}) => id === state.destination
   );
@@ -56,7 +60,7 @@ function createEditPointTemplate(
       <div class="event__offer-selector">
         <input class="event__offer-checkbox visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage"
         data-id="${id}"
-        ${state.offers.find((item) => item === id) ? 'checked' : ''}>
+        ${state.offers?.find((item) => item === id) ? 'checked' : ''}>
         <label class="event__offer-label" for="event-offer-luggage-${id}">
           <span class="event__offer-title">${title}</span>
           &plus;&euro;&nbsp;
@@ -72,7 +76,7 @@ function createEditPointTemplate(
 
   function cityTemplate () {
     return CITY.reduce(
-      (sum, current) => `${sum}<option value="${current}"></option>`, ''
+      (sum, current) => `${sum}<option value="${current}" ${selectedDestination.name === current ? 'selected' : ''}>${current}</option>`, ''
     );
   }
 
@@ -90,6 +94,12 @@ function createEditPointTemplate(
       (sum, current) => sum + eventTypeItemTemplate(current), ''
     );
   }
+
+  const rollupTemplate = () => `
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
+  `;
 
   return (
     `<li class="trip-events__item">
@@ -114,24 +124,24 @@ function createEditPointTemplate(
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input
+            <select
               class="event__input  event__input--destination"
               id="event-destination-1"
-              type="text"
-              name="event-destination"
-              value="${selectedDestination ? selectedDestination.name : ''}"
-              list="destination-list-1">
-            <datalist id="destination-list-1">
+              name="event-destination">
               ${cityTemplate()}
-            </datalist>
+            </select>
           </div>
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateStart}">
+            <input class="event__input  event__input--time"
+            id="event-start-time-1" type="text" name="event-start-time"
+            value="${isCreating ? '' : dateStart}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateEnd}">
+            <input class="event__input  event__input--time"
+            id="event-end-time-1" type="text" name="event-end-time"
+            value="${isCreating ? '' : dateEnd}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -139,14 +149,18 @@ function createEditPointTemplate(
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input event__input--price"
+            id="event-price-1"
+            type="number"
+            name="event-price"
+            value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
+          <button class="event__reset-btn" type="reset">
+          ${isCreating ? 'Cancel' : 'Delete'}
           </button>
+          ${isCreating ? '' : rollupTemplate()}
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -169,16 +183,28 @@ export default class EditPointView extends AbstractStatefulView {
   #arrOffers = [];
   #onSubmit = null;
   #onClose = null;
+  #onDelete = null;
   #datePickerFrom = null;
   #datePickerTo = null;
+  #editorMode = null;
 
-  constructor({editPoint, arrDestinations, arrOffers, onSubmit, onClose}) {
+  constructor({
+    editPoint = POINT_EMPTY,
+    arrDestinations,
+    arrOffers,
+    onSubmit,
+    onClose,
+    onDelete,
+    editorMode = EditType.EDITING,
+  }) {
     super();
     // this.#editPoint = editPoint;
     this.#arrDestinations = arrDestinations;
     this.#arrOffers = arrOffers;
     this.#onSubmit = onSubmit;
     this.#onClose = onClose;
+    this.#onDelete = onDelete;
+    this.#editorMode = editorMode;
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
   }
@@ -188,6 +214,7 @@ export default class EditPointView extends AbstractStatefulView {
       this._state,
       this.#arrDestinations,
       this.#arrOffers,
+      this.#editorMode
     );
   }
 
@@ -204,7 +231,14 @@ export default class EditPointView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#submitSaveBtn);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
+    if (this.#editorMode === EditType.EDITING) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
+      // Удаляем только при режиме редактирования!
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+    }
+    if (this.#editorMode === EditType.CREATING) {
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onClose);
+    }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
@@ -212,8 +246,10 @@ export default class EditPointView extends AbstractStatefulView {
     this.#setDatepickers();
   };
 
-  // #formSubmitHandler = (evt) => {
-  // }
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onDelete(this._state);
+  };
 
   #typeChangeHandler = (evt) => {
     this.updateElement({

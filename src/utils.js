@@ -64,6 +64,8 @@ const sorting = {
   }
 };
 
+const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || dateDif(pointA.dateFrom, pointA.dateTo) !== dateDif(pointB.dateFrom, pointB.dateTo);
+
 export {
   getRandomArrayElement,
   humanizeTaskDueDate,
@@ -71,5 +73,6 @@ export {
   updateItem,
   filter,
   sorting,
-  ucFirst
+  ucFirst,
+  isMinorChange
 };

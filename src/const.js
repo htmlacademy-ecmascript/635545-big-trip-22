@@ -11,11 +11,31 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
+const EditType = {
+  CREATING: 'CREATING',
+  EDITING: 'EDITING',
+};
+
 const EmptyListText = {
-  Everthing: 'Click New Event to create your first point',
-  Past: 'There are no past events now',
-  Present: 'There are no present events now',
-  Future: 'There are no future events now',
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  PRESENT: 'There are no present events now',
+  FUTURE: 'There are no future events now',
+};
+
+const POINT_EMPTY = {
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  arrDestinations: [],
+  arrOffers: [],
+  isFavorite: false,
+  offers: [],
+  offer: {
+    offers: []
+  },
+  type: 'taxi',
 };
 
 const SortTypes = {
@@ -41,6 +61,18 @@ const FilterTypes = {
   PAST: 'past'
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+  CREATE_POINT: 'CREATE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 export {
   POINT_TYPE,
   CITY,
@@ -54,4 +86,8 @@ export {
   FilterTypes,
   SortTypes,
   enabledSortTypes,
+  UserAction,
+  UpdateType,
+  EditType,
+  POINT_EMPTY,
 };

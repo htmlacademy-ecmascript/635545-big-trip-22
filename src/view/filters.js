@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import RadioListView from './radio-list.js';
 
 function createFiltersRowTemplate(filters) {
   return filters.reduce(
@@ -30,23 +30,8 @@ function createFiltersTemplate(filters) {
   );
 }
 
-export default class FiltersView extends AbstractView {
-  #items = [];
-  #handleItemChange = null;
-
-  constructor({items, onItemChange}) {
-    super();
-    this.#items = items;
-    this.#handleItemChange = onItemChange;
-    this.element.addEventListener('change', this.#handleItemChange);
-  }
-
-  #itemChangeHamdler = (evt) => {
-    evt.preventDefault();
-    this.#handleItemChange(evt.target.dataset.item);
-  };
-
+export default class FiltersView extends RadioListView {
   get template() {
-    return createFiltersTemplate(this.#items, this.#handleItemChange);
+    return createFiltersTemplate(this._items);
   }
 }

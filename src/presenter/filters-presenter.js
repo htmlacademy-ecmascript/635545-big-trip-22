@@ -1,15 +1,18 @@
 import {render} from '../framework/render.js';
 import FiltersView from '../view/filters.js';
 import {filter} from '../utils.js';
+import { UpdateType } from '../const.js';
 
 export default class FiltersPresenter {
   #container = null;
   #pointsModel = [];
+  #filtersModel = null;
   #filters = [];
 
-  constructor({container, pointsModel}) {
+  constructor({container, pointsModel, filtersModel}) {
     this.#container = container;
     this.#pointsModel = pointsModel;
+    this.#filtersModel = filtersModel;
     this.#filters = Object.entries(filter).map(
       ([filterType, filterPoints], index) => ({
         type: filterType,
@@ -20,6 +23,16 @@ export default class FiltersPresenter {
   }
 
   init() {
-    render(new FiltersView({items: this.#filters}), this.#container);
+    render(
+      new FiltersView({
+        items: this.#filters,
+        onItemChange: this.#filterTypesChangeHandler,
+      }),
+      this.#container
+    );
   }
+
+  #filterTypesChangeHandler = (filterType) => {
+    this.#filtersModel.set(UpdateType.MAJOR, filterType);
+  };
 }

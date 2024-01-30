@@ -1,36 +1,83 @@
-import {render} from '../framework/render.js';
+import {remove, render} from '../framework/render.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import {sorting, updateItem} from '../utils.js';
-import { SortTypes } from '../const.js';
+import NewPointPresenter from './new-point-presenter.js';
+import { filter, sorting } from '../utils.js';
+import { SortTypes, UpdateType, UserAction } from '../const.js';
 
 export default class EventsPresenter {
-  #emptyListComponent = new EmptyListView();
+  // #emptyListComponent = new EmptyListView();
+  #emptyListComponent = null;
   #tripEventsListComponent = new TripEventsListView();
   #container = null;
   #eventPointsModel = null;
-  #editPointModel = null;
+  #filtersModel = null;
   #destinationModel = null;
   #offersModel = null;
-  #eventPoints = [];
+  // #eventPoints = [];
   #pointsPresenter = new Map();
-  #currentSortType = null;
-  #defaultSortType = SortTypes.DAY;
+  #currentSortType = SortTypes.DAY;
+  #sortPresenter = null;
+  #newPointPresenter = null;
+  #newButtonPresenter = null;
+  #isCreating = false;
 
-  constructor({container, eventPointsModel, editPointModel, destinationModel, offersModel}) {
+  constructor({
+    container,
+    eventPointsModel,
+    destinationModel,
+    offersModel,
+    filtersModel,
+    newButtonPresenter
+  }) {
     this.#container = container;
     this.#eventPointsModel = eventPointsModel;
-    this.#editPointModel = editPointModel;
+    this.#filtersModel = filtersModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
-    this.#eventPoints = [...this.#eventPointsModel.get()];
-    // this.#eventPoints = [];
+    this.#newPointPresenter = new NewPointPresenter({
+      container: this.#container,
+      destinationModel: this.#destinationModel,
+      offersModel: this.#offersModel,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#addPointDestroyHandler,
+    });
+    this.#newButtonPresenter = newButtonPresenter;
+    // this.#eventPoints = [...this.#eventPointsModel.get()];
+    // Для пустого листа this.#eventPoints = [];
+    this.#eventPointsModel.addObserver(this.#modelEventHandler);
+    this.#filtersModel.addObserver(this.#modelEventHandler);
+  }
+
+  get eventPoints() {
+    const filterType = this.#filtersModel.get();
+    const filteredPoints = filter[filterType](this.#eventPointsModel.get());
+    return sorting[this.#currentSortType](filteredPoints);
   }
 
   init() {
-    if(!this.#eventPoints.length) {
+    this.#renderBoard();
+  }
+
+  addPointButtonClickHandler = () => {
+    this.#isCreating = true;
+    this.#newButtonPresenter.disabledButton();
+    this.#newPointPresenter.init();
+  };
+
+  #addPointDestroyHandler = ({isCanceled}) => {
+    this.#isCreating = false;
+    this.#newButtonPresenter.enableButton();
+    if(!this.#pointsPresenter.length && isCanceled) {
+      this.#clearBoard();
+      this.#renderBoard();
+    }
+  };
+
+  #renderBoard() {
+    if(!this.eventPoints.length) {
       this.#renderEmptyList();
       return;
     }
@@ -39,41 +86,70 @@ export default class EventsPresenter {
     this.#renderList();
   }
 
+  #clearBoard = ({resetSortType = false} = {}) => {
+    this.#clearPoints();
+    this.#sortPresenter.destroy();
+    remove(this.#emptyListComponent);
+    if (resetSortType) {
+      this.#currentSortType = SortTypes.DAY;
+    }
+  };
+
+  #modelEventHandler = (updateType, data) => {
+    if(updateType === UpdateType.PATCH) {
+      this.#pointsPresenter.get(data?.id)?.init(data);
+    }
+    if(updateType === UpdateType.MINOR) {
+      this.#clearBoard();
+      this.#renderBoard();
+    }
+    if(updateType === UpdateType.MAJOR) {
+      this.#clearBoard({resetSortType: true});
+      this.#renderBoard();
+    }
+  };
+
   #renderSort() {
-    const sortPresenter = new SortPresenter({
+    this.#sortPresenter = new SortPresenter({
       container: this.#container,
       sortTypeHandler: this.#sortTypesChangeHandler,
-      defaultSortType: this.#defaultSortType,
+      // defaultSortType: this.#currentSortType,
     });
-    sortPresenter.init();
+    this.#sortPresenter.init();
   }
-
-  #sortPoints = (sortType) => {
-    this.#currentSortType = sortType;
-    this.#eventPoints = sorting[this.#currentSortType](this.#eventPoints);
-  };
 
   #clearPoints = () => {
     this.#pointsPresenter.forEach((presenter) => presenter.destroy());
     this.#pointsPresenter.clear();
   };
 
-  #handleDataChange = (updatePoint) => {
-    this.#eventPoints = updateItem(this.#eventPoints, updatePoint);
-    this.#pointsPresenter.get(updatePoint.id).init(updatePoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    if(actionType === UserAction.UPDATE_POINT) {
+      this.#eventPointsModel.update(updateType, update);
+    }
+
+    if(actionType === UserAction.CREATE_POINT) {
+      this.#eventPointsModel.add(updateType, update);
+    }
+
+    if(actionType === UserAction.DELETE_POINT) {
+      this.#eventPointsModel.delete(updateType, update);
+    }
   };
 
   #renderEmptyList() {
+    this.#emptyListComponent = new EmptyListView({filterType: this.#filtersModel.get()});
     render(this.#emptyListComponent, this.#container);
   }
 
   #renderList() {
     render(this.#tripEventsListComponent, this.#container);
-    this.#sortTypesChangeHandler(this.#defaultSortType);
+    this.#sortTypesChangeHandler(this.#currentSortType);
   }
 
   #sortTypesChangeHandler = (sortType) => {
-    this.#sortPoints(sortType);
+    // this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearPoints();
     this.#renderPoints();
   };
@@ -85,7 +161,7 @@ export default class EventsPresenter {
   };
 
   #renderPoints() {
-    this.#eventPoints.forEach((point) => {
+    this.eventPoints.forEach((point) => {
       this.#renderPoint(point);
     });
   }
@@ -93,10 +169,9 @@ export default class EventsPresenter {
   #renderPoint = (point) => {
     const tripEventPresenter = new TripEventPresenter({
       container: this.#tripEventsListComponent.element,
-      editPointModel: this.#editPointModel,
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
-      onPointChange: this.#handleDataChange,
+      onPointChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
 

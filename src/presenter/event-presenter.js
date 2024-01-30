@@ -1,11 +1,11 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item.js';
 import EditPointView from '../view/edit-point.js';
-import {Mode} from '../const.js';
+import {EditType, Mode, UpdateType, UserAction} from '../const.js';
+import { isMinorChange } from '../utils.js';
 
 export default class TripEventPresenter {
   #container = null;
-  #editPointModel = null;
   #destinationModel = null;
   #offersModel = null;
   #editPoint = null;
@@ -21,14 +21,12 @@ export default class TripEventPresenter {
 
   constructor({
     container,
-    editPointModel,
     destinationModel,
     offersModel,
     onPointChange,
     onModeChange
   }) {
     this.#container = container;
-    this.#editPointModel = editPointModel;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
@@ -37,7 +35,6 @@ export default class TripEventPresenter {
 
   init(point) {
     this.#point = point;
-    // this.#editPoint = this.#editPointModel.get()[0];
     this.#editPoint = this.#point;
     this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
@@ -59,7 +56,10 @@ export default class TripEventPresenter {
       arrDestinations: this.#destinationModel.get(),
       arrOffers: this.#offersModel.get(),
       onSubmit: this.#closeAndSaveEditOpenPoint,
-      onClose: this.#closeEditOpenPoint
+      onClose: this.#closeEditOpenPoint,
+      onDelete: this.#deleteClickHandler,
+      // здесь тестим режим новой точки
+      editorMode: EditType.EDITING,
     });
 
     if (!preventPointComponent || !preventEditComponent) {
@@ -80,6 +80,10 @@ export default class TripEventPresenter {
     remove(this.#pointComponent);
     remove(this.#editComponent);
   }
+
+  #deleteClickHandler = (point) => {
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
+  };
 
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
@@ -123,12 +127,21 @@ export default class TripEventPresenter {
   // Submit
 
   #closeAndSaveEditOpenPoint = (point) => {
+    const currentTypeChange = isMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
+    this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point);
     this.#replaceEditorToPoint();
-    this.#handleDataChange(point);
-    document.removeEventListener('keydown', this.#escKeyEventEdit);
+    // возможно следует поменять местами...
+    // document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
 
   #favoriteBtnClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {
+        ...this.#point,
+        isFavorite: !this.#point.isFavorite
+      }
+    );
   };
 }
