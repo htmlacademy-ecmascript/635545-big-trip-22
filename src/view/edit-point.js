@@ -1,5 +1,4 @@
 import flatpickr from 'flatpickr';
-import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
@@ -76,7 +75,6 @@ function createEditPointTemplate(
   }
 
   function cityTemplate () {
-    console.log(selectedDestination);
     return CITY.reduce(
       (sum, current) => `${sum}<option value="${current}" ${selectedDestination.name === current ? 'selected' : ''}>${current}</option>`, ''
     );
