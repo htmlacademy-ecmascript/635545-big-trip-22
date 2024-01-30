@@ -39,7 +39,6 @@ export default class TripEventPresenter {
     this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
     this.#offers = this.#offer.offers;
-    console.log(this.#offer);
 
     const preventPointComponent = this.#pointComponent;
     const preventEditComponent = this.#editComponent;

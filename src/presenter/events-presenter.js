@@ -4,7 +4,7 @@ import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
-import {filter, sorting, updateItem} from '../utils.js';
+import { filter, sorting } from '../utils.js';
 import { SortTypes, UpdateType, UserAction } from '../const.js';
 
 export default class EventsPresenter {
