@@ -32,6 +32,9 @@ const POINT_EMPTY = {
   arrOffers: [],
   isFavorite: false,
   offers: [],
+  offer: {
+    offers: []
+  },
   type: 'taxi',
 };
 

@@ -76,8 +76,9 @@ function createEditPointTemplate(
   }
 
   function cityTemplate () {
+    console.log(selectedDestination);
     return CITY.reduce(
-      (sum, current) => `${sum}<option value="${current}"></option>`, ''
+      (sum, current) => `${sum}<option value="${current}" ${selectedDestination.name === current ? 'selected' : ''}>${current}</option>`, ''
     );
   }
 
@@ -125,16 +126,12 @@ function createEditPointTemplate(
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input
+            <select
               class="event__input  event__input--destination"
               id="event-destination-1"
-              type="text"
-              name="event-destination"
-              value="${selectedDestination ? he.encode(selectedDestination.name) : ''}"
-              list="destination-list-1">
-            <datalist id="destination-list-1">
+              name="event-destination">
               ${cityTemplate()}
-            </datalist>
+            </select>
           </div>
 
           <div class="event__field-group  event__field-group--time">
