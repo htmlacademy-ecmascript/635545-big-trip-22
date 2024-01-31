@@ -1,15 +1,35 @@
 import {updatePoint, addPoint, deletePoint} from '../service/mock-service.js';
-import {updateItem} from '../utils.js';
+import {updateItem, adaptToClient, adaptToServer} from '../utils.js';
 import Observable from '../framework/observable.js';
+import { UpdateType } from '../const.js';
 
 export default class EventPointsModel extends Observable {
   #eventPoints = [];
   #service = null;
+  #destinationsModel = null;
+  #offersModel = null;
 
-  constructor(service) {
+  constructor({service, destinationsModel, offersModel}) {
     super();
     this.#service = service;
-    this.#eventPoints = this.#service.points;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
+  }
+
+  async init() {
+    try {
+      await Promise.all(
+        [this.#destinationsModel.init()],
+        this.#offersModel.init()
+      );
+
+      const points = await this.#service.points;
+      this.#eventPoints = points.map(adaptToClient);
+      this._notify(UpdateType.INIT, {isError: false});
+    } catch (error) {
+      this.#eventPoints = [];
+      this._notify(UpdateType.INIT, {isError: true});
+    }
   }
 
   get() {
@@ -20,21 +40,39 @@ export default class EventPointsModel extends Observable {
     return this.#eventPoints.find((eventPoints) => eventPoints.id === id) || null;
   }
 
-  update(updateType, point) {
-    const updatedPoint = updatePoint(point);
-    this.#eventPoints = updateItem(this.#eventPoints, updatedPoint);
-    this._notify(updateType, updatedPoint);
+  async update(updateType, point) {
+    try {
+      const updatedPoint = await this.#service.updatePoint(
+        adaptToServer(point)
+      );
+      const adaptedPoint = adaptToClient(updatedPoint);
+      this.#eventPoints = updateItem(this.#eventPoints, adaptedPoint);
+      this._notify(updateType, adaptedPoint);
+    } catch (error) {
+      throw new Error('Update failure');
+    }
   }
 
-  add(updateType, point) {
-    const addedPoint = addPoint(point);
-    this.#eventPoints = [this.#eventPoints, addedPoint];
-    this._notify(updateType, addedPoint);
+  async add(updateType, point) {
+    try {
+      const addedPoint = await this.#service.addPoint(
+        adaptToServer(point)
+      );
+      const adaptedPoint = adaptToClient(addedPoint);
+      this.#eventPoints.push(adaptedPoint);
+      this._notify(updateType, adaptedPoint);
+    } catch (error) {
+      throw new Error('Add failure');
+    }
   }
 
-  delete(updateType, point) {
-    deletePoint(point);
-    this.#eventPoints = this.#eventPoints.filter((item) => item.id !== point.id);
-    this._notify(updateType);
+  async delete(updateType, point) {
+    try {
+      await this.#service.deletePoint(point);
+      this.#eventPoints = this.#eventPoints.filter(item => item.id !== point.id);
+      this._notify(updateType);
+    } catch (error) {
+      throw new Error('Delete failure');
+    }
   }
 }
