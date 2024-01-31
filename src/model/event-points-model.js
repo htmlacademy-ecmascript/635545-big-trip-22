@@ -1,4 +1,3 @@
-import {updatePoint, addPoint, deletePoint} from '../service/mock-service.js';
 import {updateItem, adaptToClient, adaptToServer} from '../utils.js';
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
@@ -69,7 +68,7 @@ export default class EventPointsModel extends Observable {
   async delete(updateType, point) {
     try {
       await this.#service.deletePoint(point);
-      this.#eventPoints = this.#eventPoints.filter(item => item.id !== point.id);
+      this.#eventPoints = this.#eventPoints.filter((item) => item.id !== point.id);
       this._notify(updateType);
     } catch (error) {
       throw new Error('Delete failure');
