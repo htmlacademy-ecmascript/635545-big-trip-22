@@ -42,8 +42,6 @@ export default class PointApiService extends ApiService {
     await this._load({
       url: `${SourceUrl.POINTS}/${point.id}`,
       method: Method.DELETE,
-      body: JSON.stringify(point),
-      headers: new Headers({'content-type': 'application/json'}),
     });
   }
 }

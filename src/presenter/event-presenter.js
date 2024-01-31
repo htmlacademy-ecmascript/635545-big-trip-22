@@ -6,7 +6,7 @@ import { isMinorChange } from '../utils.js';
 
 export default class TripEventPresenter {
   #container = null;
-  #destinationModel = null;
+  #destinationsModel = null;
   #offersModel = null;
   #editPoint = null;
   #destination = null;
@@ -21,13 +21,13 @@ export default class TripEventPresenter {
 
   constructor({
     container,
-    destinationModel,
+    destinationsModel,
     offersModel,
     onPointChange,
     onModeChange
   }) {
     this.#container = container;
-    this.#destinationModel = destinationModel;
+    this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
     this.#handleModeChange = onModeChange;
@@ -36,7 +36,7 @@ export default class TripEventPresenter {
   init(point) {
     this.#point = point;
     this.#editPoint = this.#point;
-    this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
+    this.#destination = this.#destinationsModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
     this.#offers = this.#offer.offers;
 
@@ -53,7 +53,7 @@ export default class TripEventPresenter {
 
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
-      arrDestinations: this.#destinationModel.get(),
+      arrDestinations: this.#destinationsModel.get(),
       arrOffers: this.#offersModel.get(),
       onSubmit: this.#closeAndSaveEditOpenPoint,
       onClose: this.#closeEditOpenPoint,

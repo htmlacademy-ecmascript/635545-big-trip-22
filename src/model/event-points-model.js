@@ -1,4 +1,3 @@
-import {eventPointsMock} from '../mock/event-points.js';
 import {updatePoint, addPoint, deletePoint} from '../service/mock-service.js';
 import {updateItem} from '../utils.js';
 import Observable from '../framework/observable.js';
@@ -10,7 +9,7 @@ export default class EventPointsModel extends Observable {
   constructor(service) {
     super();
     this.#service = service;
-    this.#eventPoints = Array.from(eventPointsMock);
+    this.#eventPoints = this.#service.points;
   }
 
   get() {

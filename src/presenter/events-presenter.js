@@ -14,7 +14,7 @@ export default class EventsPresenter {
   #container = null;
   #eventPointsModel = null;
   #filtersModel = null;
-  #destinationModel = null;
+  #destinationsModel = null;
   #offersModel = null;
   // #eventPoints = [];
   #pointsPresenter = new Map();
@@ -27,7 +27,7 @@ export default class EventsPresenter {
   constructor({
     container,
     eventPointsModel,
-    destinationModel,
+    destinationsModel,
     offersModel,
     filtersModel,
     newButtonPresenter
@@ -35,11 +35,11 @@ export default class EventsPresenter {
     this.#container = container;
     this.#eventPointsModel = eventPointsModel;
     this.#filtersModel = filtersModel;
-    this.#destinationModel = destinationModel;
+    this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#newPointPresenter = new NewPointPresenter({
       container: this.#container,
-      destinationModel: this.#destinationModel,
+      destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onDataChange: this.#handleViewAction,
       onDestroy: this.#addPointDestroyHandler,
@@ -169,7 +169,7 @@ export default class EventsPresenter {
   #renderPoint = (point) => {
     const tripEventPresenter = new TripEventPresenter({
       container: this.#tripEventsListComponent.element,
-      destinationModel: this.#destinationModel,
+      destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onPointChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
