@@ -11,6 +11,7 @@ export default class EventPointsModel extends Observable {
   constructor({service, destinationsModel, offersModel}) {
     super();
     this.#service = service;
+    console.log(this.#service);
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
   }
@@ -31,7 +32,7 @@ export default class EventPointsModel extends Observable {
     }
   }
 
-  get() {
+  get () {
     return this.#eventPoints;
   }
 
