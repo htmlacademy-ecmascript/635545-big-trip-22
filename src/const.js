@@ -27,13 +27,13 @@ const POINT_EMPTY = {
   dateFrom: null,
   dateTo: null,
   destination: null,
-  allDestinations: [],
-  allOffers: [],
+  // allDestinations: [],
+  // allOffers: [],
   isFavorite: false,
   offers: [],
-  offer: {
-    offers: []
-  },
+  // offer: {
+  //   offers: []
+  // },
   type: 'taxi',
 };
 

@@ -44,14 +44,14 @@ const headerInfoPresenter = new HeaderInfoPresenter({container: tripMainElement,
 
 export default class BigTripApp {
   init() {
-    newButtonPresenter.init({
-      onButtonClick: eventsPresenter.addPointButtonClickHandler
-    });
-    eventsPresenter.init();
-    filtersPresenter.init();
     if(eventPointsModel.get().length) {
       headerInfoPresenter.init();
     }
+    newButtonPresenter.init({
+      onButtonClick: eventsPresenter.addPointButtonClickHandler
+    });
+    filtersPresenter.init();
+    eventsPresenter.init();
     eventPointsModel.init();
   }
 }

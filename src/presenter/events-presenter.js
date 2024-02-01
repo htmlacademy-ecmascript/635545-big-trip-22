@@ -195,7 +195,6 @@ export default class EventsPresenter {
 
   #renderList() {
     render(this.#tripEventsListComponent, this.#container);
-    // this.#sortTypesChangeHandler(this.#currentSortType);
   }
 
   #sortTypesChangeHandler = (sortType) => {
@@ -209,6 +208,7 @@ export default class EventsPresenter {
     this.#pointsPresenter.forEach((presenter) => {
       presenter.resetView();
     });
+    this.#newPointPresenter.destroy();
   };
 
   #renderPoints() {
