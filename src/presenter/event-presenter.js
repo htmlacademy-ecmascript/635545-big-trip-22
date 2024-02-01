@@ -144,4 +144,37 @@ export default class TripEventPresenter {
       }
     );
   };
+
+  setSaving = () => {
+    if(this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if(this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+    }
+
+    if(this.#mode === Mode.EDITING) {
+      const resetFormState = () => {
+        this.#editComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      };
+      this.#editComponent.shake(resetFormState);
+    }
+  };
+
+  setDeleting = () => {
+    this.#editComponent.updateElement({
+      isDisabled: true,
+      isDeleting: true,
+    });
+  };
 }
