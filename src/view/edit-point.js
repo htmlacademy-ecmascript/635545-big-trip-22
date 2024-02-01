@@ -154,8 +154,10 @@ function createEditPointTemplate(
             <input class="event__input event__input--price"
             id="event-price-1"
             type="number"
+            min="1"
+            max="100000"
             name="event-price"
-            value="${basePrice}">
+            value="${he.encode(String(basePrice))}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

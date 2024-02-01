@@ -5,7 +5,7 @@ import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import { filter, sorting } from '../utils.js';
-import { SortTypes, UpdateType, UserAction } from '../const.js';
+import { FilterTypes, SortTypes, UpdateType, UserAction } from '../const.js';
 import Loading from '../view/loading.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
@@ -77,13 +77,15 @@ export default class EventsPresenter {
   addPointButtonClickHandler = () => {
     this.#isCreating = true;
     this.#newButtonPresenter.disabledButton();
+    this.#filtersModel.set(UpdateType.MAJOR, FilterTypes.EVERYTHING);
+    this.#currentSortType = SortTypes.DAY;
     this.#newPointPresenter.init();
   };
 
   #addPointDestroyHandler = ({isCanceled}) => {
     this.#isCreating = false;
     this.#newButtonPresenter.enableButton();
-    if(!this.#pointsPresenter.length && isCanceled) {
+    if(!this.eventPoints.length && isCanceled) {
       this.#clearBoard();
       this.#renderBoard();
     }
@@ -95,9 +97,9 @@ export default class EventsPresenter {
       this.#renderLoading();
     }
 
-    if(this.eventPoints.length === 0 && !this.#isCreating) {
-      this.#renderEmptyList();
+    if(!this.eventPoints.length && !this.#isCreating) {
       this.#newButtonPresenter.enableButton();
+      this.#renderEmptyList();
       return;
     }
 
@@ -152,6 +154,7 @@ export default class EventsPresenter {
   #clearPoints = () => {
     this.#pointsPresenter.forEach((presenter) => presenter.destroy());
     this.#pointsPresenter.clear();
+    this.#newPointPresenter.destroy();
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
@@ -192,7 +195,7 @@ export default class EventsPresenter {
 
   #renderList() {
     render(this.#tripEventsListComponent, this.#container);
-    this.#sortTypesChangeHandler(this.#currentSortType);
+    // this.#sortTypesChangeHandler(this.#currentSortType);
   }
 
   #sortTypesChangeHandler = (sortType) => {

@@ -12,10 +12,22 @@ function createTripEventsItemTemplate(point, destination, allOffers) {
   const dateStartHoursMinute = humanizeTaskDueDate(dateFrom, DATE_FORMAT_HOURS_MINUTE);
   const dateEndHoursMinute = humanizeTaskDueDate(dateTo, DATE_FORMAT_HOURS_MINUTE);
 
-  const currentPointOffers = allOffers.find((item) => item.type === type).offers;
+  const currentTypePointOffers = allOffers.find((item) => item.type === type).offers;
 
   function offersListTemplate () {
-    return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.title, current.price), '');
+    if (point.offers.length) {
+      const currentPointOffers = [];
+      currentTypePointOffers.forEach((item) => {
+        point.offers.forEach((item2) => {
+          if (item.id === item2) {
+            currentPointOffers.push(item);
+          }
+        });
+      });
+
+      return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.title, current.price), '');
+    }
+    return '';
   }
 
   function offerItemTemplate (title, price) {
@@ -45,7 +57,7 @@ function createTripEventsItemTemplate(point, destination, allOffers) {
           <p class="event__duration">${dateDif(dateTo, dateFrom)}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
