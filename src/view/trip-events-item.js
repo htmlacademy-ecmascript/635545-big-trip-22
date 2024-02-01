@@ -1,8 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import he from 'he';
 import {humanizeTaskDueDate, dateDif} from '../utils.js';
 import {DATE_FORMAT_DAY_MONTH, DATE_FORMAT_YEAR_DAY_MONTH, DATE_FORMAT_HOURS_MINUTE} from '../const.js';
 
-function createTripEventsItemTemplate(point, destination, arrOffers) {
+function createTripEventsItemTemplate(point, destination, allOffers) {
   const { basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const { name } = destination ?? '';
 
@@ -11,18 +12,18 @@ function createTripEventsItemTemplate(point, destination, arrOffers) {
   const dateStartHoursMinute = humanizeTaskDueDate(dateFrom, DATE_FORMAT_HOURS_MINUTE);
   const dateEndHoursMinute = humanizeTaskDueDate(dateTo, DATE_FORMAT_HOURS_MINUTE);
 
-  const currentPointOffers = arrOffers.find((item) => item.type === type).offers;
+  const currentPointOffers = allOffers.find((item) => item.type === type).offers;
 
   function offersListTemplate () {
-    return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.id, current.title, current.price), '');
+    return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.title, current.price), '');
   }
 
   function offerItemTemplate (title, price) {
     return `
       <li class="event__offer">
-        <span class="event__offer-title">${title}</span>
+        <span class="event__offer-title">${he.encode(String(title))}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${price}</span>
+        <span class="event__offer-price">${he.encode(String(price))}</span>
       </li>
     `;
   }
@@ -32,14 +33,14 @@ function createTripEventsItemTemplate(point, destination, arrOffers) {
       <div class="event">
         <time class="event__date" datetime="${dateStartDatetime}">${dateStartDayMonth}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${he.encode(String(type))}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${name}</h3>
+        <h3 class="event__title">${type} ${he.encode(String(name)) ?? ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${dateStartHoursMinute}</time>
+            <time class="event__start-time" datetime="${dateStartHoursMinute}">${dateStartHoursMinute}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${dateEndHoursMinute}</time>
+            <time class="event__end-time" datetime="${dateEndHoursMinute}">${dateEndHoursMinute}</time>
           </p>
           <p class="event__duration">${dateDif(dateTo, dateFrom)}</p>
         </div>
@@ -67,15 +68,15 @@ function createTripEventsItemTemplate(point, destination, arrOffers) {
 export default class TripEventsItemView extends AbstractView {
   #point = null;
   #destination = null;
-  #arrOffers = [];
+  #allOffers = [];
   #rollupBtnClick = null;
   #favoriteBtnClick = null;
 
-  constructor({point, destination, arrOffers, onClickRollupBtn, onClickFavoriteBtn}) {
+  constructor({point, destination, allOffers, onClickRollupBtn, onClickFavoriteBtn}) {
     super();
     this.#point = point;
     this.#destination = destination;
-    this.#arrOffers = arrOffers;
+    this.#allOffers = allOffers;
     this.#rollupBtnClick = onClickRollupBtn;
     this.#favoriteBtnClick = onClickFavoriteBtn;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickRollupBtn);
@@ -86,7 +87,7 @@ export default class TripEventsItemView extends AbstractView {
     return createTripEventsItemTemplate(
       this.#point,
       this.#destination,
-      this.#arrOffers
+      this.#allOffers
     );
   }
 

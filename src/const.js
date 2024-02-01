@@ -1,5 +1,4 @@
 const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-const CITY = ['Minsk', 'Volzhskiy', 'Moscow', 'St. Petersburg', 'Biysk', 'Grodno'];
 const NATURAL_NUMBERS = [1,2,3,4,5,6,7,8,9,0];
 const DATE_FORMAT_DAY_MONTH = 'DD MMM';
 const DATE_FORMAT_YEAR_DAY_MONTH = 'YYYY-MM-DD';
@@ -28,8 +27,8 @@ const POINT_EMPTY = {
   dateFrom: null,
   dateTo: null,
   destination: null,
-  arrDestinations: [],
-  arrOffers: [],
+  allDestinations: [],
+  allOffers: [],
   isFavorite: false,
   offers: [],
   offer: {
@@ -89,7 +88,6 @@ const SourceUrl = {
 
 export {
   POINT_TYPE,
-  CITY,
   NATURAL_NUMBERS,
   DATE_FORMAT_DAY_MONTH,
   DATE_FORMAT_YEAR_DAY_MONTH,

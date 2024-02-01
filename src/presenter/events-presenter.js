@@ -6,6 +6,7 @@ import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import { filter, sorting } from '../utils.js';
 import { SortTypes, UpdateType, UserAction } from '../const.js';
+import Loading from '../view/loading.js';
 
 export default class EventsPresenter {
   // #emptyListComponent = new EmptyListView();
@@ -23,6 +24,8 @@ export default class EventsPresenter {
   #newPointPresenter = null;
   #newButtonPresenter = null;
   #isCreating = false;
+  #loadingComponent = new Loading();
+  #isLoading = true;
 
   constructor({
     container,
@@ -77,13 +80,24 @@ export default class EventsPresenter {
   };
 
   #renderBoard() {
-    if(!this.eventPoints.length) {
+    if (this.#isLoading) {
+      this.#newButtonPresenter.disabledButton();
+    }
+
+    if(this.eventPoints.length === 0 && !this.#isCreating) {
       this.#renderEmptyList();
       return;
     }
 
+    this.#newButtonPresenter.enableButton();
+
     this.#renderSort();
     this.#renderList();
+    this.#renderPoints();
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent,this.#container);
   }
 
   #clearBoard = ({resetSortType = false} = {}) => {
@@ -105,6 +119,11 @@ export default class EventsPresenter {
     }
     if(updateType === UpdateType.MAJOR) {
       this.#clearBoard({resetSortType: true});
+      this.#renderBoard();
+    }
+    if(updateType === UpdateType.INIT) {
+      this.#isLoading = false;
+      remove(this.#loadingComponent);
       this.#renderBoard();
     }
   };

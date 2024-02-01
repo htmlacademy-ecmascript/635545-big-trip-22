@@ -46,15 +46,15 @@ export default class TripEventPresenter {
     this.#pointComponent = new TripEventsItemView({
       point: this.#point,
       destination: this.#destination,
-      arrOffers: this.#offersModel.get(),
+      allOffers: this.#offersModel.get(),
       onClickRollupBtn: this.#rollupBtnClick,
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
 
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
-      arrDestinations: this.#destinationsModel.get(),
-      arrOffers: this.#offersModel.get(),
+      allDestinations: this.#destinationsModel.get(),
+      allOffers: this.#offersModel.get(),
       onSubmit: this.#closeAndSaveEditOpenPoint,
       onClose: this.#closeEditOpenPoint,
       onDelete: this.#deleteClickHandler,

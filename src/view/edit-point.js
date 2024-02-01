@@ -1,25 +1,27 @@
 import flatpickr from 'flatpickr';
+import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
 import {POINT_EMPTY} from '../const.js';
-import {POINT_TYPE, CITY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
+import {POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
-  arrDestinations,
-  arrOffers,
+  allDestinations,
+  allOffers,
   editorMode
 ) {
   const { basePrice, dateFrom, dateTo, type } = state;
   const isCreating = editorMode === EditType.CREATING;
+  const cities = allDestinations.map((item) => item.name);
 
-  const selectedDestination = arrDestinations.find(
+  const selectedDestination = allDestinations.find(
     ({id}) => id === state.destination
   );
 
-  const currentPointOffers = arrOffers.find((item) => item.type === type).offers;
+  const currentPointOffers = allOffers.find((item) => item.type === type).offers;
 
   const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
@@ -75,7 +77,7 @@ function createEditPointTemplate(
   }
 
   function cityTemplate () {
-    return CITY.reduce(
+    return cities.reduce(
       (sum, current) => `${sum}<option value="${current}" ${selectedDestination.name === current ? 'selected' : ''}>${current}</option>`, ''
     );
   }
@@ -179,8 +181,8 @@ function createEditPointTemplate(
 
 export default class EditPointView extends AbstractStatefulView {
   // #editPoint = null;
-  #arrDestinations = [];
-  #arrOffers = [];
+  #allDestinations = [];
+  #allOffers = [];
   #onSubmit = null;
   #onClose = null;
   #onDelete = null;
@@ -190,8 +192,8 @@ export default class EditPointView extends AbstractStatefulView {
 
   constructor({
     editPoint = POINT_EMPTY,
-    arrDestinations,
-    arrOffers,
+    allDestinations,
+    allOffers,
     onSubmit,
     onClose,
     onDelete,
@@ -199,8 +201,8 @@ export default class EditPointView extends AbstractStatefulView {
   }) {
     super();
     // this.#editPoint = editPoint;
-    this.#arrDestinations = arrDestinations;
-    this.#arrOffers = arrOffers;
+    this.#allDestinations = allDestinations;
+    this.#allOffers = allOffers;
     this.#onSubmit = onSubmit;
     this.#onClose = onClose;
     this.#onDelete = onDelete;
@@ -212,8 +214,8 @@ export default class EditPointView extends AbstractStatefulView {
   get template() {
     return createEditPointTemplate(
       this._state,
-      this.#arrDestinations,
-      this.#arrOffers,
+      this.#allDestinations,
+      this.#allOffers,
       this.#editorMode
     );
   }
@@ -260,7 +262,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #destinationChangeHandler = (evt) => {
-    const selected = this.#arrDestinations.find((item) => item.name === evt.target.value);
+    const selected = this.#allDestinations.find((item) => item.name === evt.target.value);
     const selectedId = (selected) ? selected.id : null;
 
     this.updateElement({

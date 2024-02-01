@@ -30,8 +30,8 @@ export default class NewPointPresenter {
     }
 
     this.#addPointComponent = new EditPointView({
-      arrDestinations: this.#destinationsModel.get(),
-      arrOffers: this.#offersModel.get(),
+      allDestinations: this.#destinationsModel.get(),
+      allOffers: this.#offersModel.get(),
       onSubmit: this.#formSubmitHandler,
       onClose: this.#cancelClickHandler,
       editorMode: EditType.CREATING,
