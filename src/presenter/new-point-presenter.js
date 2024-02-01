@@ -70,4 +70,22 @@ export default class NewPointPresenter {
       this.destroy({isCanceled: true});
     }
   };
+
+  setSaving = () => {
+    this.#addPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#addPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        // isDeleting: false,
+      });
+    };
+    this.#addPointComponent.shake(resetFormState);
+  };
 }
