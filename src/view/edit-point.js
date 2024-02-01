@@ -78,7 +78,7 @@ function createEditPointTemplate(
 
   function cityTemplate () {
     return cities.reduce(
-      (sum, current) => `${sum}<option value="${current}" ${selectedDestination.name === current ? 'selected' : ''}>${current}</option>`, ''
+      (sum, current) => `${sum}<option value="${current}" ${selectedDestination?.name === current ? 'selected' : ''}>${current}</option>`, ''
     );
   }
 
