@@ -4,7 +4,7 @@ import {EditType, UpdateType, UserAction} from '../const.js';
 
 export default class NewPointPresenter {
   #container = null;
-  #destinationModel = [];
+  #destinationsModel = [];
   #offersModel = [];
   #addPointComponent = null;
   #handleDataChange = null;
@@ -12,13 +12,13 @@ export default class NewPointPresenter {
 
   constructor ({
     container,
-    destinationModel,
+    destinationsModel,
     offersModel,
     onDataChange,
     onDestroy
   }) {
     this.#container = container;
-    this.#destinationModel = destinationModel;
+    this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
@@ -30,8 +30,8 @@ export default class NewPointPresenter {
     }
 
     this.#addPointComponent = new EditPointView({
-      arrDestinations: this.#destinationModel.get(),
-      arrOffers: this.#offersModel.get(),
+      allDestinations: this.#destinationsModel.get(),
+      allOffers: this.#offersModel.get(),
       onSubmit: this.#formSubmitHandler,
       onClose: this.#cancelClickHandler,
       editorMode: EditType.CREATING,
@@ -41,14 +41,15 @@ export default class NewPointPresenter {
     document.addEventListener('keydown', this.#escKeyEventEdit);
   }
 
-  destroy({isCanceled = true}) {
+  destroy({isCanceled = true} = {}) {
     if (!this.#addPointComponent) {
       return;
     }
     remove(this.#addPointComponent);
     this.#addPointComponent = null;
-    this.#handleDestroy({isCanceled});
+    // this.#handleDestroy({isCanceled});
     document.removeEventListener('keydown', this.#escKeyEventEdit);
+    this.#handleDestroy({isCanceled});
   }
 
   #cancelClickHandler = () => {
@@ -61,7 +62,7 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point
     );
-    this.destroy({isCanceled: false});
+    // this.destroy({isCanceled: false});
   };
 
   #escKeyEventEdit = (evt) => {
@@ -69,5 +70,23 @@ export default class NewPointPresenter {
       evt.preventDefault();
       this.destroy({isCanceled: true});
     }
+  };
+
+  setSaving = () => {
+    this.#addPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#addPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#addPointComponent.shake(resetFormState);
   };
 }

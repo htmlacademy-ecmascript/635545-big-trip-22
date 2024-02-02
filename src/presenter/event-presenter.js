@@ -6,7 +6,7 @@ import { isMinorChange } from '../utils.js';
 
 export default class TripEventPresenter {
   #container = null;
-  #destinationModel = null;
+  #destinationsModel = null;
   #offersModel = null;
   #editPoint = null;
   #destination = null;
@@ -21,13 +21,13 @@ export default class TripEventPresenter {
 
   constructor({
     container,
-    destinationModel,
+    destinationsModel,
     offersModel,
     onPointChange,
     onModeChange
   }) {
     this.#container = container;
-    this.#destinationModel = destinationModel;
+    this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleDataChange = onPointChange;
     this.#handleModeChange = onModeChange;
@@ -36,7 +36,7 @@ export default class TripEventPresenter {
   init(point) {
     this.#point = point;
     this.#editPoint = this.#point;
-    this.#destination = this.#destinationModel.getById(this.#editPoint.destination);
+    this.#destination = this.#destinationsModel.getById(this.#editPoint.destination);
     this.#offer = this.#offersModel.getByType(this.#editPoint.type);
     this.#offers = this.#offer.offers;
 
@@ -46,15 +46,15 @@ export default class TripEventPresenter {
     this.#pointComponent = new TripEventsItemView({
       point: this.#point,
       destination: this.#destination,
-      arrOffers: this.#offersModel.get(),
+      allOffers: this.#offersModel.get(),
       onClickRollupBtn: this.#rollupBtnClick,
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
 
     this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
-      arrDestinations: this.#destinationModel.get(),
-      arrOffers: this.#offersModel.get(),
+      allDestinations: this.#destinationsModel.get(),
+      allOffers: this.#offersModel.get(),
       onSubmit: this.#closeAndSaveEditOpenPoint,
       onClose: this.#closeEditOpenPoint,
       onDelete: this.#deleteClickHandler,
@@ -143,5 +143,38 @@ export default class TripEventPresenter {
         isFavorite: !this.#point.isFavorite
       }
     );
+  };
+
+  setSaving = () => {
+    if(this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if(this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+    }
+
+    if(this.#mode === Mode.EDITING) {
+      const resetFormState = () => {
+        this.#editComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      };
+      this.#editComponent.shake(resetFormState);
+    }
+  };
+
+  setDeleting = () => {
+    this.#editComponent.updateElement({
+      isDisabled: true,
+      isDeleting: true,
+    });
   };
 }
