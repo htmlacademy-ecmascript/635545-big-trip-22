@@ -5,7 +5,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
 import {POINT_EMPTY} from '../const.js';
-import {POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
+import {POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType, START_CITY_INDEX} from '../const.js';
 
 function createEditPointTemplate(
   state,
@@ -77,6 +77,11 @@ function createEditPointTemplate(
   }
 
   function cityTemplate () {
+    if (!selectedDestination) {
+      return cities.reduce(
+        (sum, current, index) => `${sum}<option value="${current}" ${index === START_CITY_INDEX ? 'selected' : ''}>${current}</option>`, ''
+      );
+    }
     return cities.reduce(
       (sum, current) => `${sum}<option value="${current}" ${selectedDestination?.name === current ? 'selected' : ''}>${current}</option>`, ''
     );
@@ -211,6 +216,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#editorMode = editorMode;
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
+    this.#updateStartCreatingModeDestination();
   }
 
   get template() {
@@ -267,10 +273,20 @@ export default class EditPointView extends AbstractStatefulView {
     const selected = this.#allDestinations.find((item) => item.name === evt.target.value);
     const selectedId = (selected) ? selected.id : null;
 
+    this.#updateDestination(selectedId);
+  };
+
+  #updateDestination = (selectedId) => {
     this.updateElement({
       ...this._state,
       destination: selectedId
     });
+  };
+
+  #updateStartCreatingModeDestination = () => {
+    if (this.#editorMode === EditType.CREATING) {
+      this.#updateDestination(this.#allDestinations[START_CITY_INDEX].id);
+    }
   };
 
   #offersChangeHandler = () => {

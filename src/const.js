@@ -86,7 +86,10 @@ const SourceUrl = {
   DESTINATIONS: 'destinations',
 };
 
+const START_CITY_INDEX = 0;
+
 export {
+  START_CITY_INDEX,
   POINT_TYPE,
   NATURAL_NUMBERS,
   DATE_FORMAT_DAY_MONTH,
