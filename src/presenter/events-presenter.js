@@ -180,7 +180,7 @@ export default class EventsPresenter {
     if(actionType === UserAction.DELETE_POINT) {
       this.#pointsPresenter.get(update.id).setDeleting();
       try {
-        await this.#eventPointsModel.delete(updateType, update);;
+        await this.#eventPointsModel.delete(updateType, update);
       } catch (error) {
         this.#pointsPresenter.get(update.id).setAborting();
       }
