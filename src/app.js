@@ -40,13 +40,17 @@ const filtersPresenter = new FiltersPresenter({
   filtersModel: filtersModel,
 });
 
-const headerInfoPresenter = new HeaderInfoPresenter({container: tripMainElement, place: RenderPosition.AFTERBEGIN});
+const headerInfoPresenter = new HeaderInfoPresenter({
+  container: tripMainElement,
+  place: RenderPosition.AFTERBEGIN,
+  pointsModel: eventPointsModel,
+  destinationsModel: destinationsModel,
+  offersModel: offersModel,
+});
 
 export default class BigTripApp {
   init() {
-    if(eventPointsModel.get().length) {
-      headerInfoPresenter.init();
-    }
+    headerInfoPresenter.init();
     newButtonPresenter.init({
       onButtonClick: eventsPresenter.addPointButtonClickHandler
     });

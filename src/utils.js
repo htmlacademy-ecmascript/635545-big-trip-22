@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import {FilterTypes} from './const.js';
-import {SortTypes} from './const.js';
+import {FilterTypes, SortTypes, DESTINATION_ITEM_COUNT} from './const.js';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -100,7 +99,47 @@ const adaptToServer = (point) => {
   return adaptedPoint;
 };
 
+const getTripRoute = (
+  points = [],
+  destinations = [],
+) => {
+  const destinationNames = sorting[SortTypes.DAY]([...points]).map(
+    (point) =>
+      destinations.find((destination) => destination.id === point.destination)
+        .name
+  );
+
+  return destinationNames <= DESTINATION_ITEM_COUNT
+    ? destinationNames.join(' - ')
+    : `${destinationNames.at(0)} - ... - ${destinationNames.at(-1)}`;
+};
+
+const getTripPeriod = (points = []) => {
+  const sortedPoints = sorting[SortTypes.DAY]([...points]);
+
+  return sortedPoints.length
+    ? `${dayjs(sortedPoints.at(0).dateFrom).format('DD MMM')} - ${dayjs(sortedPoints.at(-1).dateTo).format('DD MMM')}`
+    : '';
+};
+
+const getCheckedOffers = (offers, type) =>
+  offers.find((offer) => offer.type === type)?.offers;
+
+const getOffersCost = (offerIDs = [], offers = []) =>
+  offerIDs.reduce((offerCost, id) =>
+    offerCost + (offers.find((offer) => offer.id === id)?.price ?? 0), 0
+  );
+
+const getTripCost = (points = [], offers = []) => points.reduce((total, point) =>
+  total +
+  point.basePrice +
+  getOffersCost(points.offers, getCheckedOffers(offers, point.type)), 0
+);
+
 export {
+  getTripCost,
+  getTripPeriod,
+  getTripRoute,
   adaptToServer,
   adaptToClient,
   getRandomArrayElement,
