@@ -157,6 +157,7 @@ export default class TripEventPresenter {
   setAborting = () => {
     if(this.#mode === Mode.DEFAULT) {
       this.#pointComponent.shake();
+      return;
     }
 
     if(this.#mode === Mode.EDITING) {
@@ -172,9 +173,11 @@ export default class TripEventPresenter {
   };
 
   setDeleting = () => {
-    this.#editComponent.updateElement({
-      isDisabled: true,
-      isDeleting: true,
-    });
+    if(this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
   };
 }

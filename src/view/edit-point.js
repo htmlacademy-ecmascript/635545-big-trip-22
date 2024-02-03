@@ -13,7 +13,7 @@ function createEditPointTemplate(
   allOffers,
   editorMode
 ) {
-  const { basePrice, dateFrom, dateTo, type } = state;
+  const { basePrice, dateFrom, dateTo, type, isDisabled, isSaving, isFavorite, isDeleting } = state;
   const isCreating = editorMode === EditType.CREATING;
   const cities = allDestinations.map((item) => item.name);
 
@@ -57,7 +57,7 @@ function createEditPointTemplate(
     return '';
   };
 
-  function offerItemTemplate (id, title, price) {
+  function createOfferItemTemplate (id, title, price) {
     return `
       <div class="event__offer-selector">
         <input class="event__offer-checkbox visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage"
@@ -72,11 +72,11 @@ function createEditPointTemplate(
     `;
   }
 
-  function offersListTemplate () {
-    return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.id, current.title, current.price), '');
+  function createOffersListTemplate () {
+    return currentPointOffers.reduce((sum, current) => sum + createOfferItemTemplate(current.id, current.title, current.price), '');
   }
 
-  function cityTemplate () {
+  function createCityTemplate () {
     if (!selectedDestination) {
       return cities.reduce(
         (sum, current, index) => `${sum}<option value="${current}" ${index === START_CITY_INDEX ? 'selected' : ''}>${current}</option>`, ''
@@ -87,7 +87,7 @@ function createEditPointTemplate(
     );
   }
 
-  function eventTypeListTemplate () {
+  function createEventTypeListTemplate () {
     function eventTypeItemTemplate (item) {
       return (
         `<div class="event__type-item">
@@ -102,11 +102,21 @@ function createEditPointTemplate(
     );
   }
 
-  const rollupTemplate = () => `
-    <button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>
-  `;
+  function createResetAndRollupTemplate() {
+    if(isCreating) {
+      return `
+        <button class="event__reset-btn" type="reset">Cancel</button>
+      `;
+    }
+    return `
+      <button class="event__reset-btn" ${isDisabled ? 'disabled' : ''} type="reset">
+        ${isDeleting ? 'Deleting...' : 'Delete'}
+      </button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
+    `;
+  }
 
   return (
     `<li class="trip-events__item">
@@ -122,7 +132,7 @@ function createEditPointTemplate(
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${eventTypeListTemplate()}
+                ${createEventTypeListTemplate()}
               </fieldset>
             </div>
           </div>
@@ -135,7 +145,7 @@ function createEditPointTemplate(
               class="event__input  event__input--destination"
               id="event-destination-1"
               name="event-destination">
-              ${cityTemplate()}
+              ${createCityTemplate()}
             </select>
           </div>
 
@@ -165,18 +175,17 @@ function createEditPointTemplate(
             value="${he.encode(String(basePrice))}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">
-          ${isCreating ? 'Cancel' : 'Delete'}
+          <button class="event__save-btn  btn  btn--blue" type="submit">
+          ${isSaving ? 'Saving...' : 'Save'}
           </button>
-          ${isCreating ? '' : rollupTemplate()}
+          ${createResetAndRollupTemplate()}
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-              ${offersListTemplate()}
+              ${createOffersListTemplate()}
             </div>
           </section>
           ${createDestinationTemplate()}
