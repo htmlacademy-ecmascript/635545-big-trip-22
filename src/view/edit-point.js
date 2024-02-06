@@ -81,15 +81,24 @@ function createEditPointTemplate(
     return currentPointOffers.reduce((sum, current) => sum + createOfferItemTemplate(current.id, current.title, current.price), '');
   }
 
-  function createCityTemplate () {
-    if (!selectedDestination) {
-      return cities.reduce(
-        (sum, current, index) => `${sum}<option value="${current}" ${index === START_CITY_INDEX ? 'selected' : ''}>${current}</option>`, ''
-      );
-    }
+  function createCityItemTemplate () {
     return cities.reduce(
-      (sum, current) => `${sum}<option value="${current}" ${selectedDestination?.name === current ? 'selected' : ''}>${current}</option>`, ''
+      (sum, current) => `${sum}<option value="${current}"></option>`, ''
     );
+  }
+
+  function createCityTemplate () {
+    return `
+      <input class="event__input  event__input--destination"
+        id="event-destination-1"
+        type="text"
+        name="event-destination"
+        value="${selectedDestination ? selectedDestination?.name : cities[START_CITY_INDEX]}"
+        list="destination-list-1">
+      <datalist id="destination-list-1">
+        ${createCityItemTemplate()}
+      </datalist>
+    `;
   }
 
   function createEventTypeListTemplate () {
@@ -146,12 +155,7 @@ function createEditPointTemplate(
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <select
-              class="event__input  event__input--destination"
-              id="event-destination-1"
-              name="event-destination">
-              ${createCityTemplate()}
-            </select>
+            ${createCityTemplate()}
           </div>
 
           <div class="event__field-group  event__field-group--time">
