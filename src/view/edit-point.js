@@ -239,7 +239,8 @@ export default class EditPointView extends AbstractStatefulView {
     this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
-    this.resetState();
+    // this.resetState();
+    this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
     this.#updateStartCreatingModeDestination();
   }

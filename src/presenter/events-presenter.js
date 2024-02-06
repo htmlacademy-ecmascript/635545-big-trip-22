@@ -46,7 +46,7 @@ export default class EventsPresenter {
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#newPointPresenter = new NewPointPresenter({
-      container: this.#container,
+      container: this.#tripEventsListComponent.element,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onDataChange: this.#handleViewAction,
