@@ -14,7 +14,7 @@ export default class NewButtonView extends AbstractView {
   constructor ({onClick}) {
     super();
     this.#handleClick = onClick;
-    this.element.addEventListener('click' , this.#clickHandler);
+    this.element.addEventListener('click' , this.#eventAddButtonClickHandler);
   }
 
   get template() {
@@ -25,7 +25,7 @@ export default class NewButtonView extends AbstractView {
     this.element.disabled = isDisabled;
   }
 
-  #clickHandler = (evt) => {
+  #eventAddButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleClick();
   };
