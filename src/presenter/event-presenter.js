@@ -166,11 +166,7 @@ export default class TripEventPresenter {
 
     if(this.#mode === Mode.EDITING) {
       const resetFormState = () => {
-        this.#editComponent.updateElement({
-          isDisabled: false,
-          isSaving: false,
-          isDeleting: false,
-        });
+        this.#editComponent.resetFormState();
       };
       this.#editComponent.shake(resetFormState);
     }
