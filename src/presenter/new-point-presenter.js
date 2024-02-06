@@ -62,6 +62,7 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point
     );
+    document.removeEventListener('keydown', this.#escKeyEventEdit);
     // this.destroy({isCanceled: false});
   };
 
@@ -87,6 +88,7 @@ export default class NewPointPresenter {
         isDeleting: false,
       });
     };
+    document.addEventListener('keydown', this.#escKeyEventEdit);
     this.#addPointComponent.shake(resetFormState);
   };
 }

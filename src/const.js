@@ -4,6 +4,8 @@ const DATE_FORMAT_DAY_MONTH = 'DD MMM';
 const DATE_FORMAT_YEAR_DAY_MONTH = 'YYYY-MM-DD';
 const DATE_FORMAT_HOURS_MINUTE = 'HH:mm';
 const DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE = 'DD/MM/YY HH:mm';
+const AUTHORIZATION = 'Basic doghdtshr6dhsge6';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -91,6 +93,8 @@ const START_CITY_INDEX = 0;
 const DESTINATION_ITEM_COUNT = 3;
 
 export {
+  END_POINT,
+  AUTHORIZATION,
   DESTINATION_ITEM_COUNT,
   START_CITY_INDEX,
   POINT_TYPE,

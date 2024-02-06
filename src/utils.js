@@ -45,7 +45,7 @@ const filter = {
 };
 
 const getPointsByDate = (pointA, pointB) =>
-  dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
+  dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 const getPointsByTime = (pointA, pointB) =>
   dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom)) - dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
 const getPointsByPrice = (pointA, pointB) =>
@@ -110,8 +110,8 @@ const getTripRoute = (
   );
 
   return destinationNames <= DESTINATION_ITEM_COUNT
-    ? destinationNames.join(' - ')
-    : `${destinationNames.at(0)} - ... - ${destinationNames.at(-1)}`;
+    ? destinationNames.join('&nbsp;&mdash;&nbsp;')
+    : `${destinationNames.at(0)}&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;${destinationNames.at(-1)}`;
 };
 
 const getTripPeriod = (points = []) => {
