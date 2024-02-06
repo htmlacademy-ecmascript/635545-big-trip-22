@@ -196,7 +196,7 @@ function createEditPointTemplate(
 }
 
 export default class EditPointView extends AbstractStatefulView {
-  // #editPoint = null;
+  #editPoint = null;
   #allDestinations = [];
   #allOffers = [];
   #onSubmit = null;
@@ -216,14 +216,14 @@ export default class EditPointView extends AbstractStatefulView {
     editorMode = EditType.EDITING,
   }) {
     super();
-    // this.#editPoint = editPoint;
+    this.#editPoint = editPoint;
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
     this.#onSubmit = onSubmit;
     this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
-    this._setState(EditPointView.pasrsePointToState(editPoint));
+    this._setState(EditPointView.pasrsePointToState(this.#editPoint));
     this._restoreHandlers();
     this.#updateStartCreatingModeDestination();
   }
@@ -251,17 +251,25 @@ export default class EditPointView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#submitSaveBtn);
     if (this.#editorMode === EditType.EDITING) {
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onButtonCloseHandler);
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonCloseClickHandler);
       this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteButtonClickHandler);
     }
     if (this.#editorMode === EditType.CREATING) {
-      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onButtonCloseHandler);
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#buttonCloseClickHandler);
     }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeGroupChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.#setDatepickers();
+  };
+
+  #buttonCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      ...EditPointView.pasrsePointToState(this.#editPoint)
+    });
+    this.#onButtonCloseHandler();
   };
 
   #deleteButtonClickHandler = (evt) => {
@@ -359,6 +367,6 @@ export default class EditPointView extends AbstractStatefulView {
     this.#datePickerFrom.set('maxDate'. selectedDate);
   };
 
-  static pasrsePointToState = (editPoint) => (editPoint);
-  static parseStateToPoint = (state) => state;
+  static pasrsePointToState = (editPoint) => ({...editPoint});
+  static parseStateToPoint = (state) => ({...state});
 }
