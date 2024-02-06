@@ -93,7 +93,13 @@ const START_CITY_INDEX = 0;
 
 const DESTINATION_ITEM_COUNT = 3;
 
+const TimeLimit = {
+  LOWER_LIMIT: 300,
+  UPPER_LIMIT: 1000,
+};
+
 export {
+  TimeLimit,
   END_POINT,
   AUTHORIZATION,
   DESTINATION_ITEM_COUNT,

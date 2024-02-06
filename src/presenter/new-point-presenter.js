@@ -63,7 +63,6 @@ export default class NewPointPresenter {
       point
     );
     document.removeEventListener('keydown', this.#escKeyEventEdit);
-    // this.destroy({isCanceled: false});
   };
 
   #escKeyEventEdit = (evt) => {

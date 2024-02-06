@@ -4,18 +4,12 @@ import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
-import { filter, sorting } from '../utils.js';
-import { FilterTypes, SortTypes, UpdateType, UserAction } from '../const.js';
+import {filter, sorting} from '../utils.js';
+import {FilterTypes, SortTypes, UpdateType, UserAction, TimeLimit} from '../const.js';
 import Loading from '../view/loading.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
-const TimeLimit = {
-  LOWER_LIMIT: 300,
-  UPPER_LIMIT: 1000,
-};
-
 export default class EventsPresenter {
-  // #emptyListComponent = new EmptyListView();
   #emptyListComponent = null;
   #tripEventsListComponent = new TripEventsListView();
   #container = null;
@@ -23,7 +17,6 @@ export default class EventsPresenter {
   #filtersModel = null;
   #destinationsModel = null;
   #offersModel = null;
-  // #eventPoints = [];
   #pointsPresenter = new Map();
   #currentSortType = SortTypes.DAY;
   #sortPresenter = null;
@@ -58,8 +51,6 @@ export default class EventsPresenter {
       onDestroy: this.#addPointDestroyHandler,
     });
     this.#newButtonPresenter = newButtonPresenter;
-    // this.#eventPoints = [...this.#eventPointsModel.get()];
-    // Для пустого листа this.#eventPoints = [];
     this.#eventPointsModel.addObserver(this.#modelEventHandler);
     this.#filtersModel.addObserver(this.#modelEventHandler);
   }
@@ -146,7 +137,6 @@ export default class EventsPresenter {
     this.#sortPresenter = new SortPresenter({
       container: this.#container,
       sortTypeHandler: this.#sortTypesChangeHandler,
-      // defaultSortType: this.#currentSortType,
     });
     this.#sortPresenter.init();
   }
@@ -198,7 +188,6 @@ export default class EventsPresenter {
   }
 
   #sortTypesChangeHandler = (sortType) => {
-    // this.#sortPoints(sortType);
     this.#currentSortType = sortType;
     this.#clearPoints();
     this.#renderPoints();

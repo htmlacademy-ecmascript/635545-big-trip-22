@@ -200,7 +200,7 @@ export default class EditPointView extends AbstractStatefulView {
   #allDestinations = [];
   #allOffers = [];
   #onSubmit = null;
-  #onClose = null;
+  #onButtonCloseHandler = null;
   #onDelete = null;
   #datePickerFrom = null;
   #datePickerTo = null;
@@ -220,7 +220,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
     this.#onSubmit = onSubmit;
-    this.#onClose = onClose;
+    this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
     this._setState(EditPointView.pasrsePointToState(editPoint));
@@ -251,26 +251,25 @@ export default class EditPointView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#submitSaveBtn);
     if (this.#editorMode === EditType.EDITING) {
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
-      // Удаляем только при режиме редактирования!
-      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onButtonCloseHandler);
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteButtonClickHandler);
     }
     if (this.#editorMode === EditType.CREATING) {
-      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onClose);
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onButtonCloseHandler);
     }
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeGroupChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.#setDatepickers();
   };
 
-  #deleteClickHandler = (evt) => {
+  #deleteButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#onDelete(this._state);
   };
 
-  #typeChangeHandler = (evt) => {
+  #eventTypeGroupChangeHandler = (evt) => {
     this.updateElement({
       ...this._state,
       type: evt.target.value,
