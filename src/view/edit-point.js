@@ -77,8 +77,21 @@ function createEditPointTemplate(
     `;
   }
 
-  function createOffersListTemplate () {
+  function createOffersItemTemplate () {
     return currentPointOffers.reduce((sum, current) => sum + createOfferItemTemplate(current.id, current.title, current.price), '');
+  }
+
+  function createOffersListTemplate () {
+    if (currentPointOffers.length) {
+      return `<section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+            ${createOffersItemTemplate()}
+          </div>
+        </section>`;
+    }
+
+    return '';
   }
 
   function createCityItemTemplate () {
@@ -190,13 +203,7 @@ function createEditPointTemplate(
           ${createResetAndRollupTemplate()}
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-              ${createOffersListTemplate()}
-            </div>
-          </section>
+          ${createOffersListTemplate()}
           ${createDestinationTemplate()}
         </section>
       </form>
