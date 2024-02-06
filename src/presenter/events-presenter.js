@@ -1,24 +1,24 @@
 import {remove, render} from '../framework/render.js';
-import TripEventsListView from '../view/trip-events-list.js';
+import TripEventsList from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import {filter, sorting} from '../utils.js';
-import {FilterTypes, SortTypes, UpdateType, UserAction, TimeLimit} from '../const.js';
+import {FilterTypes, SortType, UpdateType, UserAction, TimeLimit} from '../const.js';
 import Loading from '../view/loading.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class EventsPresenter {
   #emptyListComponent = null;
-  #tripEventsListComponent = new TripEventsListView();
+  #tripEventsListComponent = new TripEventsList();
   #container = null;
   #eventPointsModel = null;
   #filtersModel = null;
   #destinationsModel = null;
   #offersModel = null;
   #pointsPresenter = new Map();
-  #currentSortType = SortTypes.DAY;
+  #currentSortType = SortType.DAY;
   #sortPresenter = null;
   #newPointPresenter = null;
   #newButtonPresenter = null;
@@ -69,7 +69,7 @@ export default class EventsPresenter {
     this.#isCreating = true;
     this.#newButtonPresenter.disabledButton();
     this.#filtersModel.set(UpdateType.MAJOR, FilterTypes.EVERYTHING);
-    this.#currentSortType = SortTypes.DAY;
+    this.#currentSortType = SortType.DAY;
     this.#newPointPresenter.init();
   };
 
@@ -110,7 +110,7 @@ export default class EventsPresenter {
     this.#sortPresenter.destroy();
     remove(this.#emptyListComponent);
     if (resetSortType) {
-      this.#currentSortType = SortTypes.DAY;
+      this.#currentSortType = SortType.DAY;
     }
   };
 

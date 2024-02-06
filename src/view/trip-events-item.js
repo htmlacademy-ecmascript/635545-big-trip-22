@@ -77,7 +77,7 @@ function createTripEventsItemTemplate(point, destination, allOffers) {
   );
 }
 
-export default class TripEventsItemView extends AbstractView {
+export default class TripEventsItem extends AbstractView {
   #point = null;
   #destination = null;
   #allOffers = [];

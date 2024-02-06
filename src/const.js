@@ -6,6 +6,8 @@ const DATE_FORMAT_HOURS_MINUTE = 'HH:mm';
 const DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE = 'DD/MM/YY HH:mm';
 const AUTHORIZATION = 'Basic doghdtshr6dhsge6';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+const START_CITY_INDEX = 0;
+const DESTINATION_ITEM_COUNT = 3;
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -29,17 +31,12 @@ const POINT_EMPTY = {
   dateFrom: null,
   dateTo: null,
   destination: null,
-  // allDestinations: [],
-  // allOffers: [],
   isFavorite: false,
   offers: [],
-  // offer: {
-  //   offers: []
-  // },
   type: 'taxi',
 };
 
-const SortTypes = {
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -47,12 +44,12 @@ const SortTypes = {
   OFFER: 'offer',
 };
 
-const enabledSortTypes = {
-  [SortTypes.DAY]: true,
-  [SortTypes.EVENT]: false,
-  [SortTypes.TIME]: true,
-  [SortTypes.PRICE]: true,
-  [SortTypes.OFFER]: false,
+const EnabledSortTypes = {
+  [SortType.DAY]: true,
+  [SortType.EVENT]: false,
+  [SortType.TIME]: true,
+  [SortType.PRICE]: true,
+  [SortType.OFFER]: false,
 };
 
 const FilterTypes = {
@@ -89,10 +86,6 @@ const SourceUrl = {
   DESTINATIONS: 'destinations',
 };
 
-const START_CITY_INDEX = 0;
-
-const DESTINATION_ITEM_COUNT = 3;
-
 const TimeLimit = {
   LOWER_LIMIT: 300,
   UPPER_LIMIT: 1000,
@@ -113,8 +106,8 @@ export {
   Mode,
   EmptyListText,
   FilterTypes,
-  SortTypes,
-  enabledSortTypes,
+  SortType,
+  EnabledSortTypes,
   UserAction,
   UpdateType,
   EditType,

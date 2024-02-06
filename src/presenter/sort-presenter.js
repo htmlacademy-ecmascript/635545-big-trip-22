@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
 import SortView from '../view/sort.js';
-import {SortTypes, enabledSortTypes} from '../const.js';
+import {SortType, EnabledSortTypes} from '../const.js';
 
 export default class SortPresenter {
   #container = null;
@@ -12,10 +12,10 @@ export default class SortPresenter {
   constructor({container, sortTypeHandler, defaultSortType}) {
     this.#container = container;
     this.#defaultSortType = defaultSortType;
-    this.#sortTypes = Object.values(SortTypes).map((type) => ({
+    this.#sortTypes = Object.values(SortType).map((type) => ({
       type,
       isChecked: type === this.#defaultSortType,
-      isDisabled: !enabledSortTypes[type],
+      isDisabled: !EnabledSortTypes[type],
     }));
     this.#sortTypeChangeHandler = sortTypeHandler;
   }

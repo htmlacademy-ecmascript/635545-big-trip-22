@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {FilterTypes, SortTypes, DESTINATION_ITEM_COUNT} from './const.js';
+import {FilterTypes, SortType, DESTINATION_ITEM_COUNT} from './const.js';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -52,14 +52,14 @@ const getPointsByPrice = (pointA, pointB) =>
   pointB.basePrice - pointA.basePrice;
 
 const sorting = {
-  [SortTypes.DAY]: (points) => [...points].sort(getPointsByDate),
-  [SortTypes.EVENT]: () => {
-    throw new Error(`Sort by ${SortTypes.EVENT} is disabled`);
+  [SortType.DAY]: (points) => [...points].sort(getPointsByDate),
+  [SortType.EVENT]: () => {
+    throw new Error(`Sort by ${SortType.EVENT} is disabled`);
   },
-  [SortTypes.TIME]: (points) => [...points].sort(getPointsByTime),
-  [SortTypes.PRICE]: (points) => [...points].sort(getPointsByPrice),
-  [SortTypes.OFFER]: () => {
-    throw new Error(`Sort by ${SortTypes.OFFER} is disabled`);
+  [SortType.TIME]: (points) => [...points].sort(getPointsByTime),
+  [SortType.PRICE]: (points) => [...points].sort(getPointsByPrice),
+  [SortType.OFFER]: () => {
+    throw new Error(`Sort by ${SortType.OFFER} is disabled`);
   }
 };
 
@@ -103,7 +103,7 @@ const getTripRoute = (
   points = [],
   destinations = [],
 ) => {
-  const destinationNames = sorting[SortTypes.DAY]([...points]).map(
+  const destinationNames = sorting[SortType.DAY]([...points]).map(
     (point) =>
       destinations.find((destination) => destination.id === point.destination)
         .name
@@ -115,7 +115,7 @@ const getTripRoute = (
 };
 
 const getTripPeriod = (points = []) => {
-  const sortedPoints = sorting[SortTypes.DAY]([...points]);
+  const sortedPoints = sorting[SortType.DAY]([...points]);
 
   return sortedPoints.length
     ? `${dayjs(sortedPoints.at(0).dateFrom).format('DD MMM')} - ${dayjs(sortedPoints.at(-1).dateTo).format('DD MMM')}`
