@@ -86,6 +86,7 @@ export default class EventsPresenter {
     if (this.#isLoading) {
       this.#newButtonPresenter.disabledButton();
       this.#renderLoading();
+      return;
     }
 
     if(!this.eventPoints.length && !this.#isCreating) {
