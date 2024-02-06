@@ -88,7 +88,7 @@ export default class TripEventPresenter {
   #escKeyEventEdit = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      // this.#editComponent.reset(this.#editPoint);
+      // this.#editComponent.resetState();
       this.#closeEditOpenPoint();
       document.removeEventListener('keydown', this.#escKeyEventEdit);
     }
@@ -102,26 +102,30 @@ export default class TripEventPresenter {
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceEditorToPoint();
+      this.#editComponent.resetState();
     }
   };
 
   #replaceEditorToPoint = () => {
+    document.removeEventListener('keydown', this.#escKeyEventEdit);
     replace(this.#pointComponent, this.#editComponent);
     this.#mode = Mode.DEFAULT;
   };
 
   #replacePointToEditor = () => {
     replace(this.#editComponent, this.#pointComponent);
+    // Возможно не нужно
+    document.addEventListener('keydown', this.#escKeyEventEdit);
     this.#handleModeChange();
+    this.#editComponent.resetState();
     this.#mode = Mode.EDITING;
   };
 
   // Close
 
   #closeEditOpenPoint = () => {
-    // this.#editComponent.reset(this.#editPoint);
     this.#replaceEditorToPoint();
-    document.removeEventListener('keydown', this.#escKeyEventEdit);
+    // document.removeEventListener('keydown', this.#escKeyEventEdit);
   };
 
   // Submit

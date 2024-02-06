@@ -24,6 +24,7 @@ const EmptyListText = {
   PAST: 'There are no past events now',
   PRESENT: 'There are no present events now',
   FUTURE: 'There are no future events now',
+  ERROR: 'Failed to load latest route information',
 };
 
 const POINT_EMPTY = {

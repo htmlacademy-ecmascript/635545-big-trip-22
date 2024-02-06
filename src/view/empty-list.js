@@ -11,13 +11,18 @@ function createEmptyListTemplate({text}) {
 
 export default class EmptyListView extends AbstractView {
   #filterType = null;
+  #isError = false;
 
-  constructor ({filterType}) {
+  constructor ({filterType, isError}) {
     super();
     this.#filterType = filterType;
+    this.#isError = isError;
   }
 
   get template() {
+    if (this.#isError) {
+      return createEmptyListTemplate({text: EmptyListText.ERROR});
+    }
     return createEmptyListTemplate({text: EmptyListText[this.#filterType.toUpperCase()]});
   }
 }

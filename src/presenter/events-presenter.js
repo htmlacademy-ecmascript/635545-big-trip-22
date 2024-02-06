@@ -25,6 +25,8 @@ export default class EventsPresenter {
   #isCreating = false;
   #loadingComponent = new Loading();
   #isLoading = true;
+  #isError = false;
+
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -82,16 +84,22 @@ export default class EventsPresenter {
     }
   };
 
-  #renderBoard() {
+  #renderBoard({isError} = {}) {
     if (this.#isLoading) {
       this.#newButtonPresenter.disabledButton();
       this.#renderLoading();
       return;
     }
 
-    if(!this.eventPoints.length && !this.#isCreating) {
+    if(!this.eventPoints.length && !this.#isCreating && !isError) {
       this.#newButtonPresenter.enableButton();
       this.#renderEmptyList();
+      return;
+    }
+
+    if(isError) {
+      this.#newButtonPresenter.disabledButton();
+      this.#renderEmptyList({isError});
       return;
     }
 
@@ -131,6 +139,12 @@ export default class EventsPresenter {
       this.#isLoading = false;
       remove(this.#loadingComponent);
       this.#renderBoard();
+    }
+    if(updateType === UpdateType.ERROR) {
+      // this.#clearBoard();
+      this.#isLoading = false;
+      remove(this.#loadingComponent);
+      this.#renderBoard({ isError: true });
     }
   };
 
@@ -179,8 +193,11 @@ export default class EventsPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #renderEmptyList() {
-    this.#emptyListComponent = new EmptyListView({filterType: this.#filtersModel.get()});
+  #renderEmptyList({isError} = {}) {
+    this.#emptyListComponent = new EmptyListView({
+      filterType: this.#filtersModel.get(),
+      isError: isError,
+    });
     render(this.#emptyListComponent, this.#container);
   }
 

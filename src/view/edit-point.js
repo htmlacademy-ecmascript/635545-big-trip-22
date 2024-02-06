@@ -27,6 +27,7 @@ function createEditPointTemplate(
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
 
   const createDestinationTemplate = () => {
+    const isEmptyDestination = !selectedDestination?.pictures.length && !selectedDestination?.description.trim();
     if (selectedDestination) {
       const photoListTemplate = () => {
         if (selectedDestination.pictures.length) {
@@ -44,15 +45,19 @@ function createEditPointTemplate(
         }
       };
 
-      return (
-        `
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
-            ${photoListTemplate()}
-          </section>
-        `
-      );
+      if(isEmptyDestination) {
+        return '<p class="event__destination-description">No pictures destination description</p>';
+      } else {
+        return (
+          `
+            <section class="event__section  event__section--destination">
+              <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+              <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
+              ${photoListTemplate()}
+            </section>
+          `
+        );
+      }
     }
     return '';
   };
@@ -223,9 +228,15 @@ export default class EditPointView extends AbstractStatefulView {
     this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
-    this._setState(EditPointView.pasrsePointToState(this.#editPoint));
+    this.resetState();
     this._restoreHandlers();
     this.#updateStartCreatingModeDestination();
+  }
+
+  resetState() {
+    this.updateElement({
+      ...EditPointView.pasrsePointToState(this.#editPoint)
+    });
   }
 
   get template() {
@@ -266,9 +277,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   #buttonCloseClickHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      ...EditPointView.pasrsePointToState(this.#editPoint)
-    });
+    // this.resetState();
     this.#onButtonCloseHandler();
   };
 
