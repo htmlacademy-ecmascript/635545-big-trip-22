@@ -116,7 +116,7 @@ export default class EventsPresenter {
 
   #clearBoard = ({resetSortType = false} = {}) => {
     this.#clearPoints();
-    this.#sortPresenter.destroy();
+    this.#sortPresenter?.destroy();
     remove(this.#emptyListComponent);
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;

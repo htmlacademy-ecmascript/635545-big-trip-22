@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 function createNewButtonTemplate() {
   return (
@@ -8,8 +8,9 @@ function createNewButtonTemplate() {
   );
 }
 
-export default class NewButtonView extends AbstractView {
+export default class NewButtonView extends AbstractStatefulView {
   #handleClick = null;
+  #isDisabled = false;
 
   constructor ({onClick}) {
     super();
@@ -18,10 +19,13 @@ export default class NewButtonView extends AbstractView {
   }
 
   get template() {
+    console.log(this.#isDisabled);
     return createNewButtonTemplate();
   }
 
   setDisabled(isDisabled) {
+    this.#isDisabled = isDisabled;
+    console.log('setDisabled' , this.#isDisabled);
     this.element.disabled = isDisabled;
   }
 
