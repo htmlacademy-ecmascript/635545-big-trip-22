@@ -4,8 +4,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
-import {POINT_EMPTY} from '../const.js';
-import {POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType, START_CITY_INDEX} from '../const.js';
+import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType, START_CITY_INDEX} from '../const.js';
 
 function createEditPointTemplate(
   state,
@@ -100,27 +99,13 @@ function createEditPointTemplate(
   }
 
   function createCityTemplate () {
-    if (isCreating) {
-      return `
-        <input class="event__input  event__input--destination"
-          id="event-destination-1"
-          type="text"
-          required
-          name="event-destination"
-          value=""
-          list="destination-list-1">
-        <datalist id="destination-list-1">
-          ${createCityItemTemplate()}
-        </datalist>
-      `;
-    }
     return `
       <input class="event__input  event__input--destination"
         id="event-destination-1"
         type="text"
         required
         name="event-destination"
-        value="${selectedDestination ? selectedDestination?.name : cities[START_CITY_INDEX]}"
+        value="${selectedDestination ? selectedDestination?.name : ''}"
         list="destination-list-1">
       <datalist id="destination-list-1">
         ${createCityItemTemplate()}
@@ -256,7 +241,7 @@ export default class EditPointView extends AbstractStatefulView {
     // this.resetState();
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
-    this.#updateStartCreatingModeDestination();
+    // this.#updateStartCreatingModeDestination();
   }
 
   resetState() {
@@ -274,7 +259,9 @@ export default class EditPointView extends AbstractStatefulView {
     );
   }
 
-  reset = (editPoint) => this.updateElement({editPoint});
+  reset = (editPoint) => {
+    this.updateElement({editPoint});
+  };
 
   #submitSaveBtn = (evt) => {
     evt.preventDefault();
@@ -371,14 +358,14 @@ export default class EditPointView extends AbstractStatefulView {
     this.#datePickerFrom = flatpickr(startDateNode, {
       ...flatpickerConfig,
       defaultDate: this._state.dateFrom,
-      onClose: this.#closeStartDateHandler,
+      onChange: this.#closeStartDateHandler,
       maxDate: this._state.dateTo,
     });
 
     this.#datePickerTo = flatpickr(endDateNode, {
       ...flatpickerConfig,
       defaultDate: this._state.dateTo,
-      onClose: this.#closeEndDateHandler,
+      onChange: this.#closeEndDateHandler,
       minDate: this._state.dateFrom,
     });
 

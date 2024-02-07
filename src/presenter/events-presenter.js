@@ -75,7 +75,7 @@ export default class EventsPresenter {
     this.#newPointPresenter.init();
   };
 
-  #addPointDestroyHandler = ({isCanceled}) => {
+  #addPointDestroyHandler = ({isCanceled} = {}) => {
     this.#isCreating = false;
     this.#newButtonPresenter.enableButton();
     if(!this.eventPoints.length && isCanceled) {
