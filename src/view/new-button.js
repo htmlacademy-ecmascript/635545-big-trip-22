@@ -1,9 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
-function createNewButtonTemplate() {
+function createNewButtonTemplate(isDisabled) {
   return (
     `
-      <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>
+      <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button" ${isDisabled ? 'disabled' : ''}>New event</button>
     `
   );
 }
@@ -19,7 +19,7 @@ export default class NewButton extends AbstractStatefulView {
   }
 
   get template() {
-    return createNewButtonTemplate();
+    return createNewButtonTemplate(this.#isDisabled);
   }
 
   setDisabled(isDisabled) {

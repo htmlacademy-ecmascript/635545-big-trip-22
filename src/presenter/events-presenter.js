@@ -103,7 +103,10 @@ export default class EventsPresenter {
       return;
     }
 
-    this.#newButtonPresenter.enableButton();
+    if (!this.#isCreating) {
+      this.#newButtonPresenter.enableButton();
+    }
+
 
     this.#renderSort();
     this.#renderList();
