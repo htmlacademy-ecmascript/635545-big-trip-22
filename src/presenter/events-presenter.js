@@ -190,11 +190,13 @@ export default class EventsPresenter {
     }
 
     if(actionType === UserAction.DELETE_POINT) {
-      this.#pointsPresenter.get(update.id).setDeleting();
+      const deletePresenter = this.#pointsPresenter.get(update.id);
+      deletePresenter.setDeleting();
       try {
+        // deletePresenter.setDeleting();
         await this.#eventPointsModel.delete(updateType, update);
       } catch (error) {
-        this.#pointsPresenter.get(update.id).setAborting();
+        deletePresenter.setAborting();
       }
     }
     this.#uiBlocker.unblock();

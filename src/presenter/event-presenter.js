@@ -80,8 +80,8 @@ export default class TripEventPresenter {
     remove(this.#editComponent);
   }
 
-  #deleteClickHandler = (point) => {
-    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
+  #deleteClickHandler = () => {
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, this.#point);
   };
 
   #escKeyEventEdit = (evt) => {

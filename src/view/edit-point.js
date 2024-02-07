@@ -296,7 +296,8 @@ export default class EditPointView extends AbstractStatefulView {
 
   #deleteButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this.#onDelete(this._state);
+    // this.#onDelete(this._state);
+    this.#onDelete(EditPointView.parseStateToPoint(this._state));
   };
 
   #eventTypeGroupChangeHandler = (evt) => {
@@ -319,12 +320,6 @@ export default class EditPointView extends AbstractStatefulView {
       ...this._state,
       destination: selectedId
     });
-  };
-
-  #updateStartCreatingModeDestination = () => {
-    if (this.#editorMode === EditType.CREATING) {
-      this.#updateDestination(this.#allDestinations[START_CITY_INDEX].id);
-    }
   };
 
   #offersChangeHandler = () => {
@@ -389,6 +384,22 @@ export default class EditPointView extends AbstractStatefulView {
     this.#datePickerFrom.set('maxDate'. selectedDate);
   };
 
-  static pasrsePointToState = (editPoint) => ({...editPoint});
-  static parseStateToPoint = (state) => ({...state});
+  static pasrsePointToState (editPoint) {
+    return {
+      ...editPoint,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
+  }
+
+  static parseStateToPoint (state) {
+    const point = {...state};
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  }
 }
