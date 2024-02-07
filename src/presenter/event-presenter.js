@@ -132,8 +132,8 @@ export default class TripEventPresenter {
 
   #closeAndSaveEditOpenPoint = (point) => {
     const currentTypeChange = isMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
-    this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point);
-    this.#replaceEditorToPoint();
+    this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point, this.#replaceEditorToPoint);
+    // this.#replaceEditorToPoint();
     // возможно следует поменять местами...
     // document.removeEventListener('keydown', this.#escKeyEventEdit);
   };

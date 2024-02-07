@@ -16,7 +16,6 @@ function createEditPointTemplate(
   const { basePrice, dateFrom, dateTo, type, isDisabled, isSaving, isDeleting } = state;
   const isCreating = editorMode === EditType.CREATING;
   const cities = allDestinations.map((item) => item.name);
-
   const selectedDestination = allDestinations.find(
     ({id}) => id === state.destination
   );

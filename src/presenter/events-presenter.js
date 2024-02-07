@@ -162,12 +162,15 @@ export default class EventsPresenter {
     this.#newPointPresenter.destroy();
   };
 
-  #handleViewAction = async (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update, replaceEditorToPoint) => {
     this.#uiBlocker.block();
     if(actionType === UserAction.UPDATE_POINT) {
       this.#pointsPresenter.get(update.id).setSaving();
       try {
         await this.#eventPointsModel.update(updateType, update);
+        if (replaceEditorToPoint) {
+          replaceEditorToPoint();
+        }
       } catch (error) {
         this.#pointsPresenter.get(update.id).setAborting();
       }
