@@ -152,6 +152,7 @@ export default class EventsPresenter {
     this.#sortPresenter = new SortPresenter({
       container: this.#container,
       sortTypeHandler: this.#sortTypesChangeHandler,
+      defaultSortType: SortType.DAY,
     });
     this.#sortPresenter.init();
   }
