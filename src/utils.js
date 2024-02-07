@@ -14,13 +14,15 @@ function getTwoString(str) {
 }
 
 function dateDif(date1 , date2) {
-  const result = dayjs(date1).diff(dayjs(date2), 'minute');
-  if (Math.trunc(result / 60) >= 24) {
-    return `${getTwoString(Math.trunc(result / (24 * 60)))}D ${getTwoString(result % 24 % 60)}H ${getTwoString(result % 60)}M`;
-  } else if (result >= 60) {
-    return `${getTwoString(Math.trunc(result / 60))}H ${getTwoString(result % 60)}M`;
+  const resultMinute = dayjs(date1).diff(dayjs(date2), 'minute');
+  const resultDay = dayjs(date1).diff(dayjs(date2), 'day');
+  const resultHour = dayjs(date1).diff(dayjs(date2), 'hour');
+  if (resultDay >= 1) {
+    return `${getTwoString(resultDay)}D ${getTwoString(resultHour % 24)}H ${getTwoString(resultMinute % 60)}M`;
+  } else if (resultHour >= 1) {
+    return `${getTwoString(resultHour)}H ${getTwoString(resultMinute % 60)}M`;
   }
-  return `${getTwoString(result)}M`;
+  return `${getTwoString(resultMinute)}M`;
 }
 
 function ucFirst(str) {
