@@ -34,7 +34,7 @@ const POINT_EMPTY = {
   destination: null,
   isFavorite: false,
   offers: [],
-  type: 'taxi',
+  type: 'flight',
 };
 
 const SortType = {
