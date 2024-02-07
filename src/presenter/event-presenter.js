@@ -165,10 +165,10 @@ export default class TripEventPresenter {
     }
 
     if(this.#mode === Mode.EDITING) {
-      const resetFormState = () => {
-        this.#editComponent.resetFormState();
+      const resetState = () => {
+        this.#editComponent.resetState();
       };
-      this.#editComponent.shake(resetFormState);
+      this.#editComponent.shake(resetState);
     }
   };
 

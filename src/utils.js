@@ -36,8 +36,8 @@ function ucFirst(str) {
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
 const isPointFuture = (point) => dayjs().isBefore(point.dateFrom);
-const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateFrom);
-const isPointPast = (point) => dayjs().isAfter(point.dateFrom);
+const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateTo);
+const isPointPast = (point) => dayjs().isAfter(point.dateTo);
 
 const filter = {
   [FilterTypes.EVERYTHING]: (points) => [...points],
