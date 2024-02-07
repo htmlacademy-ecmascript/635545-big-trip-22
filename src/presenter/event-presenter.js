@@ -58,7 +58,6 @@ export default class TripEventPresenter {
       onSubmit: this.#closeAndSaveEditOpenPoint,
       onClose: this.#closeEditOpenPoint,
       onDelete: this.#deleteClickHandler,
-      // здесь тестим режим новой точки
       editorMode: EditType.EDITING,
     });
 
@@ -102,7 +101,8 @@ export default class TripEventPresenter {
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceEditorToPoint();
-      this.#editComponent.resetState();
+      // Проблемный момент с заменой включенной
+      // this.#editComponent.resetState();
     }
   };
 
