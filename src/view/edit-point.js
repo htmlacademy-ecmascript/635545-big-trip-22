@@ -100,10 +100,25 @@ function createEditPointTemplate(
   }
 
   function createCityTemplate () {
+    if (isCreating) {
+      return `
+        <input class="event__input  event__input--destination"
+          id="event-destination-1"
+          type="text"
+          required
+          name="event-destination"
+          value=""
+          list="destination-list-1">
+        <datalist id="destination-list-1">
+          ${createCityItemTemplate()}
+        </datalist>
+      `;
+    }
     return `
       <input class="event__input  event__input--destination"
         id="event-destination-1"
         type="text"
+        required
         name="event-destination"
         value="${selectedDestination ? selectedDestination?.name : cities[START_CITY_INDEX]}"
         list="destination-list-1">

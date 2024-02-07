@@ -8,7 +8,7 @@ function createNewButtonTemplate() {
   );
 }
 
-export default class NewButtonView extends AbstractStatefulView {
+export default class NewButton extends AbstractStatefulView {
   #handleClick = null;
   #isDisabled = false;
 
@@ -19,13 +19,11 @@ export default class NewButtonView extends AbstractStatefulView {
   }
 
   get template() {
-    console.log(this.#isDisabled);
     return createNewButtonTemplate();
   }
 
   setDisabled(isDisabled) {
     this.#isDisabled = isDisabled;
-    console.log('setDisabled' , this.#isDisabled);
     this.element.disabled = isDisabled;
   }
 
