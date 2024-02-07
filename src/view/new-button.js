@@ -1,31 +1,33 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
-function createNewButtonTemplate() {
+function createNewButtonTemplate(isDisabled) {
   return (
     `
-      <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>
+      <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button" ${isDisabled ? 'disabled' : ''}>New event</button>
     `
   );
 }
 
-export default class NewButtonView extends AbstractView {
+export default class NewButton extends AbstractStatefulView {
   #handleClick = null;
+  #isDisabled = false;
 
   constructor ({onClick}) {
     super();
     this.#handleClick = onClick;
-    this.element.addEventListener('click' , this.#clickHandler);
+    this.element.addEventListener('click' , this.#eventAddButtonClickHandler);
   }
 
   get template() {
-    return createNewButtonTemplate();
+    return createNewButtonTemplate(this.#isDisabled);
   }
 
   setDisabled(isDisabled) {
+    this.#isDisabled = isDisabled;
     this.element.disabled = isDisabled;
   }
 
-  #clickHandler = (evt) => {
+  #eventAddButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleClick();
   };

@@ -4,8 +4,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
-import {POINT_EMPTY} from '../const.js';
-import {POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType, START_CITY_INDEX} from '../const.js';
+import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
@@ -16,7 +15,6 @@ function createEditPointTemplate(
   const { basePrice, dateFrom, dateTo, type, isDisabled, isSaving, isDeleting } = state;
   const isCreating = editorMode === EditType.CREATING;
   const cities = allDestinations.map((item) => item.name);
-
   const selectedDestination = allDestinations.find(
     ({id}) => id === state.destination
   );
@@ -27,6 +25,7 @@ function createEditPointTemplate(
   const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
 
   const createDestinationTemplate = () => {
+    const isEmptyDestination = !selectedDestination?.pictures.length && !selectedDestination?.description.trim();
     if (selectedDestination) {
       const photoListTemplate = () => {
         if (selectedDestination.pictures.length) {
@@ -44,15 +43,19 @@ function createEditPointTemplate(
         }
       };
 
-      return (
-        `
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
-          </section>
-          ${photoListTemplate()}
-        `
-      );
+      if(isEmptyDestination) {
+        return '<p class="event__destination-description">No pictures destination description</p>';
+      } else {
+        return (
+          `
+            <section class="event__section  event__section--destination">
+              <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+              <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
+              ${photoListTemplate()}
+            </section>
+          `
+        );
+      }
     }
     return '';
   };
@@ -72,19 +75,42 @@ function createEditPointTemplate(
     `;
   }
 
-  function createOffersListTemplate () {
+  function createOffersItemTemplate () {
     return currentPointOffers.reduce((sum, current) => sum + createOfferItemTemplate(current.id, current.title, current.price), '');
   }
 
-  function createCityTemplate () {
-    if (!selectedDestination) {
-      return cities.reduce(
-        (sum, current, index) => `${sum}<option value="${current}" ${index === START_CITY_INDEX ? 'selected' : ''}>${current}</option>`, ''
-      );
+  function createOffersListTemplate () {
+    if (currentPointOffers.length) {
+      return `<section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
+            ${createOffersItemTemplate()}
+          </div>
+        </section>`;
     }
+
+    return '';
+  }
+
+  function createCityItemTemplate () {
     return cities.reduce(
-      (sum, current) => `${sum}<option value="${current}" ${selectedDestination?.name === current ? 'selected' : ''}>${current}</option>`, ''
+      (sum, current) => `${sum}<option value="${current}"></option>`, ''
     );
+  }
+
+  function createCityTemplate () {
+    return `
+      <input class="event__input  event__input--destination"
+        id="event-destination-1"
+        type="text"
+        required
+        name="event-destination"
+        value="${selectedDestination ? selectedDestination?.name : ''}"
+        list="destination-list-1">
+      <datalist id="destination-list-1">
+        ${createCityItemTemplate()}
+      </datalist>
+    `;
   }
 
   function createEventTypeListTemplate () {
@@ -141,12 +167,7 @@ function createEditPointTemplate(
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <select
-              class="event__input  event__input--destination"
-              id="event-destination-1"
-              name="event-destination">
-              ${createCityTemplate()}
-            </select>
+            ${createCityTemplate()}
           </div>
 
           <div class="event__field-group  event__field-group--time">
@@ -181,13 +202,7 @@ function createEditPointTemplate(
           ${createResetAndRollupTemplate()}
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-              ${createOffersListTemplate()}
-            </div>
-          </section>
+          ${createOffersListTemplate()}
           ${createDestinationTemplate()}
         </section>
       </form>
@@ -196,11 +211,11 @@ function createEditPointTemplate(
 }
 
 export default class EditPointView extends AbstractStatefulView {
-  // #editPoint = null;
+  #editPoint = null;
   #allDestinations = [];
   #allOffers = [];
   #onSubmit = null;
-  #onClose = null;
+  #onButtonCloseHandler = null;
   #onDelete = null;
   #datePickerFrom = null;
   #datePickerTo = null;
@@ -216,16 +231,23 @@ export default class EditPointView extends AbstractStatefulView {
     editorMode = EditType.EDITING,
   }) {
     super();
-    // this.#editPoint = editPoint;
+    this.#editPoint = editPoint;
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
     this.#onSubmit = onSubmit;
-    this.#onClose = onClose;
+    this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
+    // this.resetState();
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
-    this.#updateStartCreatingModeDestination();
+    // this.#updateStartCreatingModeDestination();
+  }
+
+  resetState() {
+    this.updateElement({
+      ...EditPointView.pasrsePointToState(this.#editPoint)
+    });
   }
 
   get template() {
@@ -237,7 +259,9 @@ export default class EditPointView extends AbstractStatefulView {
     );
   }
 
-  reset = (editPoint) => this.updateElement({editPoint});
+  reset = (editPoint) => {
+    this.updateElement({editPoint});
+  };
 
   #submitSaveBtn = (evt) => {
     evt.preventDefault();
@@ -251,26 +275,32 @@ export default class EditPointView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.element.addEventListener('submit', this.#submitSaveBtn);
     if (this.#editorMode === EditType.EDITING) {
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClose);
-      // Удаляем только при режиме редактирования!
-      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonCloseClickHandler);
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteButtonClickHandler);
     }
     if (this.#editorMode === EditType.CREATING) {
-      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onClose);
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#buttonCloseClickHandler);
     }
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeGroupChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.#setDatepickers();
   };
 
-  #deleteClickHandler = (evt) => {
+  #buttonCloseClickHandler = (evt) => {
     evt.preventDefault();
-    this.#onDelete(this._state);
+    // this.resetState();
+    this.#onButtonCloseHandler();
   };
 
-  #typeChangeHandler = (evt) => {
+  #deleteButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    // this.#onDelete(this._state);
+    this.#onDelete(EditPointView.parseStateToPoint(this._state));
+  };
+
+  #eventTypeGroupChangeHandler = (evt) => {
     this.updateElement({
       ...this._state,
       type: evt.target.value,
@@ -290,12 +320,6 @@ export default class EditPointView extends AbstractStatefulView {
       ...this._state,
       destination: selectedId
     });
-  };
-
-  #updateStartCreatingModeDestination = () => {
-    if (this.#editorMode === EditType.CREATING) {
-      this.#updateDestination(this.#allDestinations[START_CITY_INDEX].id);
-    }
   };
 
   #offersChangeHandler = () => {
@@ -329,14 +353,14 @@ export default class EditPointView extends AbstractStatefulView {
     this.#datePickerFrom = flatpickr(startDateNode, {
       ...flatpickerConfig,
       defaultDate: this._state.dateFrom,
-      onClose: this.#closeStartDateHandler,
+      onChange: this.#closeStartDateHandler,
       maxDate: this._state.dateTo,
     });
 
     this.#datePickerTo = flatpickr(endDateNode, {
       ...flatpickerConfig,
       defaultDate: this._state.dateTo,
-      onClose: this.#closeEndDateHandler,
+      onChange: this.#closeEndDateHandler,
       minDate: this._state.dateFrom,
     });
 
@@ -360,6 +384,22 @@ export default class EditPointView extends AbstractStatefulView {
     this.#datePickerFrom.set('maxDate'. selectedDate);
   };
 
-  static pasrsePointToState = (editPoint) => (editPoint);
-  static parseStateToPoint = (state) => state;
+  static pasrsePointToState (editPoint) {
+    return {
+      ...editPoint,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
+  }
+
+  static parseStateToPoint (state) {
+    const point = {...state};
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  }
 }

@@ -77,7 +77,7 @@ function createTripEventsItemTemplate(point, destination, allOffers) {
   );
 }
 
-export default class TripEventsItemView extends AbstractView {
+export default class TripEventsItem extends AbstractView {
   #point = null;
   #destination = null;
   #allOffers = [];
@@ -91,8 +91,8 @@ export default class TripEventsItemView extends AbstractView {
     this.#allOffers = allOffers;
     this.#rollupBtnClick = onClickRollupBtn;
     this.#favoriteBtnClick = onClickFavoriteBtn;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickRollupBtn);
-    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#clickFavoriteBtn);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupBtnClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteButtonClickHandler);
   }
 
   get template() {
@@ -103,12 +103,12 @@ export default class TripEventsItemView extends AbstractView {
     );
   }
 
-  #clickRollupBtn = (evt) => {
+  #rollupBtnClickHandler = (evt) => {
     evt.preventDefault();
     this.#rollupBtnClick();
   };
 
-  #clickFavoriteBtn = (evt) => {
+  #favoriteButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#favoriteBtnClick();
   };

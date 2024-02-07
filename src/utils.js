@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import {FilterTypes} from './const.js';
-import {SortTypes} from './const.js';
+import {FilterTypes, SortType, DESTINATION_ITEM_COUNT} from './const.js';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -15,13 +14,15 @@ function getTwoString(str) {
 }
 
 function dateDif(date1 , date2) {
-  const result = dayjs(date1).diff(dayjs(date2), 'minute');
-  if (Math.trunc(result / 60) >= 24) {
-    return `${getTwoString(Math.trunc(result / (24 * 60)))}D ${getTwoString(result % 24 % 60)}H ${getTwoString(result % 60)}M`;
-  } else if (result >= 60) {
-    return `${getTwoString(Math.trunc(result / 60))}H ${getTwoString(result % 60)}M`;
+  const resultMinute = dayjs(date1).diff(dayjs(date2), 'minute');
+  const resultDay = dayjs(date1).diff(dayjs(date2), 'day');
+  const resultHour = dayjs(date1).diff(dayjs(date2), 'hour');
+  if (resultDay >= 1) {
+    return `${getTwoString(resultDay)}D ${getTwoString(resultHour % 24)}H ${getTwoString(resultMinute % 60)}M`;
+  } else if (resultHour >= 1) {
+    return `${getTwoString(resultHour)}H ${getTwoString(resultMinute % 60)}M`;
   }
-  return `${getTwoString(result)}M`;
+  return `${getTwoString(resultMinute)}M`;
 }
 
 function ucFirst(str) {
@@ -35,8 +36,8 @@ function ucFirst(str) {
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
 const isPointFuture = (point) => dayjs().isBefore(point.dateFrom);
-const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateFrom);
-const isPointPast = (point) => dayjs().isAfter(point.dateFrom);
+const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateTo);
+const isPointPast = (point) => dayjs().isAfter(point.dateTo);
 
 const filter = {
   [FilterTypes.EVERYTHING]: (points) => [...points],
@@ -46,21 +47,21 @@ const filter = {
 };
 
 const getPointsByDate = (pointA, pointB) =>
-  dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
+  dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 const getPointsByTime = (pointA, pointB) =>
   dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom)) - dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
 const getPointsByPrice = (pointA, pointB) =>
   pointB.basePrice - pointA.basePrice;
 
 const sorting = {
-  [SortTypes.DAY]: (points) => [...points].sort(getPointsByDate),
-  [SortTypes.EVENT]: () => {
-    throw new Error(`Sort by ${SortTypes.EVENT} is disabled`);
+  [SortType.DAY]: (points) => [...points].sort(getPointsByDate),
+  [SortType.EVENT]: () => {
+    throw new Error(`Sort by ${SortType.EVENT} is disabled`);
   },
-  [SortTypes.TIME]: (points) => [...points].sort(getPointsByTime),
-  [SortTypes.PRICE]: (points) => [...points].sort(getPointsByPrice),
-  [SortTypes.OFFER]: () => {
-    throw new Error(`Sort by ${SortTypes.OFFER} is disabled`);
+  [SortType.TIME]: (points) => [...points].sort(getPointsByTime),
+  [SortType.PRICE]: (points) => [...points].sort(getPointsByPrice),
+  [SortType.OFFER]: () => {
+    throw new Error(`Sort by ${SortType.OFFER} is disabled`);
   }
 };
 
@@ -100,7 +101,47 @@ const adaptToServer = (point) => {
   return adaptedPoint;
 };
 
+const getTripRoute = (
+  points = [],
+  destinations = [],
+) => {
+  const destinationNames = sorting[SortType.DAY]([...points]).map(
+    (point) =>
+      destinations.find((destination) => destination.id === point.destination)
+        .name
+  );
+
+  return destinationNames <= DESTINATION_ITEM_COUNT
+    ? destinationNames.join('&nbsp;&mdash;&nbsp;')
+    : `${destinationNames.at(0)}&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;${destinationNames.at(-1)}`;
+};
+
+const getTripPeriod = (points = []) => {
+  const sortedPoints = sorting[SortType.DAY]([...points]);
+
+  return sortedPoints.length
+    ? `${dayjs(sortedPoints.at(0).dateFrom).format('DD MMM')} - ${dayjs(sortedPoints.at(-1).dateTo).format('DD MMM')}`
+    : '';
+};
+
+const getCheckedOffers = (offers, type) =>
+  offers.find((offer) => offer.type === type)?.offers;
+
+const getOffersCost = (offerIDs = [], offers = []) =>
+  offerIDs.reduce((offerCost, id) =>
+    offerCost + (offers.find((offer) => offer.id === id)?.price ?? 0), 0
+  );
+
+const getTripCost = (points = [], offers = []) => points.reduce((total, point) =>
+  total +
+  point.basePrice +
+  getOffersCost(points.offers, getCheckedOffers(offers, point.type)), 0
+);
+
 export {
+  getTripCost,
+  getTripPeriod,
+  getTripRoute,
   adaptToServer,
   adaptToClient,
   getRandomArrayElement,

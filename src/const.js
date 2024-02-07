@@ -1,9 +1,13 @@
 const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const NATURAL_NUMBERS = [1,2,3,4,5,6,7,8,9,0];
-const DATE_FORMAT_DAY_MONTH = 'DD MMM';
+const DATE_FORMAT_DAY_MONTH = 'MMM DD';
 const DATE_FORMAT_YEAR_DAY_MONTH = 'YYYY-MM-DD';
 const DATE_FORMAT_HOURS_MINUTE = 'HH:mm';
 const DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE = 'DD/MM/YY HH:mm';
+const AUTHORIZATION = 'Basic doghdtshr6dhsge6';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+const START_CITY_INDEX = 0;
+const DESTINATION_ITEM_COUNT = 3;
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -20,6 +24,7 @@ const EmptyListText = {
   PAST: 'There are no past events now',
   PRESENT: 'There are no present events now',
   FUTURE: 'There are no future events now',
+  ERROR: 'Failed to load latest route information',
 };
 
 const POINT_EMPTY = {
@@ -27,17 +32,12 @@ const POINT_EMPTY = {
   dateFrom: null,
   dateTo: null,
   destination: null,
-  // allDestinations: [],
-  // allOffers: [],
   isFavorite: false,
   offers: [],
-  // offer: {
-  //   offers: []
-  // },
-  type: 'taxi',
+  type: 'flight',
 };
 
-const SortTypes = {
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -45,12 +45,12 @@ const SortTypes = {
   OFFER: 'offer',
 };
 
-const enabledSortTypes = {
-  [SortTypes.DAY]: true,
-  [SortTypes.EVENT]: false,
-  [SortTypes.TIME]: true,
-  [SortTypes.PRICE]: true,
-  [SortTypes.OFFER]: false,
+const EnabledSortTypes = {
+  [SortType.DAY]: true,
+  [SortType.EVENT]: false,
+  [SortType.TIME]: true,
+  [SortType.PRICE]: true,
+  [SortType.OFFER]: false,
 };
 
 const FilterTypes = {
@@ -71,6 +71,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
 const Method = {
@@ -86,9 +87,16 @@ const SourceUrl = {
   DESTINATIONS: 'destinations',
 };
 
-const START_CITY_INDEX = 0;
+const TimeLimit = {
+  LOWER_LIMIT: 300,
+  UPPER_LIMIT: 1000,
+};
 
 export {
+  TimeLimit,
+  END_POINT,
+  AUTHORIZATION,
+  DESTINATION_ITEM_COUNT,
   START_CITY_INDEX,
   POINT_TYPE,
   NATURAL_NUMBERS,
@@ -99,8 +107,8 @@ export {
   Mode,
   EmptyListText,
   FilterTypes,
-  SortTypes,
-  enabledSortTypes,
+  SortType,
+  EnabledSortTypes,
   UserAction,
   UpdateType,
   EditType,

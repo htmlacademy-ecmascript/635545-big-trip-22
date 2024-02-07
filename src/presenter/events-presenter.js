@@ -1,37 +1,32 @@
 import {remove, render} from '../framework/render.js';
-import TripEventsListView from '../view/trip-events-list.js';
+import TripEventsList from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
 import TripEventPresenter from './event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
-import { filter, sorting } from '../utils.js';
-import { FilterTypes, SortTypes, UpdateType, UserAction } from '../const.js';
+import {filter, sorting} from '../utils.js';
+import {FilterTypes, SortType, UpdateType, UserAction, TimeLimit} from '../const.js';
 import Loading from '../view/loading.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
-const TimeLimit = {
-  LOWER_LIMIT: 300,
-  UPPER_LIMIT: 1000,
-};
-
 export default class EventsPresenter {
-  // #emptyListComponent = new EmptyListView();
   #emptyListComponent = null;
-  #tripEventsListComponent = new TripEventsListView();
+  #tripEventsListComponent = new TripEventsList();
   #container = null;
   #eventPointsModel = null;
   #filtersModel = null;
   #destinationsModel = null;
   #offersModel = null;
-  // #eventPoints = [];
   #pointsPresenter = new Map();
-  #currentSortType = SortTypes.DAY;
+  #currentSortType = SortType.DAY;
   #sortPresenter = null;
   #newPointPresenter = null;
   #newButtonPresenter = null;
   #isCreating = false;
   #loadingComponent = new Loading();
   #isLoading = true;
+  #isError = false;
+
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -51,15 +46,13 @@ export default class EventsPresenter {
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#newPointPresenter = new NewPointPresenter({
-      container: this.#container,
+      container: this.#tripEventsListComponent.element,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onDataChange: this.#handleViewAction,
       onDestroy: this.#addPointDestroyHandler,
     });
     this.#newButtonPresenter = newButtonPresenter;
-    // this.#eventPoints = [...this.#eventPointsModel.get()];
-    // Для пустого листа this.#eventPoints = [];
     this.#eventPointsModel.addObserver(this.#modelEventHandler);
     this.#filtersModel.addObserver(this.#modelEventHandler);
   }
@@ -78,11 +71,11 @@ export default class EventsPresenter {
     this.#isCreating = true;
     this.#newButtonPresenter.disabledButton();
     this.#filtersModel.set(UpdateType.MAJOR, FilterTypes.EVERYTHING);
-    this.#currentSortType = SortTypes.DAY;
+    this.#currentSortType = SortType.DAY;
     this.#newPointPresenter.init();
   };
 
-  #addPointDestroyHandler = ({isCanceled}) => {
+  #addPointDestroyHandler = ({isCanceled} = {}) => {
     this.#isCreating = false;
     this.#newButtonPresenter.enableButton();
     if(!this.eventPoints.length && isCanceled) {
@@ -91,19 +84,29 @@ export default class EventsPresenter {
     }
   };
 
-  #renderBoard() {
+  #renderBoard({isError} = {}) {
     if (this.#isLoading) {
       this.#newButtonPresenter.disabledButton();
       this.#renderLoading();
+      return;
     }
 
-    if(!this.eventPoints.length && !this.#isCreating) {
+    if(!this.eventPoints.length && !this.#isCreating && !isError) {
       this.#newButtonPresenter.enableButton();
       this.#renderEmptyList();
       return;
     }
 
-    this.#newButtonPresenter.enableButton();
+    if(isError) {
+      this.#newButtonPresenter.disabledButton();
+      this.#renderEmptyList({isError});
+      return;
+    }
+
+    if (!this.#isCreating) {
+      this.#newButtonPresenter.enableButton();
+    }
+
 
     this.#renderSort();
     this.#renderList();
@@ -116,10 +119,10 @@ export default class EventsPresenter {
 
   #clearBoard = ({resetSortType = false} = {}) => {
     this.#clearPoints();
-    this.#sortPresenter.destroy();
+    this.#sortPresenter?.destroy();
     remove(this.#emptyListComponent);
     if (resetSortType) {
-      this.#currentSortType = SortTypes.DAY;
+      this.#currentSortType = SortType.DAY;
     }
   };
 
@@ -140,13 +143,19 @@ export default class EventsPresenter {
       remove(this.#loadingComponent);
       this.#renderBoard();
     }
+    if(updateType === UpdateType.ERROR) {
+      // this.#clearBoard();
+      this.#isLoading = false;
+      remove(this.#loadingComponent);
+      this.#renderBoard({ isError: true });
+    }
   };
 
   #renderSort() {
     this.#sortPresenter = new SortPresenter({
       container: this.#container,
       sortTypeHandler: this.#sortTypesChangeHandler,
-      // defaultSortType: this.#currentSortType,
+      defaultSortType: SortType.DAY,
     });
     this.#sortPresenter.init();
   }
@@ -157,12 +166,15 @@ export default class EventsPresenter {
     this.#newPointPresenter.destroy();
   };
 
-  #handleViewAction = async (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update, replaceEditorToPoint) => {
     this.#uiBlocker.block();
     if(actionType === UserAction.UPDATE_POINT) {
       this.#pointsPresenter.get(update.id).setSaving();
       try {
         await this.#eventPointsModel.update(updateType, update);
+        if (replaceEditorToPoint) {
+          replaceEditorToPoint();
+        }
       } catch (error) {
         this.#pointsPresenter.get(update.id).setAborting();
       }
@@ -178,18 +190,23 @@ export default class EventsPresenter {
     }
 
     if(actionType === UserAction.DELETE_POINT) {
-      this.#pointsPresenter.get(update.id).setDeleting();
+      const deletePresenter = this.#pointsPresenter.get(update.id);
+      deletePresenter.setDeleting();
       try {
+        // deletePresenter.setDeleting();
         await this.#eventPointsModel.delete(updateType, update);
       } catch (error) {
-        this.#pointsPresenter.get(update.id).setAborting();
+        deletePresenter.setAborting();
       }
     }
     this.#uiBlocker.unblock();
   };
 
-  #renderEmptyList() {
-    this.#emptyListComponent = new EmptyListView({filterType: this.#filtersModel.get()});
+  #renderEmptyList({isError} = {}) {
+    this.#emptyListComponent = new EmptyListView({
+      filterType: this.#filtersModel.get(),
+      isError: isError,
+    });
     render(this.#emptyListComponent, this.#container);
   }
 
@@ -198,7 +215,6 @@ export default class EventsPresenter {
   }
 
   #sortTypesChangeHandler = (sortType) => {
-    // this.#sortPoints(sortType);
     this.#currentSortType = sortType;
     this.#clearPoints();
     this.#renderPoints();

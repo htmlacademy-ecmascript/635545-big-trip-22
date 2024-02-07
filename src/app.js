@@ -1,4 +1,5 @@
 import {RenderPosition} from './framework/render.js';
+import {AUTHORIZATION, END_POINT} from './const.js';
 import EventsPresenter from './presenter/events-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import HeaderInfoPresenter from './presenter/header-info-presenter.js';
@@ -12,8 +13,6 @@ import PointsApiService from './service/points-api-service.js';
 const tripMainElement = document.querySelector('.trip-main');
 const tripControlsFilters = document.querySelector('.trip-controls__filters');
 const tripEvents = document.querySelector('.trip-events');
-const AUTHORIZATION = 'Basic doghdtshr6dhsge6';
-const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
 
 const destinationsModel = new DestinationsModel(pointsApiService);
@@ -40,17 +39,21 @@ const filtersPresenter = new FiltersPresenter({
   filtersModel: filtersModel,
 });
 
-const headerInfoPresenter = new HeaderInfoPresenter({container: tripMainElement, place: RenderPosition.AFTERBEGIN});
+const headerInfoPresenter = new HeaderInfoPresenter({
+  container: tripMainElement,
+  place: RenderPosition.AFTERBEGIN,
+  pointsModel: eventPointsModel,
+  destinationsModel: destinationsModel,
+  offersModel: offersModel,
+});
 
 export default class BigTripApp {
   init() {
-    if(eventPointsModel.get().length) {
-      headerInfoPresenter.init();
-    }
+    headerInfoPresenter.init();
+    filtersPresenter.init();
     newButtonPresenter.init({
       onButtonClick: eventsPresenter.addPointButtonClickHandler
     });
-    filtersPresenter.init();
     eventsPresenter.init();
     eventPointsModel.init();
   }
