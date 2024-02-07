@@ -4,7 +4,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate, ucFirst} from '../utils.js';
-import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType, START_CITY_INDEX} from '../const.js';
+import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
