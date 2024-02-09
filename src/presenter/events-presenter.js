@@ -25,7 +25,6 @@ export default class EventsPresenter {
   #isCreating = false;
   #loadingComponent = new Loading();
   #isLoading = true;
-  #isError = false;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,

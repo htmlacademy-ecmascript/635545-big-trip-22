@@ -3,7 +3,7 @@ import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeTaskDueDate, ucFirst} from '../utils.js';
+import {getHumanizeTaskDueDate, getFirstLetterBig} from '../utils.js';
 import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
@@ -21,8 +21,8 @@ function createEditPointTemplate(
 
   const currentPointOffers = allOffers.find((item) => item.type === type).offers;
 
-  const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
-  const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
+  const dateStart = getHumanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
+  const dateEnd = getHumanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
 
   const createDestinationTemplate = () => {
     const isEmptyDestination = !selectedDestination?.pictures.length && !selectedDestination?.description.trim();
@@ -114,17 +114,17 @@ function createEditPointTemplate(
   }
 
   function createEventTypeListTemplate () {
-    function eventTypeItemTemplate (item) {
+    function createEventTypeItemTemplate (item) {
       return (
         `<div class="event__type-item">
           <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
-          <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${ucFirst(item)}</label>
+          <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${getFirstLetterBig(item)}</label>
         </div>`
       );
     }
 
     return POINT_TYPE.reduce(
-      (sum, current) => sum + eventTypeItemTemplate(current), ''
+      (sum, current) => sum + createEventTypeItemTemplate(current), ''
     );
   }
 

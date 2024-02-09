@@ -5,7 +5,7 @@ function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function humanizeTaskDueDate(dueDate, dateFormat) {
+function getHumanizeTaskDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
 
@@ -13,7 +13,7 @@ function getTwoString(str) {
   return (`${str}`.length < 2) ? `0${str}` : `${str}`;
 }
 
-function dateDif(date1 , date2) {
+function getDateDif(date1 , date2) {
   const resultMinute = dayjs(date1).diff(dayjs(date2), 'minute');
   const resultDay = dayjs(date1).diff(dayjs(date2), 'day');
   const resultHour = dayjs(date1).diff(dayjs(date2), 'hour');
@@ -25,7 +25,7 @@ function dateDif(date1 , date2) {
   return `${getTwoString(resultMinute)}M`;
 }
 
-function ucFirst(str) {
+function getFirstLetterBig(str) {
   if (!str) {
     return str;
   }
@@ -65,7 +65,7 @@ const sorting = {
   }
 };
 
-const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || dateDif(pointA.dateFrom, pointA.dateTo) !== dateDif(pointB.dateFrom, pointB.dateTo);
+const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || getDateDif(pointA.dateFrom, pointA.dateTo) !== getDateDif(pointB.dateFrom, pointB.dateTo);
 
 const adaptToClient = (point) => {
   const adaptedPoint = {
@@ -145,11 +145,11 @@ export {
   adaptToServer,
   adaptToClient,
   getRandomArrayElement,
-  humanizeTaskDueDate,
-  dateDif,
+  getHumanizeTaskDueDate,
+  getDateDif,
   updateItem,
   filter,
   sorting,
-  ucFirst,
+  getFirstLetterBig,
   isMinorChange
 };

@@ -1,20 +1,20 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import he from 'he';
-import {humanizeTaskDueDate, dateDif} from '../utils.js';
+import {getHumanizeTaskDueDate, getDateDif} from '../utils.js';
 import {DATE_FORMAT_DAY_MONTH, DATE_FORMAT_YEAR_DAY_MONTH, DATE_FORMAT_HOURS_MINUTE} from '../const.js';
 
 function createTripEventsItemTemplate(point, destination, allOffers) {
   const { basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const { name } = destination ?? '';
 
-  const dateStartDayMonth = humanizeTaskDueDate(dateFrom, DATE_FORMAT_DAY_MONTH);
-  const dateStartDatetime = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH);
-  const dateStartHoursMinute = humanizeTaskDueDate(dateFrom, DATE_FORMAT_HOURS_MINUTE);
-  const dateEndHoursMinute = humanizeTaskDueDate(dateTo, DATE_FORMAT_HOURS_MINUTE);
+  const dateStartDayMonth = getHumanizeTaskDueDate(dateFrom, DATE_FORMAT_DAY_MONTH);
+  const dateStartDatetime = getHumanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH);
+  const dateStartHoursMinute = getHumanizeTaskDueDate(dateFrom, DATE_FORMAT_HOURS_MINUTE);
+  const dateEndHoursMinute = getHumanizeTaskDueDate(dateTo, DATE_FORMAT_HOURS_MINUTE);
 
   const currentTypePointOffers = allOffers.find((item) => item.type === type).offers;
 
-  function offersListTemplate () {
+  function createOffersListTemplate () {
     if (point.offers.length) {
       const currentPointOffers = [];
       currentTypePointOffers.forEach((item) => {
@@ -25,12 +25,12 @@ function createTripEventsItemTemplate(point, destination, allOffers) {
         });
       });
 
-      return currentPointOffers.reduce((sum, current) => sum + offerItemTemplate(current.title, current.price), '');
+      return currentPointOffers.reduce((sum, current) => sum + createOfferItemTemplate(current.title, current.price), '');
     }
     return '';
   }
 
-  function offerItemTemplate (title, price) {
+  function createOfferItemTemplate (title, price) {
     return `
       <li class="event__offer">
         <span class="event__offer-title">${he.encode(String(title))}</span>
@@ -54,14 +54,14 @@ function createTripEventsItemTemplate(point, destination, allOffers) {
             &mdash;
             <time class="event__end-time" datetime="${dateEndHoursMinute}">${dateEndHoursMinute}</time>
           </p>
-          <p class="event__duration">${dateDif(dateTo, dateFrom)}</p>
+          <p class="event__duration">${getDateDif(dateTo, dateFrom)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${offersListTemplate()}
+          ${createOffersListTemplate()}
         </ul>
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
