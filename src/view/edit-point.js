@@ -263,7 +263,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.updateElement({editPoint});
   };
 
-  #submitSaveBtn = (evt) => {
+  #editPointSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#onSubmit(EditPointView.parseStateToPoint(this._state));
   };
@@ -273,7 +273,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   _restoreHandlers = () => {
-    this.element.addEventListener('submit', this.#submitSaveBtn);
+    this.element.addEventListener('submit', this.#editPointSubmitHandler);
     if (this.#editorMode === EditType.EDITING) {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonCloseClickHandler);
       this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteButtonClickHandler);

@@ -84,18 +84,18 @@ export default class TripEventPresenter {
     this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, this.#point);
   };
 
-  #escKeyEventEdit = (evt) => {
+  #eventEditEscKeyHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       // this.#editComponent.resetState();
       this.#closeEditOpenPoint();
-      document.removeEventListener('keydown', this.#escKeyEventEdit);
+      document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
     }
   };
 
   #rollupBtnClick = () => {
     this.#replacePointToEditor();
-    document.addEventListener('keydown', this.#escKeyEventEdit);
+    document.addEventListener('keydown', this.#eventEditEscKeyHandler);
   };
 
   resetView = () => {
@@ -107,7 +107,7 @@ export default class TripEventPresenter {
   };
 
   #replaceEditorToPoint = () => {
-    document.removeEventListener('keydown', this.#escKeyEventEdit);
+    document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
     replace(this.#pointComponent, this.#editComponent);
     this.#mode = Mode.DEFAULT;
   };
@@ -115,7 +115,7 @@ export default class TripEventPresenter {
   #replacePointToEditor = () => {
     replace(this.#editComponent, this.#pointComponent);
     // Возможно не нужно
-    document.addEventListener('keydown', this.#escKeyEventEdit);
+    document.addEventListener('keydown', this.#eventEditEscKeyHandler);
     this.#handleModeChange();
     this.#editComponent.resetState();
     this.#mode = Mode.EDITING;
@@ -125,7 +125,7 @@ export default class TripEventPresenter {
 
   #closeEditOpenPoint = () => {
     this.#replaceEditorToPoint();
-    // document.removeEventListener('keydown', this.#escKeyEventEdit);
+    // document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
   };
 
   // Submit
@@ -135,7 +135,7 @@ export default class TripEventPresenter {
     this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point, this.#replaceEditorToPoint);
     // this.#replaceEditorToPoint();
     // возможно следует поменять местами...
-    // document.removeEventListener('keydown', this.#escKeyEventEdit);
+    // document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
   };
 
   #favoriteBtnClick = () => {

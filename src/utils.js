@@ -1,10 +1,6 @@
 import dayjs from 'dayjs';
 import {FilterTypes, SortType, DESTINATION_ITEM_COUNT} from './const.js';
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
 function getHumanizeTaskDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
@@ -14,13 +10,16 @@ function getTwoString(str) {
 }
 
 function getDateDif(date1 , date2) {
+  const HOUR_IN_DAY = 24;
+  const MINUTE_IN_HOUR = 60;
+
   const resultMinute = dayjs(date1).diff(dayjs(date2), 'minute');
   const resultDay = dayjs(date1).diff(dayjs(date2), 'day');
   const resultHour = dayjs(date1).diff(dayjs(date2), 'hour');
   if (resultDay >= 1) {
-    return `${getTwoString(resultDay)}D ${getTwoString(resultHour % 24)}H ${getTwoString(resultMinute % 60)}M`;
+    return `${getTwoString(resultDay)}D ${getTwoString(resultHour % HOUR_IN_DAY)}H ${getTwoString(resultMinute % MINUTE_IN_HOUR)}M`;
   } else if (resultHour >= 1) {
-    return `${getTwoString(resultHour)}H ${getTwoString(resultMinute % 60)}M`;
+    return `${getTwoString(resultHour)}H ${getTwoString(resultMinute % MINUTE_IN_HOUR)}M`;
   }
   return `${getTwoString(resultMinute)}M`;
 }
@@ -144,7 +143,6 @@ export {
   getTripRoute,
   adaptToServer,
   adaptToClient,
-  getRandomArrayElement,
   getHumanizeTaskDueDate,
   getDateDif,
   updateItem,
