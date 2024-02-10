@@ -122,8 +122,8 @@ function createEditPointTemplate(
       );
     }
 
-    return allDestinations?.reduce(
-      (sum, current) => sum + createEventTypeItemTemplate(current.name), ''
+    return allOffers?.reduce(
+      (sum, current) => sum + createEventTypeItemTemplate(current.type), ''
     );
   }
 
