@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsItem from '../view/trip-events-item.js';
-import EditPoint from '../view/edit-point.js';
+import EditPointView from '../view/edit-point-view.js';
 import {EditType, Mode, UpdateType, UserAction} from '../const.js';
 import { getMinorChange } from '../utils.js';
 
@@ -51,7 +51,7 @@ export default class TripEventPresenter {
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
 
-    this.#editComponent = new EditPoint({
+    this.#editComponent = new EditPointView({
       editPoint: this.#editPoint,
       allDestinations: this.#destinationsModel.get(),
       allOffers: this.#offersModel.get(),

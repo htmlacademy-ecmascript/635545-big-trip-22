@@ -209,7 +209,7 @@ function createEditPointTemplate(
   );
 }
 
-export default class EditPoint extends AbstractStatefulView {
+export default class EditPointView extends AbstractStatefulView {
   #editPoint = null;
   #allDestinations = [];
   #allOffers = [];
@@ -237,16 +237,8 @@ export default class EditPoint extends AbstractStatefulView {
     this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
-    // this.resetState();
-    this._setState(EditPoint.pasrsePointToState(editPoint));
+    this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
-    // this.#updateStartCreatingModeDestination();
-  }
-
-  resetState() {
-    this.updateElement({
-      ...EditPoint.pasrsePointToState(this.#editPoint)
-    });
   }
 
   get template() {
@@ -258,13 +250,15 @@ export default class EditPoint extends AbstractStatefulView {
     );
   }
 
-  reset = (editPoint) => {
-    this.updateElement({editPoint});
-  };
+  resetState() {
+    this.updateElement({
+      ...EditPointView.pasrsePointToState(this.#editPoint)
+    });
+  }
 
   #editPointSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmit(EditPoint.parseStateToPoint(this._state));
+    this.#onSubmit(EditPointView.parseStateToPoint(this._state));
   };
 
   removeElement = () => {
@@ -289,14 +283,12 @@ export default class EditPoint extends AbstractStatefulView {
 
   #buttonCloseClickHandler = (evt) => {
     evt.preventDefault();
-    // this.resetState();
     this.#onButtonCloseHandler();
   };
 
   #deleteButtonClickHandler = (evt) => {
     evt.preventDefault();
-    // this.#onDelete(this._state);
-    this.#onDelete(EditPoint.parseStateToPoint(this._state));
+    this.#onDelete(EditPointView.parseStateToPoint(this._state));
   };
 
   #eventTypeGroupChangeHandler = (evt) => {

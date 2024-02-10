@@ -1,7 +1,7 @@
 import {remove, render} from '../framework/render.js';
 import TripEventsList from '../view/trip-events-list.js';
 import EmptyListView from '../view/empty-list.js';
-import TripEventPresenter from './event-presenter.js';
+import TripEventPresenter from './trip-event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import {filter, sorting} from '../utils.js';
