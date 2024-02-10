@@ -8,7 +8,7 @@ function createNewButtonTemplate(isDisabled) {
   );
 }
 
-export default class NewButton extends AbstractStatefulView {
+export default class NewButtonView extends AbstractStatefulView {
   #handleClick = null;
   #isDisabled = false;
 

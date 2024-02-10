@@ -1,5 +1,5 @@
 import {RenderPosition, remove, render} from '../framework/render.js';
-import EditPointView from '../view/edit-point.js';
+import EditPointView from '../view/edit-point-view.js';
 import {EditType, UpdateType, UserAction} from '../const.js';
 
 export default class NewPointPresenter {
@@ -38,7 +38,7 @@ export default class NewPointPresenter {
     });
 
     render(this.#addPointComponent, this.#container, RenderPosition.AFTERBEGIN);
-    document.addEventListener('keydown', this.#escKeyEventEdit);
+    document.addEventListener('keydown', this.#eventEditEscKeyHandler);
   }
 
   destroy({isCanceled = true} = {}) {
@@ -47,8 +47,7 @@ export default class NewPointPresenter {
     }
     remove(this.#addPointComponent);
     this.#addPointComponent = null;
-    // this.#handleDestroy({isCanceled});
-    document.removeEventListener('keydown', this.#escKeyEventEdit);
+    document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
     this.#handleDestroy({isCanceled});
   }
 
@@ -62,10 +61,10 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point
     );
-    document.removeEventListener('keydown', this.#escKeyEventEdit);
+    document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
   };
 
-  #escKeyEventEdit = (evt) => {
+  #eventEditEscKeyHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.destroy({isCanceled: true});
@@ -87,7 +86,7 @@ export default class NewPointPresenter {
         isDeleting: false,
       });
     };
-    document.addEventListener('keydown', this.#escKeyEventEdit);
+    document.addEventListener('keydown', this.#eventEditEscKeyHandler);
     this.#addPointComponent.shake(resetFormState);
   };
 }

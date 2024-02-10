@@ -1,17 +1,17 @@
 import {remove, render} from '../framework/render.js';
-import TripEventsList from '../view/trip-events-list.js';
-import EmptyListView from '../view/empty-list.js';
-import TripEventPresenter from './event-presenter.js';
+import TripEventsListView from '../view/trip-events-list-view.js';
+import EmptyListView from '../view/empty-list-view.js';
+import TripEventPresenter from './trip-event-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import {filter, sorting} from '../utils.js';
 import {FilterTypes, SortType, UpdateType, UserAction, TimeLimit} from '../const.js';
-import Loading from '../view/loading.js';
+import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class EventsPresenter {
   #emptyListComponent = null;
-  #tripEventsListComponent = new TripEventsList();
+  #tripEventsListComponent = new TripEventsListView();
   #container = null;
   #eventPointsModel = null;
   #filtersModel = null;
@@ -23,9 +23,8 @@ export default class EventsPresenter {
   #newPointPresenter = null;
   #newButtonPresenter = null;
   #isCreating = false;
-  #loadingComponent = new Loading();
+  #loadingComponent = new LoadingView();
   #isLoading = true;
-  #isError = false;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
@@ -144,7 +143,6 @@ export default class EventsPresenter {
       this.#renderBoard();
     }
     if(updateType === UpdateType.ERROR) {
-      // this.#clearBoard();
       this.#isLoading = false;
       remove(this.#loadingComponent);
       this.#renderBoard({ isError: true });
@@ -193,7 +191,6 @@ export default class EventsPresenter {
       const deletePresenter = this.#pointsPresenter.get(update.id);
       deletePresenter.setDeleting();
       try {
-        // deletePresenter.setDeleting();
         await this.#eventPointsModel.delete(updateType, update);
       } catch (error) {
         deletePresenter.setAborting();

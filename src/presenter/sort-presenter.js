@@ -1,5 +1,5 @@
 import {render, replace, remove} from '../framework/render.js';
-import SortView from '../view/sort.js';
+import SortView from '../view/sort-view.js';
 import {SortType, EnabledSortTypes} from '../const.js';
 
 export default class SortPresenter {

@@ -1,5 +1,5 @@
 import {render, replace, remove} from '../framework/render.js';
-import HeaderInfoView from '../view/header-info.js';
+import HeaderInfoView from '../view/header-info-view.js';
 
 export default class HeaderInfoPresenter {
   #headerInfoComponent = null;

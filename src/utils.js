@@ -1,11 +1,7 @@
 import dayjs from 'dayjs';
 import {FilterTypes, SortType, DESTINATION_ITEM_COUNT} from './const.js';
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function humanizeTaskDueDate(dueDate, dateFormat) {
+function getHumanizeTaskDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
 
@@ -13,23 +9,25 @@ function getTwoString(str) {
   return (`${str}`.length < 2) ? `0${str}` : `${str}`;
 }
 
-function dateDif(date1 , date2) {
+function getDateDif(date1 , date2) {
+  const HOUR_IN_DAY = 24;
+  const MINUTE_IN_HOUR = 60;
+
   const resultMinute = dayjs(date1).diff(dayjs(date2), 'minute');
   const resultDay = dayjs(date1).diff(dayjs(date2), 'day');
   const resultHour = dayjs(date1).diff(dayjs(date2), 'hour');
   if (resultDay >= 1) {
-    return `${getTwoString(resultDay)}D ${getTwoString(resultHour % 24)}H ${getTwoString(resultMinute % 60)}M`;
+    return `${getTwoString(resultDay)}D ${getTwoString(resultHour % HOUR_IN_DAY)}H ${getTwoString(resultMinute % MINUTE_IN_HOUR)}M`;
   } else if (resultHour >= 1) {
-    return `${getTwoString(resultHour)}H ${getTwoString(resultMinute % 60)}M`;
+    return `${getTwoString(resultHour)}H ${getTwoString(resultMinute % MINUTE_IN_HOUR)}M`;
   }
   return `${getTwoString(resultMinute)}M`;
 }
 
-function ucFirst(str) {
+function getFirstLetterBig(str) {
   if (!str) {
     return str;
   }
-
   return str[0].toUpperCase() + str.slice(1);
 }
 
@@ -65,7 +63,7 @@ const sorting = {
   }
 };
 
-const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || dateDif(pointA.dateFrom, pointA.dateTo) !== dateDif(pointB.dateFrom, pointB.dateTo);
+const getMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || getDateDif(pointA.dateFrom, pointA.dateTo) !== getDateDif(pointB.dateFrom, pointB.dateTo);
 
 const adaptToClient = (point) => {
   const adaptedPoint = {
@@ -144,12 +142,11 @@ export {
   getTripRoute,
   adaptToServer,
   adaptToClient,
-  getRandomArrayElement,
-  humanizeTaskDueDate,
-  dateDif,
+  getHumanizeTaskDueDate,
+  getDateDif,
   updateItem,
   filter,
   sorting,
-  ucFirst,
-  isMinorChange
+  getFirstLetterBig,
+  getMinorChange
 };

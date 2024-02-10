@@ -1,5 +1,5 @@
 import {render} from '../framework/render.js';
-import NewButton from '../view/new-button.js';
+import NewButtonView from '../view/new-button-view.js';
 
 export default class NewButtonPresenter {
   #container = null;
@@ -12,7 +12,7 @@ export default class NewButtonPresenter {
 
   init({onButtonClick}) {
     this.#handleButtonClick = onButtonClick;
-    this.#buttonComponent = new NewButton ({
+    this.#buttonComponent = new NewButtonView ({
       onClick: this.#buttonClickHandler,
     });
 

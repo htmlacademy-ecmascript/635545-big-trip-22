@@ -1,10 +1,9 @@
 import flatpickr from 'flatpickr';
 import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
-
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeTaskDueDate, ucFirst} from '../utils.js';
-import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
+import {getHumanizeTaskDueDate, getFirstLetterBig} from '../utils.js';
+import {POINT_EMPTY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
@@ -21,8 +20,8 @@ function createEditPointTemplate(
 
   const currentPointOffers = allOffers.find((item) => item.type === type).offers;
 
-  const dateStart = humanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
-  const dateEnd = humanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
+  const dateStart = getHumanizeTaskDueDate(dateFrom, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
+  const dateEnd = getHumanizeTaskDueDate(dateTo, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE);
 
   const createDestinationTemplate = () => {
     const isEmptyDestination = !selectedDestination?.pictures.length && !selectedDestination?.description.trim();
@@ -114,17 +113,17 @@ function createEditPointTemplate(
   }
 
   function createEventTypeListTemplate () {
-    function eventTypeItemTemplate (item) {
+    function createEventTypeItemTemplate (item) {
       return (
         `<div class="event__type-item">
           <input id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
-          <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${ucFirst(item)}</label>
+          <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1">${getFirstLetterBig(item)}</label>
         </div>`
       );
     }
 
-    return POINT_TYPE.reduce(
-      (sum, current) => sum + eventTypeItemTemplate(current), ''
+    return allOffers?.reduce(
+      (sum, current) => sum + createEventTypeItemTemplate(current.type), ''
     );
   }
 
@@ -238,16 +237,8 @@ export default class EditPointView extends AbstractStatefulView {
     this.#onButtonCloseHandler = onClose;
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
-    // this.resetState();
     this._setState(EditPointView.pasrsePointToState(editPoint));
     this._restoreHandlers();
-    // this.#updateStartCreatingModeDestination();
-  }
-
-  resetState() {
-    this.updateElement({
-      ...EditPointView.pasrsePointToState(this.#editPoint)
-    });
   }
 
   get template() {
@@ -259,11 +250,13 @@ export default class EditPointView extends AbstractStatefulView {
     );
   }
 
-  reset = (editPoint) => {
-    this.updateElement({editPoint});
-  };
+  resetState() {
+    this.updateElement({
+      ...EditPointView.pasrsePointToState(this.#editPoint)
+    });
+  }
 
-  #submitSaveBtn = (evt) => {
+  #editPointSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#onSubmit(EditPointView.parseStateToPoint(this._state));
   };
@@ -273,7 +266,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   _restoreHandlers = () => {
-    this.element.addEventListener('submit', this.#submitSaveBtn);
+    this.element.addEventListener('submit', this.#editPointSubmitHandler);
     if (this.#editorMode === EditType.EDITING) {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonCloseClickHandler);
       this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteButtonClickHandler);
@@ -290,13 +283,11 @@ export default class EditPointView extends AbstractStatefulView {
 
   #buttonCloseClickHandler = (evt) => {
     evt.preventDefault();
-    // this.resetState();
     this.#onButtonCloseHandler();
   };
 
   #deleteButtonClickHandler = (evt) => {
     evt.preventDefault();
-    // this.#onDelete(this._state);
     this.#onDelete(EditPointView.parseStateToPoint(this._state));
   };
 

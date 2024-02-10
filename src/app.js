@@ -47,7 +47,7 @@ const headerInfoPresenter = new HeaderInfoPresenter({
   offersModel: offersModel,
 });
 
-export default class BigTripApp {
+export default class App {
   init() {
     headerInfoPresenter.init();
     filtersPresenter.init();
