@@ -2,7 +2,7 @@ import {render, replace, remove} from '../framework/render.js';
 import TripEventsItemView from '../view/trip-events-item-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import {EditType, Mode, UpdateType, UserAction} from '../const.js';
-import { getMinorChange } from '../utils.js';
+import {getMinorChange} from '../utils.js';
 
 export default class TripEventPresenter {
   #container = null;
@@ -87,7 +87,6 @@ export default class TripEventPresenter {
   #eventEditEscKeyHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      // this.#editComponent.resetState();
       this.#closeEditOpenPoint();
       document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
     }
@@ -101,8 +100,6 @@ export default class TripEventPresenter {
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceEditorToPoint();
-      // Проблемный момент с заменой включенной
-      // this.#editComponent.resetState();
     }
   };
 
@@ -114,28 +111,19 @@ export default class TripEventPresenter {
 
   #replacePointToEditor = () => {
     replace(this.#editComponent, this.#pointComponent);
-    // Возможно не нужно
     document.addEventListener('keydown', this.#eventEditEscKeyHandler);
     this.#handleModeChange();
     this.#editComponent.resetState();
     this.#mode = Mode.EDITING;
   };
 
-  // Close
-
   #closeEditOpenPoint = () => {
     this.#replaceEditorToPoint();
-    // document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
   };
-
-  // Submit
 
   #closeAndSaveEditOpenPoint = (point) => {
     const currentTypeChange = getMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
     this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point, this.#replaceEditorToPoint);
-    // this.#replaceEditorToPoint();
-    // возможно следует поменять местами...
-    // document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
   };
 
   #favoriteBtnClick = () => {

@@ -143,7 +143,6 @@ export default class EventsPresenter {
       this.#renderBoard();
     }
     if(updateType === UpdateType.ERROR) {
-      // this.#clearBoard();
       this.#isLoading = false;
       remove(this.#loadingComponent);
       this.#renderBoard({ isError: true });
@@ -192,7 +191,6 @@ export default class EventsPresenter {
       const deletePresenter = this.#pointsPresenter.get(update.id);
       deletePresenter.setDeleting();
       try {
-        // deletePresenter.setDeleting();
         await this.#eventPointsModel.delete(updateType, update);
       } catch (error) {
         deletePresenter.setAborting();

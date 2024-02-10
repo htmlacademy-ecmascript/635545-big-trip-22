@@ -47,7 +47,6 @@ export default class NewPointPresenter {
     }
     remove(this.#addPointComponent);
     this.#addPointComponent = null;
-    // this.#handleDestroy({isCanceled});
     document.removeEventListener('keydown', this.#eventEditEscKeyHandler);
     this.#handleDestroy({isCanceled});
   }
