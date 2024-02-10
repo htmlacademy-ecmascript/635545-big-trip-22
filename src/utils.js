@@ -28,7 +28,6 @@ function getFirstLetterBig(str) {
   if (!str) {
     return str;
   }
-
   return str[0].toUpperCase() + str.slice(1);
 }
 
@@ -64,7 +63,7 @@ const sorting = {
   }
 };
 
-const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || getDateDif(pointA.dateFrom, pointA.dateTo) !== getDateDif(pointB.dateFrom, pointB.dateTo);
+const getMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom || pointA.basePrice !== pointB.basePrice || getDateDif(pointA.dateFrom, pointA.dateTo) !== getDateDif(pointB.dateFrom, pointB.dateTo);
 
 const adaptToClient = (point) => {
   const adaptedPoint = {
@@ -149,5 +148,5 @@ export {
   filter,
   sorting,
   getFirstLetterBig,
-  isMinorChange
+  getMinorChange
 };

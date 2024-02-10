@@ -48,7 +48,6 @@ export default class EventPointsModel extends Observable {
       this.#eventPoints = updateItem(this.#eventPoints, adaptedPoint);
       this._notify(updateType, adaptedPoint);
     } catch (error) {
-      // this._notify(UpdateType.ERROR, {isError: true});
       throw new Error('Update fall');
     }
   }
@@ -62,7 +61,6 @@ export default class EventPointsModel extends Observable {
       this.#eventPoints.push(adaptedPoint);
       this._notify(updateType, adaptedPoint);
     } catch (error) {
-      // this._notify(UpdateType.ERROR, {isError: true});
       throw new Error('Add fall');
     }
   }
@@ -73,7 +71,6 @@ export default class EventPointsModel extends Observable {
       this.#eventPoints = this.#eventPoints.filter((item) => item.id !== point.id);
       this._notify(updateType);
     } catch (error) {
-      // this._notify(UpdateType.ERROR, {isError: true});
       throw new Error('Delete fall');
     }
   }

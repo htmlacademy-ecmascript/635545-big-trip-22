@@ -1,4 +1,4 @@
-import BigTripApp from './app.js';
+import App from './app.js';
 
-const bigTripApp = new BigTripApp();
+const bigTripApp = new App();
 bigTripApp.init();

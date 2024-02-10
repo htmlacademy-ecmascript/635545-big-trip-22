@@ -1,5 +1,3 @@
-const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-const NATURAL_NUMBERS = [1,2,3,4,5,6,7,8,9,0];
 const DATE_FORMAT_DAY_MONTH = 'MMM DD';
 const DATE_FORMAT_YEAR_DAY_MONTH = 'YYYY-MM-DD';
 const DATE_FORMAT_HOURS_MINUTE = 'HH:mm';
@@ -7,7 +5,7 @@ const DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE = 'DD/MM/YY HH:mm';
 const AUTHORIZATION = 'Basic doghdtshr6dhsge6';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 const START_CITY_INDEX = 0;
-const DESTINATION_ITEM_COUNT = 3;
+const DESTINATION_ITEM_COUNT = 2;
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -98,8 +96,6 @@ export {
   AUTHORIZATION,
   DESTINATION_ITEM_COUNT,
   START_CITY_INDEX,
-  POINT_TYPE,
-  NATURAL_NUMBERS,
   DATE_FORMAT_DAY_MONTH,
   DATE_FORMAT_YEAR_DAY_MONTH,
   DATE_FORMAT_HOURS_MINUTE,

@@ -1,10 +1,9 @@
 import flatpickr from 'flatpickr';
 import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
-
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {getHumanizeTaskDueDate, getFirstLetterBig} from '../utils.js';
-import {POINT_EMPTY, POINT_TYPE, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
+import {POINT_EMPTY, DATE_FORMAT_YEAR_DAY_MONTH_HOURS_MINUTE, EditType} from '../const.js';
 
 function createEditPointTemplate(
   state,
@@ -123,8 +122,8 @@ function createEditPointTemplate(
       );
     }
 
-    return POINT_TYPE.reduce(
-      (sum, current) => sum + createEventTypeItemTemplate(current), ''
+    return allDestinations?.reduce(
+      (sum, current) => sum + createEventTypeItemTemplate(current.name), ''
     );
   }
 
@@ -210,7 +209,7 @@ function createEditPointTemplate(
   );
 }
 
-export default class EditPointView extends AbstractStatefulView {
+export default class EditPoint extends AbstractStatefulView {
   #editPoint = null;
   #allDestinations = [];
   #allOffers = [];
@@ -239,14 +238,14 @@ export default class EditPointView extends AbstractStatefulView {
     this.#onDelete = onDelete;
     this.#editorMode = editorMode;
     // this.resetState();
-    this._setState(EditPointView.pasrsePointToState(editPoint));
+    this._setState(EditPoint.pasrsePointToState(editPoint));
     this._restoreHandlers();
     // this.#updateStartCreatingModeDestination();
   }
 
   resetState() {
     this.updateElement({
-      ...EditPointView.pasrsePointToState(this.#editPoint)
+      ...EditPoint.pasrsePointToState(this.#editPoint)
     });
   }
 
@@ -265,7 +264,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   #editPointSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmit(EditPointView.parseStateToPoint(this._state));
+    this.#onSubmit(EditPoint.parseStateToPoint(this._state));
   };
 
   removeElement = () => {
@@ -297,7 +296,7 @@ export default class EditPointView extends AbstractStatefulView {
   #deleteButtonClickHandler = (evt) => {
     evt.preventDefault();
     // this.#onDelete(this._state);
-    this.#onDelete(EditPointView.parseStateToPoint(this._state));
+    this.#onDelete(EditPoint.parseStateToPoint(this._state));
   };
 
   #eventTypeGroupChangeHandler = (evt) => {

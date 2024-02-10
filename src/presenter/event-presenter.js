@@ -1,8 +1,8 @@
 import {render, replace, remove} from '../framework/render.js';
 import TripEventsItem from '../view/trip-events-item.js';
-import EditPointView from '../view/edit-point.js';
+import EditPoint from '../view/edit-point.js';
 import {EditType, Mode, UpdateType, UserAction} from '../const.js';
-import { isMinorChange } from '../utils.js';
+import { getMinorChange } from '../utils.js';
 
 export default class TripEventPresenter {
   #container = null;
@@ -51,7 +51,7 @@ export default class TripEventPresenter {
       onClickFavoriteBtn: this.#favoriteBtnClick,
     });
 
-    this.#editComponent = new EditPointView({
+    this.#editComponent = new EditPoint({
       editPoint: this.#editPoint,
       allDestinations: this.#destinationsModel.get(),
       allOffers: this.#offersModel.get(),
@@ -131,7 +131,7 @@ export default class TripEventPresenter {
   // Submit
 
   #closeAndSaveEditOpenPoint = (point) => {
-    const currentTypeChange = isMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
+    const currentTypeChange = getMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
     this.#handleDataChange(UserAction.UPDATE_POINT, currentTypeChange, point, this.#replaceEditorToPoint);
     // this.#replaceEditorToPoint();
     // возможно следует поменять местами...
