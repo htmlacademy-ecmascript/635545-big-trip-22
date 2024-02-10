@@ -1,4 +1,4 @@
-import RadioListView from './radio-list.js';
+import RadioListView from './radio-list-view.js';
 
 function createFiltersRowTemplate(filters) {
   return filters.reduce(

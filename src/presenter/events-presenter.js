@@ -1,5 +1,5 @@
 import {remove, render} from '../framework/render.js';
-import TripEventsList from '../view/trip-events-list.js';
+import TripEventsListView from '../view/trip-events-list-view.js';
 import EmptyListView from '../view/empty-list-view.js';
 import TripEventPresenter from './trip-event-presenter.js';
 import SortPresenter from './sort-presenter.js';
@@ -11,7 +11,7 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class EventsPresenter {
   #emptyListComponent = null;
-  #tripEventsListComponent = new TripEventsList();
+  #tripEventsListComponent = new TripEventsListView();
   #container = null;
   #eventPointsModel = null;
   #filtersModel = null;

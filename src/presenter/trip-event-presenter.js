@@ -1,5 +1,5 @@
 import {render, replace, remove} from '../framework/render.js';
-import TripEventsItem from '../view/trip-events-item.js';
+import TripEventsItemView from '../view/trip-events-item-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import {EditType, Mode, UpdateType, UserAction} from '../const.js';
 import { getMinorChange } from '../utils.js';
@@ -43,7 +43,7 @@ export default class TripEventPresenter {
     const preventPointComponent = this.#pointComponent;
     const preventEditComponent = this.#editComponent;
 
-    this.#pointComponent = new TripEventsItem({
+    this.#pointComponent = new TripEventsItemView({
       point: this.#point,
       destination: this.#destination,
       allOffers: this.#offersModel.get(),
