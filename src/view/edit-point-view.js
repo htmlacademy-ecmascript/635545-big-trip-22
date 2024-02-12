@@ -26,14 +26,14 @@ function createEditPointTemplate(
   const createDestinationTemplate = () => {
     const isEmptyDestination = !selectedDestination?.pictures.length && !selectedDestination?.description.trim();
     if (selectedDestination) {
-      const photoListTemplate = () => {
+      const createPhotoListTemplate = () => {
         if (selectedDestination.pictures.length) {
-          const photoItemTemplate = (src, title) => `<img class="event__photo" src="${src}" alt="${title}">`;
+          const createPhotoItemTemplate = (src, title) => `<img class="event__photo" src="${src}" alt="${title}">`;
 
           return (`
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                ${selectedDestination.pictures.reduce((sum, current) => sum + photoItemTemplate(current.src, current.description), '')}
+                ${selectedDestination.pictures.reduce((sum, current) => sum + createPhotoItemTemplate(current.src, current.description), '')}
               </div>
             </div>
           `);
@@ -50,7 +50,7 @@ function createEditPointTemplate(
             <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${selectedDestination ? selectedDestination.description : ''}</p>
-              ${photoListTemplate()}
+              ${createPhotoListTemplate()}
             </section>
           `
         );

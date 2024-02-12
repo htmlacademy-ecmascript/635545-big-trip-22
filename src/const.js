@@ -6,6 +6,8 @@ const AUTHORIZATION = 'Basic doghdtshr6dhsge6';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 const START_CITY_INDEX = 0;
 const DESTINATION_ITEM_COUNT = 2;
+const HOUR_IN_DAY = 24;
+const MINUTE_IN_HOUR = 60;
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -111,4 +113,6 @@ export {
   POINT_EMPTY,
   Method,
   SourceUrl,
+  HOUR_IN_DAY,
+  MINUTE_IN_HOUR
 };
