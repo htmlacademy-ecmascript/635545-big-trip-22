@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {FilterTypes, SortType, DESTINATION_ITEM_COUNT} from './const.js';
+import {FilterTypes, SortType, DESTINATION_ITEM_COUNT, HOUR_IN_DAY, MINUTE_IN_HOUR} from './const.js';
 
 function getHumanizeTaskDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
@@ -10,9 +10,6 @@ function getTwoString(str) {
 }
 
 function getDateDif(date1 , date2) {
-  const HOUR_IN_DAY = 24;
-  const MINUTE_IN_HOUR = 60;
-
   const resultMinute = dayjs(date1).diff(dayjs(date2), 'minute');
   const resultDay = dayjs(date1).diff(dayjs(date2), 'day');
   const resultHour = dayjs(date1).diff(dayjs(date2), 'hour');
